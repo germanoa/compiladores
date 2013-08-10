@@ -1,0 +1,7 @@
+duvidas:
+
+LISTAS
+1. o que significa "com um tipo de dado para lista que também é um nó da lista" ?
+2. os elementos da lista devem ser de algum tipo especifico?
+3. podemos ter elementos de tipos distintos na mesma lista?
+4. precisa ter operacoes na lista atraves de indices?
