@@ -1,8 +1,9 @@
 #include "comp_tree.h"
+#include "comp_list.h"
 #include <stdlib.h>
 
 static inline __comp_tree_init(comp_tree_t *tree) {
-	item = NULL;
+	//item = NULL;
     tree->children = NULL;
 }
 

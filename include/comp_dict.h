@@ -1,3 +1,6 @@
+#ifndef COMP_DICT_H
+#define COMP_DICT_H
+
 #define DICT_ITEM_MAX_KEY_SIZE 128
 #define DICT_ITEM_MAX_VALUE_SIZE 1024
 
@@ -46,3 +49,5 @@ void *dict_item_value_get(comp_dict_item_t *dict_item);
 int dict_item_set(comp_dict_item_t *dict_item, char *key, char *value);
 // print dict_item key,value
 void dict_item_print(comp_dict_item_t *dict_item);
+
+#endif /* COMP_DICT_H */

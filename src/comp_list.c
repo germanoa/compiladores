@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 static inline void __comp_list_init(comp_list_t *list) {
-	item = NULL;
+	//list->item = NULL; /* while item is int(tests), do nothing */
     list->prev = list;
     list->next = list;
 }

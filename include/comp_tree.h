@@ -1,3 +1,6 @@
+#ifndef COMP_TREE_H
+#define COMP_TREE_H
+
 #include "comp_list.h"
 
 typedef struct comp_tree_t_struct {
@@ -12,3 +15,5 @@ static inline __comp_tree_init(comp_tree_t *tree);
 comp_tree_t *new_comp_tree();
 // free address memory used by tree
 void comp_tree_delete(comp_tree_t *tree);
+
+#endif /* COMP_TREE_H */

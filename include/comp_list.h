@@ -1,9 +1,13 @@
-typedef struct comp_list_t_struct {
+#ifndef COMP_LIST_H
+#define COMP_LIST_H
+
+typedef struct comp_list_t comp_list_t;
+struct comp_list_t {
     //void *item; //not defined yet
     int item; //int defined to tests
     comp_list_t *prev;
     comp_list_t *next;
-} comp_list_t;
+};
 
 // initialize list with item as NULL and next and prev pointing to list itself
 static inline void __comp_list_init(comp_list_t *list);
@@ -23,3 +27,5 @@ void comp_list_remove(comp_list_t *list, comp_list_t *node_to_remove);
 void comp_list_concat(comp_list_t *list1, comp_list_t *list2);
 // print list items
 void comp_list_print(comp_list_t *list) ;
+
+#endif /* COMP_LIST_H */
