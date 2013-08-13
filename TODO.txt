@@ -5,3 +5,8 @@ LISTAS
 2. os elementos da lista devem ser de algum tipo especifico?
 3. podemos ter elementos de tipos distintos na mesma lista?
 4. precisa ter operacoes na lista atraves de indices?
+
+
+etapa1:
+
+para retornar codigo ascii no flex, return yytext[0];
