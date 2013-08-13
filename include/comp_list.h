@@ -1,14 +1,13 @@
-typedef struct comp_list_t comp_list_t;
-struct comp_list_t {
+typedef struct comp_list_t_struct {
     void *item; //not defined yet
     comp_list_t *prev;
     comp_list_t *next;
-};
+} comp_list_t;
 
-// initialize list with prev,next with its same address
+// initialize list with item as NULL and next and prev pointing to list itself
 static inline void __comp_list_init(comp_list_t *list);
-// return 0 if list is empty
-static inline int __comp_list_is_empty(struct comp_list_t *list);
+// return 1 if list is empty
+static inline int __comp_list_is_empty(comp_list_t *list);
 // create a list, alloc mem and return address
 comp_list_t *new_comp_list();
 // free address memory used by list

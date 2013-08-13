@@ -2,12 +2,15 @@
 #include <stdlib.h>
 
 static inline void __comp_list_init(comp_list_t *list) {
+	item = NULL;
     list->prev = list;
     list->next = list;
 }
 
 static inline int __comp_list_is_empty(comp_list_t *list) {
-    return list == list->next;
+	if(list == NULL)
+		return 1;
+    else return !(list == list->next);
 }
 
 comp_list_t *new_comp_list_create() {
@@ -18,6 +21,7 @@ comp_list_t *new_comp_list_create() {
 }
 
 void comp_list_delete(comp_list_t *list) {
+// TO-DO: DELETE ENTIRE LIST
     free(list);
     list = NULL;
 }

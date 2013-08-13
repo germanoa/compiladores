@@ -1,23 +1,20 @@
 #include "comp_tree.h"
 #include <stdlib.h>
 
-static inline __comp_list_init(struct comp_list_t *list) {
-    list->prev = list;
-    list->next = list;
+static inline __comp_tree_init(comp_tree_t *tree) {
+	item = NULL;
+    tree->children = NULL;
 }
 
-struct comp_list_t *new_comp_list_create() {
-    struct comp_list_t *list;
-    list = malloc(sizeof(struct comp_list_t));
-    __comp_list_init(list);
-    return list;
+comp_tree_t *new_comp_tree_create() {
+    comp_tree_t *tree;
+    tree = malloc(sizeof(comp_tree_t));
+    __comp_tree_init(tree);
+    return tree;
 }
 
-void comp_list_delete(struct comp_list_t *list) {
-    free(list);
-    list = NULL;
-}
-
-int comp_list_is_empty(struct comp_list_t *list) {
-    return list == list->next;
+void comp_tree_delete(comp_tree_t *tree) {
+// TO-DO: DELETE ENTIRE TREE
+    free(tree);
+    tree = NULL;
 }
