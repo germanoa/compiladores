@@ -1,5 +1,7 @@
-typedef struct comp_list_t_struct {
-    void *item; //not defined yet
+typedef struct comp_list_t comp_list_t;
+struct comp_list_t {
+    //void *item; //not defined yet
+    int item; //int defined to tests
     comp_list_t *prev;
     comp_list_t *next;
 } comp_list_t;

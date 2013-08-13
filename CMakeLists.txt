@@ -14,4 +14,12 @@ ADD_EXECUTABLE(main
   src/comp_tree.c
   src/comp_graph.c
 )
+ADD_EXECUTABLE(test
+  src/tests/test.c
+  src/comp_dict.c
+  src/comp_list.c
+  src/comp_tree.c
+  src/comp_graph.c
+)
+
 TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})
