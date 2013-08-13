@@ -22,9 +22,7 @@ comp_list_t *new_comp_list() {
 }
 
 void comp_list_delete(comp_list_t *list) {
-<<<<<<< HEAD
 // TO-DO: DELETE ENTIRE LIST
-=======
     if (!__comp_list_is_empty) {
         comp_list_t *temp;
         temp = list->next;
@@ -34,7 +32,6 @@ void comp_list_delete(comp_list_t *list) {
             temp->prev = NULL;
         } while(temp != list);
     }
->>>>>>> 1b77e904fd6a7b718107e89c078152b117b50f66
     free(list);
     list = NULL; /* http://stackoverflow.com/questions/1025589/setting-variable-to-null-after-free */
 }
