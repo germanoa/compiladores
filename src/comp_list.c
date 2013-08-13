@@ -1,4 +1,4 @@
-#include <comp_list.h>
+#include "comp_list.h"
 #include <stdlib.h>
 
 static inline __comp_list_init(struct comp_list_t *list) {
