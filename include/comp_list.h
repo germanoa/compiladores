@@ -22,3 +22,5 @@ void comp_list_insert(comp_list_t *list, comp_list_t *new_node);
 void comp_list_remove(comp_list_t *list, comp_list_t *node_to_remove);
 // concat two lists
 void comp_list_concat(comp_list_t *list1, comp_list_t *list2);
+// print list items
+void comp_list_print(comp_list_t *list) ;
