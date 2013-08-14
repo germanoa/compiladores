@@ -55,6 +55,10 @@ void comp_dict_remove(comp_dict_t *dict, comp_dict_t *node_to_remove);
  * concat two dicts
  */
 void comp_dict_concat(comp_dict_t *dict1, comp_dict_t *dict2);
+/**
+ * set dict item
+ */
+void comp_dict_set(comp_dict_t *dict, comp_dict_item_t *item);
 
 
 /**

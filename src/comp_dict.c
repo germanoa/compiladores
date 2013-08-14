@@ -83,6 +83,11 @@ void comp_dict_concat(comp_dict_t *dict1, comp_dict_t *dict2) {
     dict2->prev = temp_dict1_prev;
 }
 
+void comp_dict_set(comp_dict_t *dict, comp_dict_item_t *item) {
+    dict->item = item;
+}
+
+
 static inline void __comp_dict_item_init(comp_dict_item_t *dict_item) {
     dict_item->key = NULL;
     dict_item->value = NULL;
