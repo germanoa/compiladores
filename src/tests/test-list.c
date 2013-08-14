@@ -14,10 +14,10 @@ int main (int argc, char **argv)
     l2 = new_comp_list();
     l3 = new_comp_list();
     l4 = new_comp_list();
-    l1->item = 1;
-    l2->item = 2;
-    l3->item = 3;
-    l4->item = 4;
+    l1->item = (void *)1;
+    l2->item = (void *)2;
+    l3->item = (void *)3;
+    l4->item = (void *)4;
     comp_list_print(lista);
     comp_list_append(lista,l1);
     comp_list_print(lista);

@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 static inline void __comp_list_init(comp_list_t *list) {
-	//list->item = NULL; /* while item is int(tests), do nothing */
+	list->item = NULL; 
     list->prev = list;
     list->next = list;
 }
@@ -90,7 +90,7 @@ void comp_list_print(comp_list_t *list) {
     comp_list_t *temp;
     temp = list;
     do {
-        printf("%d,",temp->item);
+        printf("%d,",(int)temp->item);
         temp = temp->next;    
     } while(temp != list);
     printf("\n");

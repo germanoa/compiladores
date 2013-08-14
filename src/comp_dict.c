@@ -104,15 +104,15 @@ void comp_dict_item_delete(comp_dict_item_t *dict_item) {
     dict_item = NULL;
 }
 
-char *dict_item_key_get(comp_dict_item_t *dict_item) {
+char *comp_dict_item_key_get(comp_dict_item_t *dict_item) {
     return dict_item->key;
 }
 
-void *dict_item_value_get(comp_dict_item_t *dict_item) {
+void *comp_dict_item_value_get(comp_dict_item_t *dict_item) {
     return dict_item->value;
 }
 
-int dict_item_set(comp_dict_item_t *dict_item, char key[], char value[]) {
+int comp_dict_item_set(comp_dict_item_t *dict_item, char key[], char value[]) {
     int ret = 0;
     int key_s,value_s;
     key_s = sizeof(key);
@@ -129,6 +129,6 @@ int dict_item_set(comp_dict_item_t *dict_item, char key[], char value[]) {
     return ret;
 }
 
-void dict_item_print(comp_dict_item_t *dict_item) {
+void comp_dict_item_print(comp_dict_item_t *dict_item) {
     printf("%s -> %s\n",dict_item->key,dict_item->value);
 }

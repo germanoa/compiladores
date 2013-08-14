@@ -6,8 +6,8 @@
  */
 typedef struct comp_list_t comp_list_t;
 struct comp_list_t {
-    //void *item; //not defined yet
-    int item; /*!< Not present at specification. Defined to tests. */
+    void *item; /*!< Item has no type defined. Be moderate. */
+    //int item; /*!< Not present at specification. Defined to tests. */
     comp_list_t *prev; /*!< Pointer to previous list node */
     comp_list_t *next; /*!< Pointer to next list node */
 };
