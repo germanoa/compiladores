@@ -1,5 +1,5 @@
 %{
-#include "tokens.h"
+#include "parser.h"
 %}
 %%
 int { return TK_PR_INT; }
