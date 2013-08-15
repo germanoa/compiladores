@@ -1,6 +1,9 @@
-duvidas:
+1. documentar no modo doxygen
+2. verificar porque doxygen nao estah gerando doc para as funcoes
+3. tratamento de erros (nos mallocs e outros)
 
-LISTAS
+
+duvidas:
 1. o que significa "com um tipo de dado para lista que também é um nó da lista" ?
 	o tipo lista em sí é um registro na lista. a lista como um todo é um tipo lista encadeado com outros (ou sozinho)
 2. os elementos da lista devem ser de algum tipo especifico?
@@ -9,8 +12,3 @@ LISTAS
 	acho que esquecemos de perguntar isso.
 4. precisa ter operacoes na lista atraves de indices?
 	não sei se perguntamos isso também.
-
-
-etapa1:
-
-para retornar codigo ascii no flex, return yytext[0];
