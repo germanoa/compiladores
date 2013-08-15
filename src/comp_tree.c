@@ -103,26 +103,28 @@ int comp_tree_create_child(comp_tree_t *tree) {
 
 void comp_tree_create_child_with_string(comp_tree_t *tree, const char *string) {
 	if(comp_tree_create_child(tree))
-		comp_tree_set_string((comp_tree_t*)(tree->children->item), string);
+		comp_tree_set_string(tree->children->prev->item, string);
 }
 
-void comp_tree_remove_child(comp_tree_t *tree, comp_tree_t *child) {
+void comp_tree_delete_child(comp_tree_t *tree, comp_tree_t *child) {
+	// deletes child tree along with its entry in children list.
+	// searches by breadth for child
 	if(tree == NULL) {
-		fprintf(stderr, "ERROR: Cannot remove child from null tree.\n");
+		fprintf(stderr, "ERROR: Cannot delete child from null tree.\n");
 		return;
 	}
 	
 	if(child == NULL) {
-		fprintf(stderr, "ERROR: Cannot remove null child from tree.\n");
+		fprintf(stderr, "ERROR: Cannot delete null child from tree.\n");
 		return;
 	}
 	
 	if(tree->children == NULL) {
-		fprintf(stderr, "ERROR: Cannot remove child from childless tree.\n");
+		fprintf(stderr, "ERROR: Cannot delete child from childless tree.\n");
 		return;
 	}
 	
-	comp_list_t *childEntry = NULL;
+	// TO-DO (use comp_tree_delete)
 	
 }
 	

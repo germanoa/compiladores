@@ -28,7 +28,7 @@ int comp_tree_create_child(comp_tree_t *tree);
 void comp_tree_create_child_with_string(comp_tree_t *tree, const char *string);
 
 // delete child tree and remove from children list
-void comp_tree_remove_child(comp_tree_t *tree, comp_tree_t *child);
+void comp_tree_delete_child(comp_tree_t *tree, comp_tree_t *child);
 
 // free address memory used by tree and its subtrees
 void comp_tree_delete(comp_tree_t *tree);

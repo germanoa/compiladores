@@ -13,13 +13,12 @@ int getLineNumber (void)
 
 int main (int argc, char **argv)
 {
-	/*
     int token = TOKEN_ERRO;
     while (token = yylex()){
         printf ("token <%d> at %d\n", token, getLineNumber());
     }
-	*/
 	
+	/* Tree tests
 	comp_tree_t *tree = new_comp_tree();
 	printf("New tree.\n");
 	comp_tree_set_string(tree, "1");
@@ -39,5 +38,7 @@ int main (int argc, char **argv)
 	
 	comp_tree_depth_print_string(tree);
 	printf("Out.\n");
+	*/
+	
     return 0;
 }
