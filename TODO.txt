@@ -1,3 +1,4 @@
 1. documentar no modo doxygen
 2. verificar porque doxygen nao estah gerando doc para as funcoes
 3. tratamento de erros (nos mallocs e outros)
+4. teste de commit
