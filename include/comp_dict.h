@@ -59,7 +59,10 @@ void comp_dict_concat(comp_dict_t *dict1, comp_dict_t *dict2);
  * set dict item
  */
 void comp_dict_set(comp_dict_t *dict, comp_dict_item_t *item);
-
+/**
+ * print dict key as char and address from pointer value
+ */
+void comp_dict_print(comp_dict_t *dict);
 
 /**
  * initialize dict_item

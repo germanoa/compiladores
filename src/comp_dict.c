@@ -87,6 +87,17 @@ void comp_dict_set(comp_dict_t *dict, comp_dict_item_t *item) {
     dict->item = item;
 }
 
+void comp_dict_print(comp_dict_t *dict) {
+    comp_dict_t *temp;
+    temp = dict;
+    int i=0;
+    do {
+        printf("%s -> %X\n",comp_dict_item_key_get(temp->item),comp_dict_item_value_get(temp->item));
+        temp = temp->next;    
+    } while(temp != dict);
+    printf("\n");
+}
+
 
 static inline void __comp_dict_item_init(comp_dict_item_t *dict_item) {
     dict_item->key = NULL;
@@ -127,7 +138,7 @@ int comp_dict_item_set(comp_dict_item_t *dict_item, char key[], char value[]) {
         dict_item->key = malloc(key_s);
         dict_item->key = key;
         free(dict_item->value);
-        dict_item->key = malloc(value_s);
+        dict_item->value = malloc(value_s);
         dict_item->value = value;
         ret = 1;
     }
