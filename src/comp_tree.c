@@ -106,31 +106,61 @@ void comp_tree_create_child_with_string(comp_tree_t *tree, const char *string) {
 		comp_tree_set_string(tree->children->prev->item, string);
 }
 
-void comp_tree_delete_child(comp_tree_t *tree, comp_tree_t *child) {
-	// deletes child tree along with its entry in children list.
-	// searches by breadth for child
-	if(tree == NULL) {
-		fprintf(stderr, "ERROR: Cannot delete child from null tree.\n");
-		return;
-	}
+int comp_tree_remove(comp_tree_t *tree, comp_tree_t *child) {
+	if(tree == NULL)
+		return 0;
 	
 	if(child == NULL) {
 		fprintf(stderr, "ERROR: Cannot delete null child from tree.\n");
-		return;
+		return 0;
 	}
 	
-	if(tree->children == NULL) {
-		fprintf(stderr, "ERROR: Cannot delete child from childless tree.\n");
-		return;
+	if(tree->children == NULL)
+		return 0;
+	
+	comp_list_t *childList = tree->children;
+	
+	do { // checks if tree is father
+		childList = childList->next;
+	} while(childList->item != child && childList != tree->children);
+	
+	if(childList->item != child) { // didn't find father yet
+		childList = tree->children;
+		int found = 0;
+		
+		do { // tries to find father in tree's children
+			childList = childList->next;
+			found = comp_tree_remove(childList->item, child);
+		} while(!found && childList != tree->children);
+		
+		if(!found) {
+			fprintf(stderr, "ERROR: Could not find child father in tree.\n");
+			return 0;
+		}
+		else return 1;
 	}
-	
-	// TO-DO (use comp_tree_delete)
-	
+	else { // found father
+		comp_list_concat(tree->children, child->children);
+		comp_list_remove(tree->children, childList);
+		
+		free(child);
+		child == NULL;
+	}
 }
 	
 
 void comp_tree_delete(comp_tree_t *tree) {
-// TO-DO: DELETE ENTIRE TREE
+	if(tree->children != NULL) {
+		comp_list_t *childList = tree->children;
+	
+		do { // runs through every child
+			childList = childList->next;
+			comp_tree_delete(childList->item);
+		} while(childList != tree->children);
+	}
+	
+	comp_list_delete(tree->children);
+	
     free(tree);
     tree = NULL;
 }
