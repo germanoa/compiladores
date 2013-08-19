@@ -7,8 +7,8 @@ ty_
 /* mais um */
 _ER 98-98 +44/**/ 4.4 +4.4
 "a"
-"a""
-""a"
+"a goiaba eh verde""
+""ok, vamos lah?"
 'c'
 '''
 __ty||

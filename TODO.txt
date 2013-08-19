@@ -1,4 +1,6 @@
 1. documentar no modo doxygen
 2. verificar porque doxygen nao estah gerando doc para as funcoes
 3. tratamento de erros (nos mallocs e outros)
-4. teste de commit
+4. fix etapa1
+5. transformar dicionario em tabela hash
+6. distrinchar etapa2 em novos todos.
