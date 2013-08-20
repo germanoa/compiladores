@@ -13,8 +13,6 @@ char *identifier;
 
 \/\*[^\*\/]*\*\/ { }
 
-" "+ { }
-
 int { return TK_PR_INT; }
 float { return TK_PR_FLOAT; }
 bool { return TK_PR_BOOL; }
@@ -37,7 +35,7 @@ true { return TK_LIT_TRUE; }
 
 false { return TK_LIT_FALSE; }
 
-\'[^\']\' { 
+'[^']' {
     identifier = malloc(yyleng);
     strncpy(identifier,&yytext[1],yyleng-2);     
     
@@ -86,6 +84,9 @@ false { return TK_LIT_FALSE; }
 \|\| { return TK_OC_OR; }
 
 [\n\r] { line_number++; }
+
+" "+ { }
+
 . { return TOKEN_ERRO; }
 %%
 
