@@ -7,11 +7,10 @@ int line_number = 1;
 char *identifier;
 
 %}
+
+%x COMMENT
 %%
 
-\/\/[^\n\r]*[\n\r] { }
-
-\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/ { }
 
 int { return TK_PR_INT; }
 float { return TK_PR_FLOAT; }
@@ -60,6 +59,14 @@ false { return TK_LIT_FALSE; }
 
     return TK_LIT_STRING;
 }
+
+\/\/[^\n\r]* { }
+
+.*\/\* { BEGIN COMMENT; }
+
+<COMMENT>.*\*\/ { BEGIN 0; }
+<COMMENT>[\n\r] { line_number++; }
+<COMMENT>[^\n\r]* { }
 
 ([a-z]|[A-Z]|_)+([a-z]|[A-Z]|_|[0-9])* {
     identifier = malloc(yyleng);
