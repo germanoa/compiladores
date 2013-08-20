@@ -11,7 +11,7 @@ char *identifier;
 
 \/\/[^\n\r]*[\n\r] { }
 
-\/\*[^\*\/]*\*\/ { }
+\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/ { }
 
 int { return TK_PR_INT; }
 float { return TK_PR_FLOAT; }
@@ -43,7 +43,7 @@ false { return TK_LIT_FALSE; }
     symbol = new_comp_grammar_symbol();
     comp_grammar_symbol_set(symbol,T,line_number,NULL);
 
-    symbol_table_append(identifier,symbol);
+    //symbol_table_append(identifier,symbol);
 
     return TK_LIT_CHAR;
 }
@@ -56,7 +56,7 @@ false { return TK_LIT_FALSE; }
     symbol = new_comp_grammar_symbol();
     comp_grammar_symbol_set(symbol,T,line_number,NULL);
 
-    symbol_table_append(identifier,symbol);
+    //symbol_table_append(identifier,symbol);
 
     return TK_LIT_STRING;
 }
@@ -69,7 +69,7 @@ false { return TK_LIT_FALSE; }
     symbol = new_comp_grammar_symbol();
     comp_grammar_symbol_set(symbol,T,line_number,NULL);
 
-    symbol_table_append(identifier,symbol);
+    //symbol_table_append(identifier,symbol);
     
     return TK_IDENTIFICADOR;
 }
@@ -85,7 +85,7 @@ false { return TK_LIT_FALSE; }
 
 [\n\r] { line_number++; }
 
-" "+ { }
+[ \t]+ {  }
 
 . { return TOKEN_ERRO; }
 %%

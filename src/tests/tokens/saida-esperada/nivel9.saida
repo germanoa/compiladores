@@ -1,0 +1,7 @@
+1 TK_OC_LE [<=]
+2 TK_OC_GE [>=]
+3 TK_OC_EQ [==]
+4 TK_OC_NE [!=]
+5 TK_OC_AND [&&]
+6 TK_OC_OR [||]
+7 TOKEN_ERRO [.]

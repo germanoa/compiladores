@@ -16,6 +16,7 @@ ADD_EXECUTABLE(main
   src/comp_grammar.c
 )
 ADD_EXECUTABLE(test
+  ${FLEX_scanner_OUTPUTS}
   src/tests/test.c
   src/comp_dict.c
   src/comp_list.c
@@ -25,3 +26,4 @@ ADD_EXECUTABLE(test
 )
 
 TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})
+TARGET_LINK_LIBRARIES(test ${FLEX_LIBRARIES})

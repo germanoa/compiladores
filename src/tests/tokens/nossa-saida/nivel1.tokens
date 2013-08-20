@@ -1,0 +1,934 @@
+1 +
+1 TK_PR_RETURN [return]
+1 TK_PR_STRING [string]
+1 TK_PR_STRING [string]
+1 -
+1 TK_PR_RETURN [return]
+1 +
+1 +
+1 TK_PR_DO [do]
+1 TK_PR_INPUT [input]
+1 TK_PR_RETURN [return]
+2 TK_PR_FLOAT [float]
+2 {
+2 {
+2 ;
+2 ]
+2 TK_PR_DO [do]
+2 [
+2 >
+2 )
+2 <
+2 ]
+2 -
+2 /
+2 !
+2 TK_PR_STRING [string]
+2 =
+2 ;
+2 TK_PR_DO [do]
+2 TOKEN_ERRO [	]
+2 :
+2 -
+2 {
+2 TOKEN_ERRO [	]
+2 }
+2 >
+2 TK_PR_CHAR [char]
+2 TK_PR_STRING [string]
+3 TK_PR_DO [do]
+3 TK_PR_DO [do]
+3 }
+3 TK_PR_THEN [then]
+3 {
+3 TK_PR_INT [int]
+3 TK_PR_STRING [string]
+3 $
+3 ,
+3 TK_PR_STRING [string]
+3 <
+3 :
+3 TK_PR_STRING [string]
+3 /
+3 -
+3 >
+3 TK_PR_DO [do]
+3 *
+3 >
+4 +
+4 *
+4 TK_PR_IF [if]
+4 /
+4 TK_PR_BOOL [bool]
+4 :
+4 !
+4 ]
+4 <
+4 TK_PR_INPUT [input]
+4 TK_PR_ELSE [else]
+4 (
+4 >
+4 TK_PR_RETURN [return]
+4 [
+4 /
+4 TK_PR_RETURN [return]
+4 TK_PR_RETURN [return]
+5 TK_PR_DO [do]
+5 TK_PR_CHAR [char]
+5 $
+5 [
+5 TK_PR_CHAR [char]
+5 ;
+5 [
+5 TK_PR_IF [if]
+5 TOKEN_ERRO [	]
+5 ]
+5 TK_PR_STRING [string]
+5 TOKEN_ERRO [	]
+5 TK_PR_BOOL [bool]
+5 ,
+5 :
+5 TK_PR_FLOAT [float]
+5 >
+5 :
+5 *
+5 -
+5 [
+6 TK_PR_FLOAT [float]
+6 }
+6 TK_PR_BOOL [bool]
+6 -
+6 {
+6 =
+6 TK_PR_STRING [string]
+6 TK_PR_CHAR [char]
+6 TOKEN_ERRO [	]
+6 !
+6 [
+6 =
+6 (
+6 +
+6 &
+6 }
+6 TK_PR_INPUT [input]
+6 TK_PR_IF [if]
+6 (
+6 {
+6 *
+6 !
+6 (
+6 ,
+6 [
+7 TK_PR_RETURN [return]
+7 TOKEN_ERRO [	]
+7 /
+7 {
+7 <
+7 ]
+7 TK_PR_INT [int]
+7 TK_PR_DO [do]
+7 &
+7 TOKEN_ERRO [	]
+7 :
+7 *
+7 TK_PR_FLOAT [float]
+7 TK_PR_INPUT [input]
+7 TK_PR_INPUT [input]
+7 TK_PR_STRING [string]
+7 {
+7 >
+7 *
+8 TK_PR_BOOL [bool]
+8 $
+8 ;
+8 }
+8 TK_PR_THEN [then]
+8 :
+8 ,
+8 (
+8 TK_PR_DO [do]
+8 TK_PR_RETURN [return]
+8 TK_PR_INPUT [input]
+8 (
+8 TK_PR_FLOAT [float]
+8 TK_PR_DO [do]
+8 <
+8 ,
+8 =
+8 ;
+8 ;
+8 $
+8 TK_PR_IF [if]
+8 :
+8 )
+8 /
+9 *
+9 ]
+9 TOKEN_ERRO [	]
+9 *
+9 :
+9 )
+9 [
+9 TK_PR_BOOL [bool]
+9 !
+9 TOKEN_ERRO [	]
+9 {
+9 TK_PR_STRING [string]
+9 TOKEN_ERRO [	]
+9 TK_PR_CHAR [char]
+9 ,
+9 TK_PR_BOOL [bool]
+9 /
+9 TK_PR_BOOL [bool]
+9 }
+9 +
+9 >
+10 TK_PR_STRING [string]
+10 TK_PR_THEN [then]
+10 &
+10 }
+10 TK_PR_STRING [string]
+10 )
+10 )
+10 *
+10 <
+10 [
+10 ;
+10 TK_PR_THEN [then]
+10 [
+10 TK_PR_OUTPUT [output]
+10 TK_PR_ELSE [else]
+10 :
+10 ;
+10 =
+10 TK_PR_STRING [string]
+10 $
+10 $
+10 TK_PR_OUTPUT [output]
+10 ,
+11 TK_PR_STRING [string]
+11 TK_PR_INT [int]
+11 [
+11 >
+11 !
+11 +
+11 {
+11 /
+11 =
+11 /
+11 TK_PR_RETURN [return]
+11 TK_PR_STRING [string]
+11 TK_PR_BOOL [bool]
+11 TK_PR_FLOAT [float]
+11 <
+11 TK_PR_CHAR [char]
+11 ]
+11 }
+12 >
+12 TK_PR_CHAR [char]
+12 }
+12 *
+12 [
+12 ,
+12 =
+12 TK_PR_BOOL [bool]
+12 $
+12 TK_PR_STRING [string]
+12 TK_PR_THEN [then]
+12 {
+12 /
+12 TK_PR_DO [do]
+12 !
+12 TOKEN_ERRO [	]
+12 )
+12 TOKEN_ERRO [	]
+12 {
+12 [
+12 (
+12 :
+12 TK_PR_THEN [then]
+12 -
+13 TOKEN_ERRO [	]
+13 -
+13 ,
+13 TK_PR_INT [int]
+13 TK_PR_INT [int]
+13 &
+13 /
+13 }
+13 &
+13 {
+13 TK_PR_THEN [then]
+13 !
+13 ]
+13 {
+13 TK_PR_STRING [string]
+13 >
+13 $
+13 TK_PR_INPUT [input]
+13 *
+13 =
+13 TK_PR_INT [int]
+13 !
+13 &
+14 TK_PR_THEN [then]
+14 *
+14 {
+14 TOKEN_ERRO [	]
+14 TK_PR_OUTPUT [output]
+14 &
+14 ;
+14 TOKEN_ERRO [	]
+14 TK_PR_THEN [then]
+14 TK_PR_INPUT [input]
+14 TK_PR_RETURN [return]
+14 (
+14 =
+14 +
+14 TK_PR_OUTPUT [output]
+14 TK_PR_INT [int]
+14 ;
+14 &
+14 /
+14 ]
+14 -
+14 $
+14 TOKEN_ERRO [	]
+14 )
+15 TK_PR_FLOAT [float]
+15 {
+15 /
+15 TK_PR_FLOAT [float]
+15 TK_PR_IF [if]
+15 =
+15 ,
+15 $
+15 )
+15 *
+15 =
+15 <
+15 TK_PR_FLOAT [float]
+15 ]
+15 !
+15 (
+15 }
+15 TK_PR_BOOL [bool]
+15 {
+15 TOKEN_ERRO [	]
+15 /
+15 *
+15 TK_PR_INT [int]
+16 $
+16 TK_PR_DO [do]
+16 TK_PR_DO [do]
+16 }
+16 TK_PR_STRING [string]
+16 TK_PR_CHAR [char]
+16 ,
+16 ;
+16 TK_PR_THEN [then]
+16 TK_PR_RETURN [return]
+16 TK_PR_RETURN [return]
+16 }
+16 >
+17 TK_PR_CHAR [char]
+17 TK_PR_STRING [string]
+17 {
+17 TK_PR_INT [int]
+17 /
+17 +
+17 [
+17 <
+17 -
+17 =
+17 TOKEN_ERRO [	]
+17 $
+17 >
+17 ,
+17 :
+17 /
+17 TOKEN_ERRO [	]
+17 ;
+17 *
+17 =
+17 ;
+17 (
+17 ]
+17 TK_PR_RETURN [return]
+17 *
+17 )
+17 <
+17 TK_PR_INPUT [input]
+18 TK_PR_BOOL [bool]
+18 TOKEN_ERRO [	]
+18 (
+18 /
+18 TK_PR_FLOAT [float]
+18 $
+18 =
+18 ,
+18 TOKEN_ERRO [	]
+18 )
+18 !
+18 TK_PR_FLOAT [float]
+18 {
+18 /
+18 !
+18 /
+18 [
+18 {
+18 [
+18 TK_PR_THEN [then]
+18 !
+18 TK_PR_DO [do]
+18 -
+18 [
+18 &
+18 *
+19 TK_PR_DO [do]
+19 TK_PR_INT [int]
+19 TK_PR_STRING [string]
+19 TK_PR_FLOAT [float]
+19 $
+19 TOKEN_ERRO [	]
+19 $
+19 TK_PR_DO [do]
+19 TK_PR_STRING [string]
+19 :
+19 *
+19 ;
+19 TK_PR_FLOAT [float]
+19 -
+19 +
+20 TK_PR_INPUT [input]
+20 TK_PR_STRING [string]
+20 )
+20 +
+20 ;
+20 TOKEN_ERRO [	]
+20 }
+20 {
+20 ;
+20 TK_PR_THEN [then]
+20 ]
+20 -
+20 =
+20 TK_PR_IF [if]
+20 !
+20 TK_PR_INPUT [input]
+20 <
+20 TK_PR_STRING [string]
+20 ]
+20 }
+20 TK_PR_RETURN [return]
+20 TK_PR_BOOL [bool]
+20 :
+21 TK_PR_STRING [string]
+21 ,
+21 <
+21 !
+21 +
+21 ;
+21 TK_PR_BOOL [bool]
+21 ,
+21 (
+21 ]
+21 ]
+21 TK_PR_IF [if]
+21 >
+21 TK_PR_STRING [string]
+21 {
+21 *
+21 TK_PR_STRING [string]
+21 TOKEN_ERRO [	]
+21 :
+21 *
+21 =
+21 +
+21 TK_PR_INT [int]
+21 -
+21 {
+21 [
+21 $
+21 -
+21 TOKEN_ERRO [	]
+22 {
+22 [
+22 (
+22 {
+22 <
+22 >
+22 TK_PR_INPUT [input]
+22 ]
+22 TK_PR_INPUT [input]
+22 )
+22 TK_PR_BOOL [bool]
+22 ,
+22 TK_PR_RETURN [return]
+22 TK_PR_BOOL [bool]
+22 ]
+22 [
+22 :
+22 TK_PR_CHAR [char]
+23 TK_PR_STRING [string]
+23 ,
+23 *
+23 >
+23 }
+23 TK_PR_CHAR [char]
+23 TK_PR_RETURN [return]
+23 TK_PR_ELSE [else]
+23 {
+23 }
+23 TK_PR_INPUT [input]
+23 ;
+23 /
+23 :
+23 ,
+23 {
+23 TK_PR_BOOL [bool]
+23 -
+23 *
+23 TK_PR_DO [do]
+23 [
+24 +
+24 TK_PR_FLOAT [float]
+24 <
+24 >
+24 TK_PR_STRING [string]
+24 &
+24 TOKEN_ERRO [	]
+24 TK_PR_THEN [then]
+24 ]
+24 &
+24 TK_PR_RETURN [return]
+24 /
+24 !
+24 TK_PR_OUTPUT [output]
+24 }
+24 {
+24 TK_PR_CHAR [char]
+24 >
+24 )
+24 TK_PR_INT [int]
+25 TK_PR_FLOAT [float]
+25 TK_PR_STRING [string]
+25 )
+25 :
+25 TOKEN_ERRO [	]
+25 TK_PR_IF [if]
+25 !
+25 /
+25 (
+25 (
+25 {
+25 >
+25 TK_PR_STRING [string]
+25 ]
+25 !
+25 =
+25 ,
+25 +
+25 TK_PR_INT [int]
+25 }
+25 ;
+25 -
+25 &
+25 <
+25 TK_PR_RETURN [return]
+25 TK_PR_BOOL [bool]
+25 (
+26 -
+26 {
+26 TK_PR_BOOL [bool]
+26 {
+26 TK_PR_INPUT [input]
+26 ]
+26 TK_PR_DO [do]
+26 >
+26 {
+26 TK_PR_INT [int]
+26 /
+26 TK_PR_BOOL [bool]
+26 &
+26 TK_PR_STRING [string]
+26 TK_PR_INPUT [input]
+26 {
+26 !
+26 $
+26 TOKEN_ERRO [	]
+27 TK_PR_IF [if]
+27 TK_PR_OUTPUT [output]
+27 TOKEN_ERRO [	]
+27 TK_PR_ELSE [else]
+27 =
+27 TK_PR_IF [if]
+27 TOKEN_ERRO [	]
+27 <
+27 *
+27 TK_PR_DO [do]
+27 [
+27 TK_PR_RETURN [return]
+27 TOKEN_ERRO [	]
+27 :
+27 =
+27 TK_PR_THEN [then]
+27 }
+27 :
+27 /
+27 TK_PR_THEN [then]
+27 TOKEN_ERRO [	]
+27 [
+27 :
+28 TK_PR_THEN [then]
+28 $
+28 TK_PR_RETURN [return]
+28 TK_PR_STRING [string]
+28 TK_PR_BOOL [bool]
+28 TK_PR_DO [do]
+28 TK_PR_CHAR [char]
+28 =
+28 *
+28 TK_PR_FLOAT [float]
+28 (
+28 /
+29 TK_PR_CHAR [char]
+29 /
+29 $
+29 TK_PR_OUTPUT [output]
+29 }
+29 TK_PR_INT [int]
+29 )
+29 &
+29 TOKEN_ERRO [	]
+29 TOKEN_ERRO [	]
+29 !
+29 TK_PR_STRING [string]
+29 +
+29 )
+29 TK_PR_OUTPUT [output]
+29 $
+29 (
+29 TK_PR_DO [do]
+29 [
+29 ;
+29 TK_PR_THEN [then]
+29 }
+29 TK_PR_THEN [then]
+29 *
+30 =
+30 TK_PR_FLOAT [float]
+30 {
+30 [
+30 *
+30 /
+30 :
+30 TK_PR_STRING [string]
+30 =
+30 TK_PR_DO [do]
+30 TK_OC_AND [&&]
+30 [
+30 *
+30 TK_PR_STRING [string]
+30 >
+30 ,
+30 TK_PR_FLOAT [float]
+30 >
+30 *
+30 /
+31 TK_PR_STRING [string]
+31 TK_PR_CHAR [char]
+31 {
+31 TK_PR_FLOAT [float]
+31 TK_PR_STRING [string]
+31 /
+31 TK_PR_RETURN [return]
+31 TK_PR_OUTPUT [output]
+31 ;
+31 TK_PR_IF [if]
+31 TK_PR_RETURN [return]
+31 +
+31 /
+32 TK_PR_STRING [string]
+32 :
+32 &
+32 !
+32 TOKEN_ERRO [	]
+32 [
+32 *
+32 }
+32 }
+32 -
+32 &
+32 =
+32 $
+32 !
+32 {
+32 TK_PR_STRING [string]
+32 [
+32 [
+32 ;
+32 :
+32 -
+32 TK_PR_INT [int]
+32 <
+32 !
+32 TK_PR_DO [do]
+32 ;
+32 TK_PR_BOOL [bool]
+32 [
+32 =
+32 !
+32 {
+32 >
+33 TK_PR_STRING [string]
+33 :
+33 ,
+33 TK_PR_STRING [string]
+33 !
+33 TK_PR_THEN [then]
+33 {
+33 TK_PR_INPUT [input]
+33 TK_PR_INPUT [input]
+33 TK_PR_INT [int]
+33 :
+33 TK_PR_INT [int]
+33 =
+33 TK_PR_FLOAT [float]
+34 TK_PR_STRING [string]
+34 *
+34 <
+34 $
+34 =
+34 TK_PR_DO [do]
+34 }
+34 TOKEN_ERRO [	]
+34 $
+34 ]
+34 *
+34 ]
+34 TK_PR_IF [if]
+34 TK_PR_INPUT [input]
+34 $
+34 ]
+34 [
+34 TK_PR_STRING [string]
+34 ]
+34 ;
+34 ,
+34 -
+34 TK_PR_RETURN [return]
+34 +
+34 ,
+34 TK_PR_INPUT [input]
+34 :
+35 TK_PR_THEN [then]
+35 TK_PR_RETURN [return]
+35 TK_PR_OUTPUT [output]
+35 <
+35 (
+35 /
+35 [
+35 [
+35 TK_PR_RETURN [return]
+35 *
+35 TK_PR_DO [do]
+35 }
+35 TK_PR_BOOL [bool]
+35 TK_PR_BOOL [bool]
+35 TOKEN_ERRO [	]
+35 +
+35 *
+35 TK_PR_THEN [then]
+36 =
+36 *
+36 TK_PR_CHAR [char]
+36 TK_PR_RETURN [return]
+36 !
+36 >
+36 (
+36 ]
+36 }
+36 [
+36 TK_PR_INT [int]
+36 TK_PR_ELSE [else]
+36 {
+36 /
+36 TK_PR_STRING [string]
+36 >
+36 TK_PR_RETURN [return]
+36 ,
+36 *
+36 >
+36 :
+37 TK_PR_BOOL [bool]
+37 TOKEN_ERRO [	]
+37 =
+37 TK_PR_INT [int]
+37 ]
+37 -
+37 TK_OC_AND [&&]
+37 (
+37 >
+37 ]
+37 >
+37 +
+37 TOKEN_ERRO [	]
+37 TK_PR_CHAR [char]
+37 -
+37 ,
+37 {
+37 )
+37 /
+37 :
+37 [
+37 {
+37 $
+37 TK_PR_OUTPUT [output]
+37 ;
+37 TK_PR_FLOAT [float]
+37 }
+37 TK_PR_OUTPUT [output]
+37 <
+37 ;
+38 TOKEN_ERRO [	]
+38 TK_PR_BOOL [bool]
+38 TK_PR_STRING [string]
+38 {
+38 TK_PR_THEN [then]
+38 )
+38 TOKEN_ERRO [	]
+38 !
+38 TK_PR_CHAR [char]
+38 &
+38 *
+38 TK_PR_BOOL [bool]
+38 ,
+38 TK_PR_THEN [then]
+38 -
+38 )
+38 TK_PR_THEN [then]
+38 =
+39 TK_PR_DO [do]
+39 TK_PR_INT [int]
+39 (
+39 {
+39 TOKEN_ERRO [	]
+39 :
+39 TK_PR_CHAR [char]
+39 ;
+39 ;
+39 }
+39 [
+39 ,
+39 +
+39 ,
+39 TK_PR_DO [do]
+39 TOKEN_ERRO [	]
+39 (
+39 *
+39 <
+39 >
+39 -
+39 }
+39 {
+39 (
+39 TK_PR_INT [int]
+39 TK_PR_DO [do]
+39 )
+40 TK_PR_DO [do]
+40 $
+40 TK_PR_DO [do]
+40 )
+40 /
+40 TK_PR_INPUT [input]
+40 /
+40 {
+40 !
+40 }
+40 =
+40 TK_PR_THEN [then]
+40 TK_PR_STRING [string]
+40 $
+40 TOKEN_ERRO [	]
+40 [
+40 TOKEN_ERRO [	]
+40 <
+40 >
+40 ,
+40 /
+40 TK_PR_DO [do]
+40 TK_PR_DO [do]
+41 *
+41 TK_PR_INPUT [input]
+41 >
+41 $
+41 *
+41 TK_PR_STRING [string]
+41 TK_PR_FLOAT [float]
+41 TK_PR_CHAR [char]
+41 TK_PR_BOOL [bool]
+41 $
+41 /
+41 {
+41 TOKEN_ERRO [	]
+41 TK_PR_BOOL [bool]
+41 {
+42 TK_PR_FLOAT [float]
+42 -
+42 TOKEN_ERRO [	]
+42 TK_PR_BOOL [bool]
+42 {
+42 TK_PR_STRING [string]
+42 TK_PR_CHAR [char]
+42 ]
+42 [
+42 )
+42 }
+42 >
+42 TK_PR_THEN [then]
+42 /
+42 :
+42 TK_PR_THEN [then]
+42 TK_PR_INPUT [input]
+42 TOKEN_ERRO [	]
+43 TK_PR_FLOAT [float]
+43 TK_PR_IF [if]
+43 ,
+43 TK_PR_RETURN [return]
+43 /
+43 {
+43 TK_PR_IF [if]
+43 (
+43 !
+43 }
+43 =
+43 /
+43 &
+43 {
+43 TK_PR_RETURN [return]
+43 :
+43 ]
+43 (
+43 TK_PR_STRING [string]
+43 +
+43 TK_PR_FLOAT [float]
+43 ]
+43 /
+43 )
+43 +
+44 TK_PR_STRING [string]
+44 =
+44 TK_PR_ELSE [else]
+44 TK_PR_STRING [string]
+44 <
+44 >
+44 TK_PR_STRING [string]
+44 TK_PR_FLOAT [float]
+44 TK_PR_INPUT [input]
+44 &
+44 (
+44 :
+44 ;
+44 *
+44 TOKEN_ERRO [	]
