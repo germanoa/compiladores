@@ -1,0 +1,59 @@
++   return  string  string  -  return + +  do  input  return 
+ float {{;] do [>)<] -  / ! string  = ; do 	: - {	}> char  string 
+ do  do } then { int  string $, string <:  string  /  - > do  * >
++  *  if  /  bool :!]< input  else (> return [  /  return  return 
+ do  char $[ char ;[ if 	] string 	 bool ,:  float >: *  - [
+ float } bool  -  { =  string  char 	![ = (+ &}  input  if ({ * !(,[
+ return 	 /  {<] int  do &	: *  float  input  input  string {> * 
+ bool $;} then :,( do  return  input ( float  do <, = ;;$ if :) / 
+ * ]	 *  :)[ bool !	{ string 	 char , bool  /  bool }+ >
+ string  then &} string )) * <[; then [ output  else :; =  string $$ output ,
+ string  int [>!+ { /  =  /  return   string  bool  float < char ]}
+> char   } * [, =  bool $ string  then { /  do !	)	{[(: then  - 
+	 - , int  int & / }& { then !]{ string >$  input  *  =  int !&
+ then  * {	 output &;	 then  input  return ( = +  output  int ;& / ] - $	)
+ float { /  float  if  = ,$) *  = < float ]!(} bool {	/* int
+$ do  do } string  char , ; then  return  return }>
+ char  string { int  / + [< -  = 	$>,: / 	; *  = ;(] return  * )< input 
+ bool 	( /  float $ = ,	)! float {  / ! / [{[ then ! do  - [& * 
+ do  int  string  float $	$ do  string  : * ; float  - + 
+ input  string )+ ;	}{; then ] -  =  if ! input < string ]} return  bool :
+ string ,<!+ ; bool ,(]] if > string { *  string 	: *  = +  int  - {[$ - 	 
+{[ ({<> input ] input ) bool , return  bool ][: char 
+ string  , * >} char  return  else {} input ; / :,{ bool  -  *  do [ 
++  float <> string &	 then ]& return  / ! output }{ char >) int 
+ float  string ):	 if ! / (({> string ]! = ,+  int }; - &< return  bool (
+ - { bool { input ] do >{ int  /  bool & string  input { !$	
+ if  output 	 else  =  if 	< *  do [ return 	:    =  then }: /  then 	[:
+ then $ return  string   bool  do  char  =  *  float ( / 
+ char  / $ output } int )&		! string + ) output $( do [; then }  then  * 
+ =  float {[ *  / : string  =  do &&[ *  string >, float >*/
+//  - <; string >] int + <	,}$  then  bool $<>	 else  int  * [:
+//  else (> return & return ) /  bool 	)! =  bool  	 =  string  = {} =  output 
+// )<; /  int  [{{]};	 * <:{ =  if {(} / [ input  string [ input ] return 
+// {! $ string  string  ; float 	 return  string  return :< then  if ,+ 
+//  int & return  do   - :! output $ =  * 	 do ,{+  string [	;& if 	}  - 
+//  string  return  do { if {!<] *  char : input  -  string  char { / 
+//  do  bool & bool  input ) char > float  =  / ,,!!:+ ] float 
+//  & bool  string { string  - & *  then  return :	 /  *  = > do  - 
+// & bool ( - } output (	} float {>( - :] / :	 do  = !	( / $ then 
+//  char  then , float +  then  * )	 *  int  string 	 if  bool ,(] *  
+//  do  output  char ,! string  string ) input &+ ] /  float ][ * 	{:;[
+//  float  /  string >] - ,[ bool  input >$ bool  then }} /  =  input [+ $
+//  char   string  *  /  * [ do ![(} = ,[$$;	{[ string  char  /  then >!:
+// ( float  int $ return }{{ input  return ;  do   do 
+//  string  then ) int >;+ ); do  float   * {><	 =  * )	 return <+ $[ if { - &; do ! float  string  bool 
+ string  char  { float  string  /  return  output ; if  return +  / 
+ string :&!	[ *  }} - & = $!{  string [[;: -  int <! do ; bool [ = !{>
+ string :, string ! then { input  input  int : int  =  float 
+ string  * <$ =  do }	$] * ] if  input $][ string ];, -  return + , input :
+ then  return  output <( / [[ return  *  do } bool  bool 	+  *  then 
+ =  *  char  return !>(]}[ int  else { /  string  > return  , * >:
+ bool 	 =  int ] - &&(>]>+ 	 char  - ,{) / :[{$ output ; float } output <;
+	 bool  string { then )	! char & *  bool , then  - ) then  = 
+ do   int ({	: char ;;}[,+ , do 	 ( * <> - }{( int  do )
+ do $ do ) /  input  / {!} =  then  string $	[	<>, /  do  do 
+ *  input > $ *  string  float  char  bool $ / {	 bool {
+ float  -  	 bool { string  char ][)}> then  / : then  input 	
+ float  if , return  / { if (!} =  /  &{ return :] ( string +  float ]  / )+ 
+ string  =   else  string <> string  float  input &(:; * 	

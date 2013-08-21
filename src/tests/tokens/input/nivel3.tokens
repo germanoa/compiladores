@@ -1,0 +1,31 @@
+/*
+ while [)< int } * [)$: float $ - : int $$ else >{]! -  if &+ $
+ else : / ,(}+  else  input ),; /  return ; - ,)$ while  =  if { do <
+ do  while  *  bool ,:> output :] * { while ]<$ else  input  int ]
+ * } else ) -  input  bool ]: while  float  float  int 
+ then ! output  float }($>] char >: do , int  else  char 
+ float  return  string [ * ! return >(} char +  /  else [ return  char >
+{ do  -  float  - ! do ; - <{ - $!+  char  /  string 
+ do  int ( = &+ ( else ; * ,: -  while $[ while {]]{ do >{} output 
+ else > then  return &< then [ *  =  then  / ;:], bool +  return ( else ;+ 
+! output  /  output ( return  char 	[)+  else  then ! /  = ! -  do <[
+;+ [(: = ) = < return [ output )] = ;] input )+  *  bool  input 
+ do }+  * } / ; return  then ]: bool  while <(( / }) bool  / 
+ while ,, int +  char  - ! * !$ while  - ], char !! =  do 
+ while }! - ; -  output  do  =  output : return  int  - ! float !<
+ while <, input < string < else  char ;*/int
+// } =  while  input  float ]:[ float  return  /  input &,
+//  do  input }]< int  while ; *  while : char 	$ - < then 
+//  bool $+  if ( * ) *  output  do $[ /  char  output  * ! - ,>!, - (,{
+//  float ! then : else  else <] *  do : while  int ;! else + {} return 
+// } input )} = ,; int  /  return  char  then ; do  output 
+//  while !! /  return : return }(+  =  else ) - {<+ ]&< - ! return  else ] return 
+// ! /  return  = ) while <}[ output !, string } char  do <] while 
+// >$ do  - : else  input >)$![[ - ! float ) = )]; - [ else  - , = 
+//  input :[!;] * ( return  bool  - [{ int $)] char ;, while  return ,
+//  =  float ,$ bool  do  if (}:: *  = ( / +  char + { /  do 
+//  * + $ int < string ! -  - } int > float ! while ]< then  /  * )&
+//  =  output >( char +  bool $ output [+  char  output  while 
+//  int (< / { else  float {) int ; else !: char  bool  - {; - 
+//  bool  do > / [,;><>$:]]<(+  do  while ]$; else  then  then  - (+  * 
+// : output  while +  string  else  else  do 
