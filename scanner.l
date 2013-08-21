@@ -10,6 +10,13 @@ char *identifier;
 
 %x COMMENT
 %%
+\/\/[^\n\r]* { }
+
+\/\* { BEGIN COMMENT; }
+
+<COMMENT>.*"*/" { BEGIN 0; }
+<COMMENT>[^\n\r] { }
+<COMMENT>[\n\r] { line_number++; }
 
 
 int { return TK_PR_INT; }
@@ -42,12 +49,12 @@ false { return TK_LIT_FALSE; }
     symbol = new_comp_grammar_symbol();
     comp_grammar_symbol_set(symbol,T,line_number,NULL);
 
-    //symbol_table_append(identifier,symbol);
+    symbol_table_append(identifier,symbol);
 
     return TK_LIT_CHAR;
 }
 
-\"[^\"\n\r]+\" {
+\"[^\"\n\r]*\" {
     identifier = malloc(yyleng);
     strncpy(identifier,&yytext[1],yyleng-2);     
     
@@ -55,18 +62,11 @@ false { return TK_LIT_FALSE; }
     symbol = new_comp_grammar_symbol();
     comp_grammar_symbol_set(symbol,T,line_number,NULL);
 
-    //symbol_table_append(identifier,symbol);
+    symbol_table_append(identifier,symbol);
 
     return TK_LIT_STRING;
 }
 
-\/\/[^\n\r]* { }
-
-.*\/\* { BEGIN COMMENT; }
-
-<COMMENT>.*\*\/ { BEGIN 0; }
-<COMMENT>[\n\r] { line_number++; }
-<COMMENT>[^\n\r]* { }
 
 ([a-z]|[A-Z]|_)+([a-z]|[A-Z]|_|[0-9])* {
     identifier = malloc(yyleng);
@@ -76,7 +76,7 @@ false { return TK_LIT_FALSE; }
     symbol = new_comp_grammar_symbol();
     comp_grammar_symbol_set(symbol,T,line_number,NULL);
 
-    //symbol_table_append(identifier,symbol);
+    symbol_table_append(identifier,symbol);
     
     return TK_IDENTIFICADOR;
 }
