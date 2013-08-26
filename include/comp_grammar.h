@@ -49,7 +49,7 @@ void comp_grammar_symbol_print(comp_grammar_symbol_t *grammar_symbol);
 /**
  * append a symbol to the symbol_table
  */
-void yy_symbol_table_append(char *identifier, comp_grammar_symbol_t *symbol);
+void symbol_table_append(char *identifier, comp_grammar_symbol_t *symbol);
 
 /**
  * initialize the symbol_table
@@ -59,7 +59,7 @@ void symbol_table_init();
 /**
  * print the symbol_table
  */
-void yy_symbol_table_print();
+void symbol_table_print();
 
 
 #endif /* COMP_GRAMMAR_H */

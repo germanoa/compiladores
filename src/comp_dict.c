@@ -29,7 +29,7 @@ void comp_dict_delete(comp_dict_t *dict) {
         } while(temp != dict);
     }
     free(dict);
-    dict = NULL; /* http://stackoverflow.com/questions/1025589/setting-variable-to-null-after-free */
+    dict = NULL;
 }
 
 void comp_dict_append(comp_dict_t *dict, comp_dict_t *new_node) {

@@ -86,6 +86,11 @@ void comp_list_concat(comp_list_t *list1, comp_list_t *list2) {
     list2->prev = temp_list1_prev;
 }
 
+void comp_list_set_item(comp_list_t *list, void *item) {
+    //malloc not here because we dont know item size (void)
+    list->item = item;
+}
+
 void comp_list_print(comp_list_t *list) {
     comp_list_t *temp;
     temp = list;

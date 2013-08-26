@@ -46,6 +46,10 @@ void comp_list_remove(comp_list_t *list, comp_list_t *node_to_remove);
  */
 void comp_list_concat(comp_list_t *list1, comp_list_t *list2);
 /*
+ * set item
+ */
+void comp_list_set_item(comp_list_t *list, void *item);
+/*
  * print list items
  */
 void comp_list_print(comp_list_t *list) ;
