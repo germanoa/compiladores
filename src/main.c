@@ -25,7 +25,7 @@ int main (int argc, char **argv)
         //printf ("token <%d> at line %d: %s\n", token, getLineNumber(),getLastTokenIdentifier());
         printf ("token <%d> at %d\n", token, getLineNumber());
     }
-    //symbol_table_print();
+    symbol_table_print();
 	
     return 0;
 }

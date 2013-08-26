@@ -4,7 +4,7 @@
 
 static inline void __comp_graph_init(comp_graph_t *graph) {
 	graph->value = NULL; 
-	graph->edges = NULL; 
+	graph->edges = new_comp_list(); 
     graph->prev = graph;
     graph->next = graph;
 }
@@ -135,6 +135,11 @@ int comp_graph_edge_set(comp_graph_edge_t *graph_edge, comp_graph_t *src_vertex,
     graph_edge->src_vertex = src_vertex;
     graph_edge->dst_vertex = malloc(sizeof(comp_graph_edge_t));
     graph_edge->dst_vertex = dst_vertex;
+    comp_list_t *e;
+    e = new_comp_list();
+    comp_list_set_item(e, (void *)graph_edge);
+    comp_list_append(src_vertex->edges,e);
+    comp_list_append(dst_vertex->edges,e);
     return ret;
 }
 
