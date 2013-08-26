@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "tokens.h"
+#include "parser.h"
 
 extern char *yytext;
 int getLineNumber (void)

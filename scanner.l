@@ -1,11 +1,11 @@
 %{
 #include <string.h>
-#include "tokens.h"
 #include "comp_dict.h"
 #include "comp_grammar.h"
+#include "parser.h"
+
 int line_number = 1;
 char *identifier;
-
 %}
 
 %x COMMENT
