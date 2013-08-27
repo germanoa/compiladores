@@ -16,15 +16,18 @@ ADD_EXECUTABLE(main
   src/comp_tree.c
   src/comp_graph.c
   src/comp_grammar.c
+  src/hash_table.c
 )
 ADD_EXECUTABLE(test
   ${FLEX_scanner_OUTPUTS}
+  ${BISON_parser_OUTPUTS}
   src/tests/test.c
   src/comp_dict.c
   src/comp_list.c
   src/comp_tree.c
   src/comp_graph.c
   src/comp_grammar.c
+  src/hash_table.c
 )
 
 TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})

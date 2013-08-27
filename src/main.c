@@ -25,7 +25,7 @@ int main (int argc, char **argv)
 
   if(!(yyin = fopen(argv[1], "r")))
   {
-    fprintf(sterr, "Cannot open file\n");
+    fprintf(stderr, "Cannot open file\n");
     exit(1);
   }
 
