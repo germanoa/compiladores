@@ -3,11 +3,7 @@
 
    Arquivo principal do analisador sintático.
 */
-#include <stdio.h>
-#include "comp_dict.h"
-#include "comp_list.h"
-#include "comp_tree.h"
-#include "comp_graph.h"
+#include "main.h"
 
 void yyerror (char const *mensagem)
 {
