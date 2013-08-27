@@ -3,21 +3,22 @@
 
 #include "comp_dict.h"
 
-comp_dict_t *symbol_table;
+#define IKS_SIMBOLO_INDEFINIDO 0
+#define IKS_SIMBOLO_LITERAL_INT 1
+#define IKS_SIMBOLO_LITERAL_FLOAT 2
+#define IKS_SIMBOLO_LITERAL_CHAR 3
+#define IKS_SIMBOLO_LITERAL_STRING 4
+#define IKS_SIMBOLO_LITERAL_BOOL 5
+#define IKS_SIMBOLO_IDENTIFICADOR 6
 
-/**
- * Symbol type enum
- */
-typedef enum {
-    T, NT, ND //! T -> Terminal; NT -> Not Terminal; ND -> Not Defined
-} symbol_type;
+comp_dict_t *symbol_table;
 
 /**
  * Symbol struct
  */
 typedef struct comp_grammar_symbol_t comp_grammar_symbol_t;
 struct comp_grammar_symbol_t {
-    symbol_type type;
+    int type;
     int code_line_number;
     void *value;    
 };
@@ -38,7 +39,7 @@ void comp_grammar_symbol_delete(comp_grammar_symbol_t *grammar_symbol);
 /**
  * set grammar_symbol
  */
-void comp_grammar_symbol_set(comp_grammar_symbol_t *grammar_symbol, symbol_type type, int code_line_number, void *value);
+void comp_grammar_symbol_set(comp_grammar_symbol_t *grammar_symbol, int type, int code_line_number, void *value);
 
 /**
  * print grammar_symbol

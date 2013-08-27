@@ -2,4 +2,17 @@
 2. verificar porque doxygen nao estah gerando doc para as funcoes
 3. tratamento de erros (nos mallocs e outros)
 5. transformar dicionario em tabela hash
-6. distrinchar etapa2 em novos todos.
+6. analisador sintatico
+    http://www.gnu.org/software/bison/manual/bison.html#Grammar-File
+7. relatorio de erros sintaticos
+    http://www.gnu.org/software/bison/manual/bison.html#Locations
+8. enriquecimento da tabela de simbolos
+
+
+duvidas
+1. "e o nó deve ser associado ao token retornado através da atribuição
+para yyval.symbol". Me parece q yyval.symbol deve ser um ponteiro para um simbolo
+Porem, qual simbolo? Se for o ultimo, vale apenas para aquela rodada?
+
+2. 
+

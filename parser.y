@@ -1,6 +1,16 @@
+/*
+PROLOGUE
+http://www.gnu.org/software/bison/manual/bison.html#Prologue
+*/
+
 %{
 #include <stdio.h>
+#include "comp_grammar.h" /* symbol_table is there.*/
 %}
+
+/*
+DECLARATIONS
+*/
 
 /* Declaração dos tokens da gramática da Linguagem K */
 %token TK_PR_INT
@@ -32,8 +42,27 @@
 %token TOKEN_ERRO
 
 %%
- /* Regras (e ações) da gramática da Linguagem K */
 
+/*
+GRAMMAR RULES
+http://www.gnu.org/software/bison/manual/bison.html#Rules
+*/
+
+
+/* declaracao de variaveis 
+decl:
+      TK_PR_INT ':' TK_IDENTIFICADOR  { $1 $2; }
+    | TK_PR_FLOAT ':' TK_IDENTIFICADOR  { $1 $2; }
+    | TK_PR_BOOL ':' TK_IDENTIFICADOR  { $1 $2; }
+    | TK_PR_CHAR ':' TK_IDENTIFICADOR  { $1 $2; }
+    | TK_PR_STRING ':' TK_IDENTIFICADOR  { $1 $2; }
+    | TK_PR_INT ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']'{ $1 $2[$3]; }
+    | TK_PR_FLOAT ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']'{ $1 $2[$3]; }
+    | TK_PR_BOOL ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']'{ $1 $2[$3]; }
+    | TK_PR_CHAR ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']'{ $1 $2[$3]; }
+    | TK_PR_STRING ':' TK_IDENTIFICADOR '[' TK_LIT_INT ']'{ $1 $2[$3]; }
+*/
 s:
 
 %%
+

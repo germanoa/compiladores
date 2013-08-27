@@ -66,5 +66,6 @@ int main (int argc, char **argv)
     default: printf ("<Invalid Token with code %d>\n", token); return 1; break;
     }
   }
+    symbol_table_print();
   return 0;
 }

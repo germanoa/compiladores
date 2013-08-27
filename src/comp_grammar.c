@@ -4,7 +4,7 @@
 #include "comp_dict.h"
 
 static inline void __comp_grammar_symbol_init(comp_grammar_symbol_t *grammar_symbol) {
-    grammar_symbol->type = ND;
+    grammar_symbol->type = IKS_SIMBOLO_INDEFINIDO;
     grammar_symbol->code_line_number = 0;
     grammar_symbol->value = NULL;
 }
@@ -23,7 +23,7 @@ void comp_grammar_symbol_delete(comp_grammar_symbol_t *grammar_symbol) {
     grammar_symbol = NULL;
 }
 
-void comp_grammar_symbol_set(comp_grammar_symbol_t *grammar_symbol, symbol_type type, int code_line_number, void *value) {
+void comp_grammar_symbol_set(comp_grammar_symbol_t *grammar_symbol, int type, int code_line_number, void *value) {
     grammar_symbol->type = type;
     grammar_symbol->code_line_number = code_line_number;
     grammar_symbol->value = value;
