@@ -14,5 +14,6 @@ duvidas
 para yyval.symbol". Me parece q yyval.symbol deve ser um ponteiro para um simbolo
 Porem, qual simbolo? Se for o ultimo, vale apenas para aquela rodada?
 
-2. 
+2...
+ 
 
