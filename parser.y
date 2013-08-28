@@ -41,11 +41,12 @@ DECLARATIONS
 %token TK_LIT_TRUE	283
 %token TK_LIT_CHAR	284	
 %token TK_LIT_STRING	285
+
 %token TK_IDENTIFICADOR 286
 
 %token TOKEN_ERRO	290
 
-%start program
+%start prog
 
 %%
 
@@ -55,9 +56,9 @@ http://www.gnu.org/software/bison/manual/bison.html#Rules
 */
 
 /* 2 */
-program:
-	  program global.decl ';'
-	| program func
+prog:
+	  prog global.decl ';'
+	| prog func
 	| /* empty */
 	;
 
@@ -128,33 +129,33 @@ command:
         | TK_IDENTIFICADOR '[' expr ']' '=' expr
 	| TK_PR_OUTPUT output
         | TK_PR_INPUT TK_IDENTIFICADOR
-        | TK_PR_RETURN expression 
+        | TK_PR_RETURN expr 
 	;
 
 output: 
-	expression
+	expr
 	| expr ',' output
 	;
 
 /*2.5*/
-expression:
+expr:
 	TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR '[' expression ']'
+	| TK_IDENTIFICADOR '[' expr ']'
 	| TK_IDENTIFICADOR '[' parameter.function ']'
-	| '(' expression ')'
-	| expression '+' expression
-	| expression '-' expression
-	| expression '*' expression
-	| expression '/' expression
-	| expression '<' expression
-	| expression '>' expression
-	| '!' expression
-	| expression TK_OC_LE expression
-	| expression TK_OC_GE expression
-	| expression TK_OC_EQ expression
-	| expression TK_OC_NE expression
-	| expression TK_OC_AND expression
-	| expression TK_OC_OR expression
+	| '(' expr ')'
+	| expr '+' expr
+	| expr '-' expr
+	| expr '*' expr
+	| expr '/' expr
+	| expr '<' expr
+	| expr '>' expr
+	| '!' expr
+	| expr TK_OC_LE expr
+	| expr TK_OC_GE expr
+	| expr TK_OC_EQ expr
+	| expr TK_OC_NE expr
+	| expr TK_OC_AND expr
+	| expr TK_OC_OR expr
 	| '*' TK_IDENTIFICADOR
 	| '&' TK_IDENTIFICADOR
 	| terminal.value
@@ -169,9 +170,9 @@ parameter.function:
 
 /* 2.6 */
 ctrl.flow:
-        | TK_PR_IF '(' expression ')' TK_PR_THEN command
-	| TK_PR_IF '(' expression ')' TK PR_THEN command TK_PR_ELSE command
-        | TK_PR_DO command TK_PR_WHILE '(' expression ')' 
+        | TK_PR_IF '(' expr ')' TK_PR_THEN command
+	| TK_PR_IF '(' expr ')' TK PR_THEN command TK_PR_ELSE command
+        | TK_PR_DO command TK_PR_WHILE '(' expr ')' 
 	;
 
 terminal.value:
@@ -182,6 +183,8 @@ terminal.value:
 	| TK_LIT_CHAR
 	| TK_LIT_STRING
 	;
+
+%%
 
 int yyerror(char* str)
 {
