@@ -105,7 +105,7 @@ param.decl.list:
 	| type ':' TK_IDENTIFICADOR
 	;
 
-decl.list: //pode ser vazia?
+decl.list: // pode ser vazia?
 	  decl ';' decl.list
 	| decl ';'
 	;
@@ -133,9 +133,15 @@ command:
     | /* empty */
 	;
 
-output: // e strings?
+output.list:
+	  output
+	| output ',' output.list
+	;
+
+output:
 	  expr
-	| expr ',' output
+	| TK_LIT_STRING
+	| TK_IDENTIFICADOR
 	;
 
 /* 2.5 */
