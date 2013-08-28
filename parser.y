@@ -141,7 +141,6 @@ output.list:
 output:
 	  expr
 	| TK_LIT_STRING
-	| TK_IDENTIFICADOR
 	;
 
 /* 2.5 */
