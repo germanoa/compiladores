@@ -37,20 +37,23 @@ void hashPrint(HASH_TABLE *hashTable)
     for(hashNode = hashTable->hashArray[i]; hashNode != NULL; hashNode = hashNode->next)
     {
       switch(hashNode->type){
-        case TK_PR_BOOL:
-          printf("\nPos:[%d] - Tipo: TK_PR_BOOL Valor: %s ", i, hashNode->content);
+        case TK_LIT_INT:
+          printf("\nPos:[%d] - Tipo: TK_LIT_INT Valor: %s ", i, hashNode->content);
           break;
-        case TK_PR_INT:
-          printf("\nPos:[%d] - Tipo: TK_PR_INT Valor: %s ", i, hashNode->content);
+        case TK_LIT_FLOAT:
+          printf("\nPos:[%d] - Tipo: TK_LIT_FLOAT Valor: %s ", i, hashNode->content);
           break;
-        case TK_PR_FLOAT:
-          printf("\nPos:[%d] - Tipo: TK_PR_FLOAT Valor: %s ", i, hashNode->content);
+        case TK_LIT_TRUE:
+          printf("\nPos:[%d] - Tipo: TK_LIT_TRUEValor: %s ", i, hashNode->content);
           break;
-        case TK_PR_CHAR:
-          printf("\nPos[%d] - Tipo: TK_PR_CHAR Valor: %s ", i, hashNode->content);
+        case TK_LIT_FALSE:
+          printf("\nPos:[%d] - Tipo: TK_LIT_FALSE Valor: %s ", i, hashNode->content);
           break;
-        case TK_PR_STRING:
-          printf("\nPos[%d] - Tipo: TK_PR_STRING Valor: %s ", i, hashNode->content);
+        case TK_LIT_CHAR:
+          printf("\nPos[%d] - Tipo: TK_LIT_CHAR Valor: %s ", i, hashNode->content);
+          break;
+        case TK_LIT_STRING:
+          printf("\nPos[%d] - Tipo: TK_LIT_STRING Valor: %s ", i, hashNode->content);
           break;
         default:
           printf("\nPos[%d] - Tipo: Indentifier: %s", i, node->content);

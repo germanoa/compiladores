@@ -6,6 +6,7 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 %{
 #include <stdio.h>
 #include "comp_grammar.h" /* symbol_table is there.*/
+#include "hash_table.h" /* hash table is there*/
 %}
 
 /*
@@ -13,8 +14,8 @@ DECLARATIONS
 */
 
 /* Declaração dos tokens da gramática da Linguagem K */
-%token TK_PR_INT
-%token TK_PR_FLOAT
+%token TK_PR_INT		
+%token TK_PR_FLOAT	
 %token TK_PR_BOOL
 %token TK_PR_CHAR
 %token TK_PR_STRING
@@ -26,12 +27,14 @@ DECLARATIONS
 %token TK_PR_INPUT
 %token TK_PR_OUTPUT
 %token TK_PR_RETURN
+
 %token TK_OC_LE
 %token TK_OC_GE
 %token TK_OC_EQ
 %token TK_OC_NE
 %token TK_OC_AND
 %token TK_OC_OR
+
 %token TK_LIT_INT
 %token TK_LIT_FLOAT
 %token TK_LIT_FALSE
@@ -39,6 +42,7 @@ DECLARATIONS
 %token TK_LIT_CHAR
 %token TK_LIT_STRING
 %token TK_IDENTIFICADOR
+
 %token TOKEN_ERRO
 
 %start program
@@ -119,7 +123,68 @@ command.seq:
 /* 2.4 */
 command:
 	  command.block
-	| 
+        | ctrl.flow
+	| TK_IDENTIFICADOR '=' expr
+        | TK_IDENTIFICADOR '[' expr ']' '=' expr
+	| TK_PR_OUTPUT output
+        | TK_PR_INPUT TK_IDENTIFICADOR
+        | TK_PR_RETURN expression 
 	;
 
-%%
+output: 
+	expression
+	| expr ',' output
+	;
+
+/*2.5*/
+expression:
+	TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR '[' expression ']'
+	| TK_IDENTIFICADOR '[' parameter.function ']'
+	| '(' expression ')'
+	| expression '+' expression
+	| expression '-' expression
+	| expression '*' expression
+	| expression '/' expression
+	| expression '<' expression
+	| expression '>' expression
+	| expression TK_OC_LE expression
+	| expression TK_OC_GE expression
+	| expression TK_OC_EQ expression
+	| expression TK_OC_NE expression
+	| expression TK_OC_AND expression
+	| expression TK_OC_OR expression
+	| '*' TK_IDENTIFICADOR
+	| '&' TK_IDENTIFICADOR
+	| terminal.value
+	;
+	
+parameter.function:
+	TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR ',' paremeter.function
+	| terminal.value
+	| terminal.value ',' parameter.function
+	;
+
+/* 2.6 */
+ctrl.flow:
+        | TK_PR_IF '(' expression ')' TK_PR_THEN command
+	| TK_PR_IF '(' expression ')' TK PR_THEN command TK_PR_ELSE command
+        | TK_PR_DO command TK_PR_WHILE '(' expression ')' 
+	;
+
+terminal.value:
+	TK_LIT_INT
+	| TK_LIT_FLOAT
+	| TK_LIT_FALSE
+	| TK_LIT_TRUE
+	| TK_LIT_CHAR
+	| TK_LIT_STRING
+	;
+
+int yyerror(char* str)
+{
+	fflush(stderr);
+	fprintf(stderr, "ERRO: \"%s\"\t Linha: %d\n", str, getLineNumber());
+	exit(3);
+}	
