@@ -14,36 +14,36 @@ DECLARATIONS
 */
 
 /* Declaração dos tokens da gramática da Linguagem K */
-%token TK_PR_INT		
-%token TK_PR_FLOAT	
-%token TK_PR_BOOL
-%token TK_PR_CHAR
-%token TK_PR_STRING
-%token TK_PR_IF
-%token TK_PR_THEN
-%token TK_PR_ELSE
-%token TK_PR_WHILE
-%token TK_PR_DO
-%token TK_PR_INPUT
-%token TK_PR_OUTPUT
-%token TK_PR_RETURN
+%token TK_PR_INT	256		
+%token TK_PR_FLOAT	257
+%token TK_PR_BOOL	258
+%token TK_PR_CHAR	259
+%token TK_PR_STRING	260
+%token TK_PR_IF		261
+%token TK_PR_THEN	262
+%token TK_PR_ELSE	263
+%token TK_PR_WHILE	264
+%token TK_PR_DO		265
+%token TK_PR_INPUT	267
+%token TK_PR_OUTPUT	268
+%token TK_PR_RETURN	269
 
-%token TK_OC_LE
-%token TK_OC_GE
-%token TK_OC_EQ
-%token TK_OC_NE
-%token TK_OC_AND
-%token TK_OC_OR
+%token TK_OC_LE		270
+%token TK_OC_GE		271
+%token TK_OC_EQ		272	
+%token TK_OC_NE		273
+%token TK_OC_AND	274
+%token TK_OC_OR		275
 
-%token TK_LIT_INT
-%token TK_LIT_FLOAT
-%token TK_LIT_FALSE
-%token TK_LIT_TRUE
-%token TK_LIT_CHAR
-%token TK_LIT_STRING
-%token TK_IDENTIFICADOR
+%token TK_LIT_INT	280
+%token TK_LIT_FLOAT	281
+%token TK_LIT_FALSE	282
+%token TK_LIT_TRUE	283
+%token TK_LIT_CHAR	284	
+%token TK_LIT_STRING	285
+%token TK_IDENTIFICADOR 286
 
-%token TOKEN_ERRO
+%token TOKEN_ERRO	290
 
 %start program
 
@@ -148,6 +148,7 @@ expression:
 	| expression '/' expression
 	| expression '<' expression
 	| expression '>' expression
+	| '!' expression
 	| expression TK_OC_LE expression
 	| expression TK_OC_GE expression
 	| expression TK_OC_EQ expression
