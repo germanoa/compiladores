@@ -12,6 +12,7 @@
 
 int main (int argc, char **argv)
 {
+  symbol_table_init();
   int resultado = yyparse();
   return resultado;
 }
