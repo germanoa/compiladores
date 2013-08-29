@@ -11,6 +11,9 @@
 #define IKS_SIMBOLO_LITERAL_BOOL 5
 #define IKS_SIMBOLO_IDENTIFICADOR 6
 
+#define RS_SUCESSO 0
+#define RS_ERRO 1
+
 comp_dict_t *symbol_table;
 
 /**

@@ -5,8 +5,9 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 
 %{
 #include <stdio.h>
+#include <stdlib.h>
 #include "comp_grammar.h" /* symbol_table is there.*/
-#include "hash_table.h" /* hash table is there*/
+//#include "hash_table.h" /* hash table is there*/
 %}
 
 /*
@@ -57,23 +58,23 @@ http://www.gnu.org/software/bison/manual/bison.html#Rules
 
 /* 2 */
 prog:
-	  prog global.decl ';'
+	  prog global.decl
 	| prog func
 	| /* empty */
 	;
 
 /* 2.1 */
 global.decl:
-	  decl
-	| array.decl
+	  decl ';'
+	| array.decl ';'
 	;
 
 array.decl:
-	  decl '[' TK_LIT_INT ']'  //{ $1 $2[$3]; }
+	  decl '[' TK_LIT_INT ']' //{ $1 $2[$3]; }
 	;
 
 decl:
-      type ':' TK_IDENTIFICADOR //{ $1 $2; }
+      type ':' TK_IDENTIFICADOR //{ $1 $2 = 0; } 
     ;
 
 /*
@@ -101,13 +102,13 @@ func.param.decl.list:
 	;
 
 param.decl.list:
-	  type ':' TK_IDENTIFICADOR ',' param.decl.list
-	| type ':' TK_IDENTIFICADOR
+	 decl ',' param.decl.list
+	| decl
 	;
 
 decl.list: // pode ser vazia?
 	  decl ';' decl.list
-	| decl ';'
+    | /* empty */
 	;
 
 /* 2.3 */
@@ -127,7 +128,7 @@ command:
     | ctrl.flow
 	| TK_IDENTIFICADOR '=' expr
     | TK_IDENTIFICADOR '[' expr ']' '=' expr
-	| TK_PR_OUTPUT output
+	| TK_PR_OUTPUT output.list
     | TK_PR_INPUT TK_IDENTIFICADOR
     | TK_PR_RETURN expr 
     | /* empty */
@@ -182,22 +183,22 @@ func.param.list:
 
 param.list:
 	  expr
-	| expr ',' paremeter.function
+	| expr ',' param.list
 	;
 
 /* 2.6 */
 ctrl.flow:
       TK_PR_IF '(' expr ')' TK_PR_THEN command
-	| TK_PR_IF '(' expr ')' TK PR_THEN command TK_PR_ELSE command
+	| TK_PR_IF '(' expr ')' TK_PR_THEN command TK_PR_ELSE command
 	| TK_PR_WHILE '(' expr ')' TK_PR_DO command
     | TK_PR_DO command TK_PR_WHILE '(' expr ')' 
 	;
 
 %%
 
-int yyerror(char* str)
+void yyerror(char* str)
 {
 	fflush(stderr);
-	fprintf(stderr, "ERRO: \"%s\"\t Linha: %d\n", str, getLineNumber());
-	exit(3);
+	fprintf(stderr, "ERRO: \"%s\"\t Linha: %d\n", str, yy_line_number_get());
+	exit(RS_ERRO);
 }	
