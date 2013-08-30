@@ -102,7 +102,7 @@ func.param.decl.list:
 	;
 
 param.decl.list:
-	 decl ',' param.decl.list
+	  decl ',' param.decl.list
 	| decl
 	;
 
