@@ -1,19 +1,10 @@
 1. documentar no modo doxygen
-2. verificar porque doxygen nao estah gerando doc para as funcoes
+pedro 2. verificar porque doxygen nao estah gerando doc para as funcoes
 3. tratamento de erros (nos mallocs e outros)
 5. transformar dicionario em tabela hash
-6. analisador sintatico
-    http://www.gnu.org/software/bison/manual/bison.html#Grammar-File
-7. relatorio de erros sintaticos
-    http://www.gnu.org/software/bison/manual/bison.html#Locations
-8. enriquecimento da tabela de simbolos
-
-
-duvidas
-1. "e o nó deve ser associado ao token retornado através da atribuição
-para yyval.symbol". Me parece q yyval.symbol deve ser um ponteiro para um simbolo
-Porem, qual simbolo? Se for o ultimo, vale apenas para aquela rodada?
-
-2...
- 
-
+7. enriquecimento da tabela de simbolos, tipo via union, not cast.
+8. yyerror em main
+9. yyerror sem exit
+10. return no parser
+11. etapa1: integer nao aceitar '-'
+12. yylval

@@ -135,13 +135,8 @@ command:
 	;
 
 output.list:
-	  output
-	| output ',' output.list
-	;
-
-output:
 	  expr
-	| TK_LIT_STRING
+	| expr ',' output.list
 	;
 
 /* 2.5 */
@@ -200,6 +195,6 @@ ctrl.flow:
 void yyerror(char* str)
 {
 	fflush(stderr);
-	fprintf(stderr, "ERRO: \"%s\"\t Linha: %d\n", str, yy_line_number_get());
+	fprintf(stderr, "ERRO: \"%s\"\t Linha: %d token: %s\n", str, yy_line_number_get(), yy_last_token_identifier_get());
 	exit(RS_ERRO);
 }	
