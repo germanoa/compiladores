@@ -8,6 +8,8 @@
   (passando o seu tipo - de acordo com ast.h, o pointeiro para o nó da
   AST e o seu nome). Para conectar dois nós da AST, utilize gv_connect
   e para fechar o arquivo utilize gv_close.
+
+  Atenção: não altere este arquivo
  */
 #include <stdio.h>
 #include <stdlib.h>

@@ -3,6 +3,8 @@
 
   Funções públicas do módulo gv. Verifique a implementação para
   maiores detalhes de como utilizar cada uma. 
+
+  Atenção: não altere este arquivo
 */
 #ifndef __GV_H__
 #define __GV_H__
