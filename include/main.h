@@ -11,6 +11,7 @@
 #include "comp_tree.h"
 #include "comp_graph.h"
 #include "iks_ast.h"
+#include "gv.h"
 
 /*
   Constantes a serem utilizadas como valor de retorno no caso de

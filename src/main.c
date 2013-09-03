@@ -12,7 +12,9 @@ void yyerror (char const *mensagem)
 
 int main (int argc, char **argv)
 {
+  gv_init(NULL);
   int resultado = yyparse();
+  gv_close();
   return resultado;
 }
 
