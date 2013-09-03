@@ -10,6 +10,12 @@
   e para fechar o arquivo utilize gv_close.
 
   Atenção: não altere este arquivo
+
+  Supondo que o arquivo de saída deste módulo encontra-se no arquivo
+  "saida.dot", ele pode ser visualizado da seguinte maneira:
+
+  1 - instale o pacote graphviz
+  2 - execute o comando "dot saida.dot -Tpng -o saida.png"
  */
 #include <stdio.h>
 #include <stdlib.h>
