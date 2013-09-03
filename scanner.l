@@ -58,7 +58,7 @@ input { return TK_PR_INPUT; }
 output { return TK_PR_OUTPUT; }
 return { return TK_PR_RETURN; }
 
-[0-9]+|-[0-9]+ {
+[0-9]+ {
     push_to_symbol_table(TK_LIT_INT);
     return TK_LIT_INT;
 }
