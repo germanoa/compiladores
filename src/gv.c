@@ -49,12 +49,20 @@ static inline char *__gv_description_from_type (int tipo)
   case IKS_AST_INPUT: return "input";
   case IKS_AST_OUTPUT: return "output";
   case IKS_AST_ATRIBUICAO: return "=";
+  case IKS_AST_BLOCO: return "block";
   case IKS_AST_ARIM_SOMA: return "+";
   case IKS_AST_ARIM_SUBTRACAO: return "-";
   case IKS_AST_ARIM_MULTIPLICACAO: return "*";
   case IKS_AST_ARIM_DIVISAO: return "/";
   case IKS_AST_LOGICO_E: return "&&";
   case IKS_AST_LOGICO_OU: return "||";
+  case IKS_AST_LOGICO_COMP_DIF: return "!=";
+  case IKS_AST_LOGICO_COMP_IGUAL: return "==";
+  case IKS_AST_LOGICO_COMP_LE: return "<=";
+  case IKS_AST_LOGICO_COMP_GE: return ">=";
+  case IKS_AST_LOGICO_COMP_L: return "<";
+  case IKS_AST_LOGICO_COMP_G: return ">";
+  case IKS_AST_LOGICO_COMP_NEGACAO: return "!";
 
   default:
     fprintf (stderr, "%s: tipo provided is invalid here\n", __FUNCTION__);
@@ -150,12 +158,20 @@ void gv_declare (const int tipo, const void *pointer, char *name)
   case IKS_AST_INPUT:
   case IKS_AST_OUTPUT:
   case IKS_AST_ATRIBUICAO:
+  case IKS_AST_BLOCO:
   case IKS_AST_ARIM_SOMA:
   case IKS_AST_ARIM_SUBTRACAO:
   case IKS_AST_ARIM_MULTIPLICACAO:
   case IKS_AST_ARIM_DIVISAO:
   case IKS_AST_LOGICO_E:
   case IKS_AST_LOGICO_OU:
+  case IKS_AST_LOGICO_COMP_DIF:
+  case IKS_AST_LOGICO_COMP_IGUAL:
+  case IKS_AST_LOGICO_COMP_LE:
+  case IKS_AST_LOGICO_COMP_GE:
+  case IKS_AST_LOGICO_COMP_L:
+  case IKS_AST_LOGICO_COMP_G:
+  case IKS_AST_LOGICO_COMP_NEGACAO:
     if (name){
       fprintf (stderr, "%s: name should be NULL\n", __FUNCTION__);
       abort();
