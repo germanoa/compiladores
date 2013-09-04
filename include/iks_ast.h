@@ -13,20 +13,21 @@
 #define IKS_AST_INPUT                5
 #define IKS_AST_OUTPUT               6
 #define IKS_AST_ATRIBUICAO           7
-#define IKS_AST_IDENTIFICADOR        8
-#define IKS_AST_LITERAL              9
-#define IKS_AST_ARIM_SOMA           10
-#define IKS_AST_ARIM_SUBTRACAO      11
-#define IKS_AST_ARIM_MULTIPLICACAO  12
-#define IKS_AST_ARIM_DIVISAO        13
-#define IKS_AST_ARIM_INVERSAO       14 // - (operador unário -)
-#define IKS_AST_LOGICO_E            15 // &&
-#define IKS_AST_LOGICO_OU           16 // ||
-#define IKS_AST_LOGICO_COMP_DIF     17 // !=
-#define IKS_AST_LOGICO_COMP_IGUAL   18 // ==
-#define IKS_AST_LOGICO_COMP_LE      19 // <=
-#define IKS_AST_LOGICO_COMP_GE      20 // >=
-#define IKS_AST_LOGICO_COMP_L       21 // <
-#define IKS_AST_LOGICO_COMP_G       22 // >
-#define IKS_AST_LOGICO_COMP_NEGACAO 23 // ! 
+#define IKS_AST_BLOCO                8
+#define IKS_AST_IDENTIFICADOR        9
+#define IKS_AST_LITERAL             10
+#define IKS_AST_ARIM_SOMA           11
+#define IKS_AST_ARIM_SUBTRACAO      12
+#define IKS_AST_ARIM_MULTIPLICACAO  13
+#define IKS_AST_ARIM_DIVISAO        14
+#define IKS_AST_ARIM_INVERSAO       15 // - (operador unário -)
+#define IKS_AST_LOGICO_E            16 // &&
+#define IKS_AST_LOGICO_OU           17 // ||
+#define IKS_AST_LOGICO_COMP_DIF     18 // !=
+#define IKS_AST_LOGICO_COMP_IGUAL   19 // ==
+#define IKS_AST_LOGICO_COMP_LE      20 // <=
+#define IKS_AST_LOGICO_COMP_GE      21 // >=
+#define IKS_AST_LOGICO_COMP_L       22 // <
+#define IKS_AST_LOGICO_COMP_G       23 // >
+#define IKS_AST_LOGICO_COMP_NEGACAO 24 // ! 
 #endif
