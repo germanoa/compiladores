@@ -13,22 +13,24 @@
 #define IKS_AST_INPUT                5
 #define IKS_AST_OUTPUT               6
 #define IKS_AST_ATRIBUICAO           7
-#define IKS_AST_BLOCO                8
-#define IKS_AST_IDENTIFICADOR        9
-#define IKS_AST_LITERAL             10
-#define IKS_AST_ARIM_SOMA           11
-#define IKS_AST_ARIM_SUBTRACAO      12
-#define IKS_AST_ARIM_MULTIPLICACAO  13
-#define IKS_AST_ARIM_DIVISAO        14
-#define IKS_AST_ARIM_INVERSAO       15 // - (operador unário -)
-#define IKS_AST_LOGICO_E            16 // &&
-#define IKS_AST_LOGICO_OU           17 // ||
-#define IKS_AST_LOGICO_COMP_DIF     18 // !=
-#define IKS_AST_LOGICO_COMP_IGUAL   19 // ==
-#define IKS_AST_LOGICO_COMP_LE      20 // <=
-#define IKS_AST_LOGICO_COMP_GE      21 // >=
-#define IKS_AST_LOGICO_COMP_L       22 // <
-#define IKS_AST_LOGICO_COMP_G       23 // >
-#define IKS_AST_LOGICO_COMP_NEGACAO 24 // ! 
-#define IKS_AST_VETOR_INDEXADO      25 // para var[exp] quando o índice exp é acesso no vetor var
+#define IKS_AST_RETURN               8
+#define IKS_AST_BLOCO                9
+#define IKS_AST_IDENTIFICADOR       10
+#define IKS_AST_LITERAL             11
+#define IKS_AST_ARIM_SOMA           12
+#define IKS_AST_ARIM_SUBTRACAO      13
+#define IKS_AST_ARIM_MULTIPLICACAO  14
+#define IKS_AST_ARIM_DIVISAO        15
+#define IKS_AST_ARIM_INVERSAO       16 // - (operador unário -)
+#define IKS_AST_LOGICO_E            17 // &&
+#define IKS_AST_LOGICO_OU           18 // ||
+#define IKS_AST_LOGICO_COMP_DIF     19 // !=
+#define IKS_AST_LOGICO_COMP_IGUAL   20 // ==
+#define IKS_AST_LOGICO_COMP_LE      21 // <=
+#define IKS_AST_LOGICO_COMP_GE      22 // >=
+#define IKS_AST_LOGICO_COMP_L       23 // <
+#define IKS_AST_LOGICO_COMP_G       24 // >
+#define IKS_AST_LOGICO_COMP_NEGACAO 25 // !
+#define IKS_AST_VETOR_INDEXADO      26 // para var[exp] quando o índice exp é acesso no vetor var
+#define IKS_AST_CHAMADA_DE_FUNCAO   27
 #endif
