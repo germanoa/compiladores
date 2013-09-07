@@ -49,6 +49,7 @@ static inline char *__gv_description_from_type (int tipo)
   case IKS_AST_INPUT: return "input";
   case IKS_AST_OUTPUT: return "output";
   case IKS_AST_ATRIBUICAO: return "=";
+  case IKS_AST_RETURN: return "return";
   case IKS_AST_BLOCO: return "block";
   case IKS_AST_ARIM_SOMA: return "+";
   case IKS_AST_ARIM_SUBTRACAO: return "-";
@@ -63,6 +64,7 @@ static inline char *__gv_description_from_type (int tipo)
   case IKS_AST_LOGICO_COMP_L: return "<";
   case IKS_AST_LOGICO_COMP_G: return ">";
   case IKS_AST_LOGICO_COMP_NEGACAO: return "!";
+  case IKS_AST_CHAMADA_DE_FUNCAO: return "call";
 
   default:
     fprintf (stderr, "%s: tipo provided is invalid here\n", __FUNCTION__);
@@ -158,6 +160,7 @@ void gv_declare (const int tipo, const void *pointer, char *name)
   case IKS_AST_INPUT:
   case IKS_AST_OUTPUT:
   case IKS_AST_ATRIBUICAO:
+  case IKS_AST_RETURN:
   case IKS_AST_BLOCO:
   case IKS_AST_ARIM_SOMA:
   case IKS_AST_ARIM_SUBTRACAO:
@@ -172,6 +175,7 @@ void gv_declare (const int tipo, const void *pointer, char *name)
   case IKS_AST_LOGICO_COMP_L:
   case IKS_AST_LOGICO_COMP_G:
   case IKS_AST_LOGICO_COMP_NEGACAO:
+  case IKS_AST_CHAMADA_DE_FUNCAO:
     if (name){
       fprintf (stderr, "%s: name should be NULL\n", __FUNCTION__);
       abort();
