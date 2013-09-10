@@ -55,6 +55,7 @@ static inline char *__gv_description_from_type (int tipo)
   case IKS_AST_ARIM_SUBTRACAO: return "-";
   case IKS_AST_ARIM_MULTIPLICACAO: return "*";
   case IKS_AST_ARIM_DIVISAO: return "/";
+  case IKS_AST_ARIM_INVERSAO: return "-";
   case IKS_AST_LOGICO_E: return "&&";
   case IKS_AST_LOGICO_OU: return "||";
   case IKS_AST_LOGICO_COMP_DIF: return "!=";
@@ -64,6 +65,7 @@ static inline char *__gv_description_from_type (int tipo)
   case IKS_AST_LOGICO_COMP_L: return "<";
   case IKS_AST_LOGICO_COMP_G: return ">";
   case IKS_AST_LOGICO_COMP_NEGACAO: return "!";
+  case IKS_AST_VETOR_INDEXADO: return "[]";
   case IKS_AST_CHAMADA_DE_FUNCAO: return "call";
 
   default:
@@ -166,6 +168,7 @@ void gv_declare (const int tipo, const void *pointer, char *name)
   case IKS_AST_ARIM_SUBTRACAO:
   case IKS_AST_ARIM_MULTIPLICACAO:
   case IKS_AST_ARIM_DIVISAO:
+  case IKS_AST_ARIM_INVERSAO:
   case IKS_AST_LOGICO_E:
   case IKS_AST_LOGICO_OU:
   case IKS_AST_LOGICO_COMP_DIF:
@@ -175,6 +178,7 @@ void gv_declare (const int tipo, const void *pointer, char *name)
   case IKS_AST_LOGICO_COMP_L:
   case IKS_AST_LOGICO_COMP_G:
   case IKS_AST_LOGICO_COMP_NEGACAO:
+  case IKS_AST_VETOR_INDEXADO:
   case IKS_AST_CHAMADA_DE_FUNCAO:
     if (name){
       fprintf (stderr, "%s: name should be NULL\n", __FUNCTION__);
