@@ -31,6 +31,6 @@
 #define IKS_AST_LOGICO_COMP_L       23 // <
 #define IKS_AST_LOGICO_COMP_G       24 // >
 #define IKS_AST_LOGICO_COMP_NEGACAO 25 // !
-#define IKS_AST_VETOR_INDEXADO      26 // para var[exp] quando o índice exp é acesso no vetor var
+#define IKS_AST_VETOR_INDEXADO      26 // para var[exp] quando o índice exp é acessado no vetor var
 #define IKS_AST_CHAMADA_DE_FUNCAO   27
 #endif
