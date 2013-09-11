@@ -103,7 +103,7 @@ void gv_init (const char *filename)
   }else{
     fp = stderr;    
   }
-  fprintf (fp, "graph G {\n");
+  fprintf (fp, "digraph G {\n");
 }
 
 /**
@@ -209,5 +209,5 @@ void gv_connect (const void *p1, const void *p2)
   __gv_test_valid_ast_pointer (__FUNCTION__, p1);
   __gv_test_valid_ast_pointer (__FUNCTION__, p2);
 
-  fprintf(fp, "node_%p -- node_%p\n", p1, p2);
+  fprintf(fp, "node_%p -> node_%p\n", p1, p2);
 }
