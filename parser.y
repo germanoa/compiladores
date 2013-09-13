@@ -5,8 +5,9 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 
 %{
 #include <stdio.h>
+#include <stdlib.h>
 #include "comp_grammar.h" /* symbol_table is there.*/
-#include "hash_table.h" /* hash table is there*/
+//#include "hash_table.h" /* hash table is there*/
 %}
 
 /*
@@ -41,11 +42,12 @@ DECLARATIONS
 %token TK_LIT_TRUE	283
 %token TK_LIT_CHAR	284	
 %token TK_LIT_STRING	285
+
 %token TK_IDENTIFICADOR 286
 
 %token TOKEN_ERRO	290
 
-%start program
+%start prog
 
 %%
 
@@ -55,24 +57,24 @@ http://www.gnu.org/software/bison/manual/bison.html#Rules
 */
 
 /* 2 */
-program:
-	  program global.decl ';'
-	| program func
+prog:
+	  prog global.decl
+	| prog func
 	| /* empty */
 	;
 
 /* 2.1 */
 global.decl:
-	  decl
-	| array.decl
+	  decl ';'
+	| array.decl ';'
 	;
 
 array.decl:
-	  decl '[' TK_LIT_INT ']'  //{ $1 $2[$3]; }
+	  decl '[' TK_LIT_INT ']' //{ $1 $2[$3]; }
 	;
 
 decl:
-      type ':' TK_IDENTIFICADOR //{ $1 $2; }
+      type ':' TK_IDENTIFICADOR //{ $1 $2 = 0; } 
     ;
 
 /*
@@ -91,22 +93,22 @@ type:
 
 /* 2.2 */
 func:
-	  type ':' TK_IDENTIFICADOR '(' func.param.list ')' decl.list command.block
+	  type ':' TK_IDENTIFICADOR '(' func.param.decl.list ')' decl.list command.block
 	;
 
-func.param.list:
-	  param.list
+func.param.decl.list:
+	  param.decl.list
 	| /* empty */
 	;
 
-param.list:
-	  type ':' TK_IDENTIFICADOR ',' param.list
-	| type ':' TK_IDENTIFICADOR
+param.decl.list:
+	  decl ',' param.decl.list
+	| decl
 	;
 
-decl.list: //pode ser vazia?
+decl.list: // pode ser vazia?
 	  decl ';' decl.list
-	| decl ';'
+    | /* empty */
 	;
 
 /* 2.3 */
@@ -123,69 +125,78 @@ command.seq:
 /* 2.4 */
 command:
 	  command.block
-        | ctrl.flow
+    | ctrl.flow
 	| TK_IDENTIFICADOR '=' expr
-        | TK_IDENTIFICADOR '[' expr ']' '=' expr
-	| TK_PR_OUTPUT output
-        | TK_PR_INPUT TK_IDENTIFICADOR
-        | TK_PR_RETURN expression 
+    | TK_IDENTIFICADOR '[' expr ']' '=' expr
+	| TK_PR_OUTPUT output.list
+    | TK_PR_INPUT TK_IDENTIFICADOR
+    | TK_PR_RETURN expr 
+    | /* empty */
 	;
 
-output: 
-	expression
-	| expr ',' output
+output.list:
+	  expr
+	| expr ',' output.list
 	;
 
-/*2.5*/
-expression:
-	TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR '[' expression ']'
-	| TK_IDENTIFICADOR '[' parameter.function ']'
-	| '(' expression ')'
-	| expression '+' expression
-	| expression '-' expression
-	| expression '*' expression
-	| expression '/' expression
-	| expression '<' expression
-	| expression '>' expression
-	| '!' expression
-	| expression TK_OC_LE expression
-	| expression TK_OC_GE expression
-	| expression TK_OC_EQ expression
-	| expression TK_OC_NE expression
-	| expression TK_OC_AND expression
-	| expression TK_OC_OR expression
+/* 2.5 */
+expr:
+	  TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR '[' expr ']'
+	| terminal.value
+	| '(' expr ')'
+	| expr '+' expr
+	| expr '-' expr
+	| expr '*' expr
+	| expr '/' expr
+	| expr '<' expr
+	| expr '>' expr
+	| '!' expr
+	| expr TK_OC_LE expr
+	| expr TK_OC_GE expr
+	| expr TK_OC_EQ expr
+	| expr TK_OC_NE expr
+	| expr TK_OC_AND expr
+	| expr TK_OC_OR expr
 	| '*' TK_IDENTIFICADOR
 	| '&' TK_IDENTIFICADOR
-	| terminal.value
-	;
-	
-parameter.function:
-	TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR ',' paremeter.function
-	| terminal.value
-	| terminal.value ',' parameter.function
-	;
-
-/* 2.6 */
-ctrl.flow:
-        | TK_PR_IF '(' expression ')' TK_PR_THEN command
-	| TK_PR_IF '(' expression ')' TK PR_THEN command TK_PR_ELSE command
-        | TK_PR_DO command TK_PR_WHILE '(' expression ')' 
+	| TK_IDENTIFICADOR '(' func.param.list ')'
 	;
 
 terminal.value:
-	TK_LIT_INT
+	  TK_LIT_INT
+	| '-' TK_LIT_INT
 	| TK_LIT_FLOAT
+	| '-' TK_LIT_FLOAT
 	| TK_LIT_FALSE
 	| TK_LIT_TRUE
 	| TK_LIT_CHAR
 	| TK_LIT_STRING
 	;
+	
+func.param.list:
+	  param.list
+	| /* empty */
+	;
 
-int yyerror(char* str)
+param.list:
+	  expr
+	| expr ',' param.list
+	;
+
+/* 2.6 */
+ctrl.flow:
+      TK_PR_IF '(' expr ')' TK_PR_THEN command
+	| TK_PR_IF '(' expr ')' TK_PR_THEN command TK_PR_ELSE command
+	| TK_PR_WHILE '(' expr ')' TK_PR_DO command
+    | TK_PR_DO command TK_PR_WHILE '(' expr ')' 
+	;
+
+%%
+
+void yyerror(char* str)
 {
 	fflush(stderr);
-	fprintf(stderr, "ERRO: \"%s\"\t Linha: %d\n", str, getLineNumber());
-	exit(3);
+	fprintf(stderr, "ERRO: \"%s\"\t Linha: %d token: %s\n", str, yy_line_number_get(), yy_last_token_identifier_get());
+	exit(RS_ERRO);
 }	

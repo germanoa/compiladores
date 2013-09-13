@@ -9,10 +9,27 @@ char *identifier;
 
 typedef struct yyval_t yyval_t;
 struct yyval_t {
-    comp_dict_t *symbol;
+    comp_grammar_symbol_t symbol;
 };
 
 yyval_t yyval;
+
+
+void push_to_symbol_table(int type) {
+    identifier = malloc(yyleng);
+    int deslocamento=0;
+    if (type==IKS_SIMBOLO_LITERAL_CHAR || type==IKS_SIMBOLO_LITERAL_STRING) {
+        deslocamento=1; /* para eliminar '' e "" */
+    }
+    strncpy(identifier,&yytext[deslocamento],yyleng-1-deslocamento);     
+    
+    comp_grammar_symbol_t *symbol;
+    symbol = new_comp_grammar_symbol();
+    comp_grammar_symbol_set(symbol,type,line_number,NULL);
+
+    symbol_table_append(identifier,symbol);
+    yyval.symbol = *symbol;
+}
 
 %}
 
@@ -41,7 +58,7 @@ input { return TK_PR_INPUT; }
 output { return TK_PR_OUTPUT; }
 return { return TK_PR_RETURN; }
 
-[0-9]+|-[0-9]+ {
+[0-9]+ {
     push_to_symbol_table(TK_LIT_INT);
     return TK_LIT_INT;
 }
@@ -95,19 +112,3 @@ char *yy_last_token_identifier_get() {
     return identifier;
 }
 
-void push_to_symbol_table(int type) {
-    identifier = malloc(yyleng);
-    int deslocamento=0;
-    if (type==IKS_SIMBOLO_LITERAL_CHAR || type==IKS_SIMBOLO_LITERAL_STRING) {
-        deslocamento=1; /* para eliminar '' e "" */
-    }
-    strncpy(identifier,&yytext[deslocamento],yyleng-1-deslocamento);     
-    printf("vai: %s\n",identifier);
-    
-    comp_grammar_symbol_t *symbol;
-    symbol = new_comp_grammar_symbol();
-    comp_grammar_symbol_set(symbol,type,line_number,NULL);
-
-    symbol_table_append(identifier,symbol);
-    yyval.symbol = symbol;
-}

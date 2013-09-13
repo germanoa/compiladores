@@ -10,25 +10,9 @@
 #include "comp_tree.h"
 #include "comp_graph.h"
 
-void yyerror (char const *mensagem)
-{
-  fprintf (stderr, "%s\n", mensagem);
-}
-
 int main (int argc, char **argv)
 {
-  if(argc != 2)
-  {
-    fprintf(stderr, "Call with the file name... \n");
-    exit(1);
-  }
-
-  if(!(yyin = fopen(argv[1], "r")))
-  {
-    fprintf(stderr, "Cannot open file\n");
-    exit(1);
-  }
-
+  symbol_table_init();
   int resultado = yyparse();
   return resultado;
 }

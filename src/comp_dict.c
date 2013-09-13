@@ -38,6 +38,7 @@ void comp_dict_append(comp_dict_t *dict, comp_dict_t *new_node) {
        when active this, we cant find the dict by reference, just by item value */
     //node_to_append = new_comp_dict();
     //node_to_append->item = new_node->item;
+    
 
     node_to_append = new_node;
     
