@@ -11,12 +11,12 @@ extern YYSTYPE yylval;
 int line_number = 1;
 char *identifier;
 
-typedef struct yyval_t yyval_t;
-struct yyval_t {
-    comp_grammar_symbol_t symbol;
-};
-
-yyval_t yyval;
+//typedef struct yyval_t yyval_t;
+//struct yyval_t {
+//    comp_grammar_symbol_t symbol;
+//};
+//
+//yyval_t yyval;
 
 
 void push_to_symbol_table(int type) {

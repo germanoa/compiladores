@@ -63,16 +63,16 @@ DECLARATIONS
 %start prog
 
 /* declaracoes nao sao nodos da arvore? */
-//%type<nt> prog
+%type<nt> prog
 %type<nt> func
-%type<nt> command.block 
-%type<nt> command.seq 
+%type<nt> command_block 
+%type<nt> command_seq 
 %type<nt> command 
-%type<nt> ctrl.flow 
-%type<nt> output.list 
+%type<nt> ctrl_flow 
+%type<nt> output_list 
 %type<nt> expr 
-%type<nt> func.param.list
-%type<nt> param.list 
+%type<nt> func_param_list
+%type<nt> param_list 
 
 %%
 
@@ -83,26 +83,26 @@ http://www.gnu.org/software/bison/manual/bison.html#Rules
 
 /* 2 */
 prog:
-	  prog global.decl
+	  prog global_decl
 	| prog func
         {
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_PROGRAMA,NULL);
-            //prog is root, so setting, not appending
             comp_tree_set_item(ast,(void*)v);
             iks_ast_append(ast,$func);
+            $$ = ast;
         }
 	| /* empty */
 	;
 
 /* 2.1 */
-global.decl:
+global_decl:
 	  decl ';'
-	| array.decl ';'
+	| array_decl ';'
 	;
 
-array.decl:
+array_decl:
 	  decl '[' TK_LIT_INT ']'
 	;
 
@@ -111,7 +111,7 @@ decl:
     ;
 
 /*
-type.and.id:
+type_and_id:
 	  type ':' TK_IDENTIFICADOR
 	;
 */
@@ -126,78 +126,68 @@ type:
 
 /* 2.2 */
 func:
-	  type ':' TK_IDENTIFICADOR '(' func.param.decl.list ')' decl.list command.block
+	  type ':' TK_IDENTIFICADOR '(' func_param_decl_list ')' decl_list command_block
         {
-            //comp_dict_t *d;
-            //d = comp_dict_find(symbol_table,id);
-            //if (d == NULL) {
-            //    printf("putz\n");
-            //}
-            
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
-            //iks_ast_node_value_set(v,IKS_AST_FUNCAO,d->item->value);
             iks_ast_node_value_set(v,IKS_AST_FUNCAO,yylval.symbol);
-           // if (comp_list_is_empty(ast->children)) {
-           //     iks_ast_append_value(ast,v);
-           // }
-           // else {
-           //     iks_ast_append(ast->children->prev->item,v);
-           // }
+            comp_tree_set_item($func,(void*)v);
+            iks_ast_append($func,$command_block);
+            $$ = $func;
         }
 	;
 
-func.param.decl.list:
-	  param.decl.list
+func_param_decl_list:
+	  param_decl_list
 	| /* empty */
 	;
 
-param.decl.list:
-	  decl ',' param.decl.list
+param_decl_list:
+	  decl ',' param_decl_list
 	| decl
 	;
 
-decl.list: // pode ser vazia?
-	  decl ';' decl.list
+decl_list: // pode ser vazia?
+	  decl ';' decl_list
     | /* empty */
 	;
 
 /* 2.3 */
-command.block:
-	  '{' command.seq '}'
+command_block:
+	  '{' command_seq '}'
         {
             $$ = NULL;
         }
 	;
 
-command.seq:
-	  command ';' command.seq
+command_seq:
+	  command ';' command_seq
 	| command
 	| /* empty */
 	;
 
 /* 2.4 */
 command:
-	  command.block
-    | ctrl.flow
+	  command_block
+    | ctrl_flow
 	| TK_IDENTIFICADOR '=' expr { }
     | TK_IDENTIFICADOR '[' expr ']' '=' expr
-	| TK_PR_OUTPUT output.list
+	| TK_PR_OUTPUT output_list
     | TK_PR_INPUT TK_IDENTIFICADOR
     | TK_PR_RETURN expr 
     | /* empty */
 	;
 
-output.list:
+output_list:
 	  expr
-	| expr ',' output.list
+	| expr ',' output_list
 	;
 
 /* 2.5 */
 expr:
 	  TK_IDENTIFICADOR
 	| TK_IDENTIFICADOR '[' expr ']'
-	| terminal.value
+	| terminal_value
 	| '(' expr ')'
 	| expr '+' expr
 	| expr '-' expr
@@ -214,10 +204,10 @@ expr:
 	| expr TK_OC_OR expr
 	| '*' TK_IDENTIFICADOR
 	| '&' TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR '(' func.param.list ')'
+	| TK_IDENTIFICADOR '(' func_param_list ')'
 	;
 
-terminal.value:
+terminal_value:
 	  TK_LIT_INT
 	| '-' TK_LIT_INT
 	| TK_LIT_FLOAT
@@ -228,18 +218,18 @@ terminal.value:
 	| TK_LIT_STRING
 	;
 	
-func.param.list:
-	  param.list
+func_param_list:
+	  param_list
 	| /* empty */
 	;
 
-param.list:
+param_list:
 	  expr
-	| expr ',' param.list
+	| expr ',' param_list
 	;
 
 /* 2.6 */
-ctrl.flow:
+ctrl_flow:
       TK_PR_IF '(' expr ')' TK_PR_THEN command
 	| TK_PR_IF '(' expr ')' TK_PR_THEN command TK_PR_ELSE command
 	| TK_PR_WHILE '(' expr ')' TK_PR_DO command
