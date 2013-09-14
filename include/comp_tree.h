@@ -14,6 +14,9 @@ static inline __comp_tree_init(comp_tree_t *tree);
 // create a tree, alloc mem and return address
 comp_tree_t *new_comp_tree();
 
+// set tree item with void value
+void comp_tree_set_item(comp_tree_t *tree, void *item);
+
 // set tree item with string
 void comp_tree_set_string(comp_tree_t *tree, const char *string);
 
@@ -23,6 +26,9 @@ void comp_tree_depth_print_string(comp_tree_t *tree);
 // alloc mem to child tree and append to children list
 // returns 1 if successful; 0 otherwise
 int comp_tree_create_child(comp_tree_t *tree);
+
+// create child and set its item
+void comp_tree_create_child_with_item(comp_tree_t *tree, void *item);
 
 // create child and set its item with string
 void comp_tree_create_child_with_string(comp_tree_t *tree, const char *string);

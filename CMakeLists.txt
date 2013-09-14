@@ -17,6 +17,7 @@ ADD_EXECUTABLE(main
   src/comp_tree.c
   src/comp_graph.c
   src/comp_grammar.c
+  src/iks_ast.c
 )
 ADD_EXECUTABLE(test
   ${FLEX_scanner_OUTPUTS}
@@ -27,6 +28,7 @@ ADD_EXECUTABLE(test
   src/comp_tree.c
   src/comp_graph.c
   src/comp_grammar.c
+  src/iks_ast.c
 )
 
 TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})

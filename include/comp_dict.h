@@ -65,6 +65,11 @@ void comp_dict_set(comp_dict_t *dict, comp_dict_item_t *item);
 void comp_dict_print(comp_dict_t *dict);
 
 /**
+ * find dict item by key
+ */
+comp_dict_t* comp_dict_find(comp_dict_t *dict, char *key);
+
+/**
  * initialize dict_item
  */
 static inline void __comp_dict_item_init(comp_dict_item_t *dict_item);

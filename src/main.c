@@ -9,11 +9,14 @@
 #include "comp_list.h"
 #include "comp_tree.h"
 #include "comp_graph.h"
+#include "comp_grammar.h"
+#include "iks_ast.h"
 #include "main.h"
 
 int main (int argc, char **argv)
 {
   symbol_table_init();
+  iks_ast_init();
   gv_init(NULL);
   int resultado = yyparse();
   gv_close();

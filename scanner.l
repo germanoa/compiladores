@@ -4,6 +4,8 @@
 #include "comp_grammar.h"
 #include "parser.h"
 
+extern YYSTYPE yylval;
+
 int line_number = 1;
 char *identifier;
 
@@ -32,6 +34,7 @@ void push_to_symbol_table(int type) {
 }
 
 %}
+
 
 %x COMMENT
 %%

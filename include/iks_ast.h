@@ -33,4 +33,57 @@
 #define IKS_AST_LOGICO_COMP_NEGACAO 25 // !
 #define IKS_AST_VETOR_INDEXADO      26 // para var[exp] quando o índice exp é acessado no vetor var
 #define IKS_AST_CHAMADA_DE_FUNCAO   27
+#define IKS_AST_INDEFINIDO          -1
+
+#include "comp_tree.h"
+#include "comp_grammar.h"
+
+comp_tree_t *ast;
+
+/**
+ * AST node struct
+ */
+typedef struct iks_ast_node_value_t iks_ast_node_value_t;
+struct iks_ast_node_value_t {
+    int type;
+    comp_grammar_symbol_t *symbol;
+};
+
+/**
+ * initialize ast_node
+ */
+static inline void __iks_ast_node_value_init(iks_ast_node_value_t *iks_ast_node_value);
+/**
+ * create a iks_ast_node_value, alloc mem and return address
+ */
+iks_ast_node_value_t *new_iks_ast_node_value();
+/**
+ * free address memory used by iks_ast_node_value
+ */
+void iks_ast_node_value_delete(iks_ast_node_value_t *iks_ast_node_value);
+
+/**
+ * set iks_ast_node_value
+ */
+void iks_ast_node_value_set(iks_ast_node_value_t *iks_ast_node_value, int type, comp_grammar_symbol_t *symbol);
+
+/**
+ * print iks_ast_node_value
+ */
+void iks_ast_node_value_print(iks_ast_node_value_t *iks_ast_node_value);
+
+
+/**
+ * append a ast_node_value as child(create one) to another ast_node
+ */
+void iks_ast_append(comp_tree_t *parent, iks_ast_node_value_t *child_value);
+
+/**
+ * initialize the ast
+ */
+void iks_ast_init();
+
+
+
+
 #endif

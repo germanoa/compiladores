@@ -88,6 +88,18 @@ void comp_dict_set(comp_dict_t *dict, comp_dict_item_t *item) {
     dict->item = item;
 }
 
+comp_dict_t* comp_dict_find(comp_dict_t *dict, char *key) {
+    comp_dict_t *it = dict;
+    while(it != dict->prev) {
+        if (strcmp(it->item->key,key)) {
+            return it;
+        }
+        it = it->next;
+    }
+    return NULL; //not found
+}
+
+
 void comp_dict_print(comp_dict_t *dict) {
     comp_dict_t *temp;
     temp = dict;

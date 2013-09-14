@@ -23,6 +23,14 @@ comp_tree_t *new_comp_tree() {
     return tree;
 }
 
+void comp_tree_set_item(comp_tree_t *tree, void *item) {
+	if(tree == NULL) {
+		fprintf(stderr, "ERROR: Cannot set item for null tree.\n");
+		return;
+	}
+	tree->item = item;
+}
+
 void comp_tree_set_string(comp_tree_t *tree, const char *string) {
 	if(tree == NULL) {
 		fprintf(stderr, "ERROR: Cannot set string for null tree.\n");
@@ -99,6 +107,11 @@ int comp_tree_create_child(comp_tree_t *tree) {
 	}
 	
 	return 1;
+}
+
+void comp_tree_create_child_with_item(comp_tree_t *tree, void *item) {
+	if(comp_tree_create_child(tree))
+		comp_tree_set_item(tree->children->prev->item, item);
 }
 
 void comp_tree_create_child_with_string(comp_tree_t *tree, const char *string) {

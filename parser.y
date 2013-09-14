@@ -7,7 +7,30 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 #include <stdio.h>
 #include <stdlib.h>
 #include "comp_grammar.h" /* symbol_table is there.*/
+#include "iks_ast.h" /* ast is there.*/
 //#include "hash_table.h" /* hash table is there*/
+
+void ast_prog() {
+    iks_ast_node_value_t *v;
+    v = new_iks_ast_node_value();
+    iks_ast_node_value_set(v,IKS_AST_PROGRAMA,NULL);
+    //prog is root, so setting, not appending
+    comp_tree_set_item(ast,(void*)v);
+}
+
+void ast_func(char *id) {
+    comp_dict_t *d;
+    d = comp_dict_find(symbol_table,id);
+    if (d == NULL) {
+        printf("putz\n");
+    }
+    
+    iks_ast_node_value_t *v;
+    v = new_iks_ast_node_value();
+    iks_ast_node_value_set(v,IKS_AST_FUNCAO,d->item->value);
+    iks_ast_append(ast,v);
+}
+
 %}
 
 /*
@@ -60,7 +83,7 @@ http://www.gnu.org/software/bison/manual/bison.html#Rules
 prog:
 	  prog global.decl
 	| prog func
-	| /* empty */
+	| /* empty */ { ast_prog(); }
 	;
 
 /* 2.1 */
@@ -70,11 +93,11 @@ global.decl:
 	;
 
 array.decl:
-	  decl '[' TK_LIT_INT ']' //{ $1 $2[$3]; }
+	  decl '[' TK_LIT_INT ']'
 	;
 
 decl:
-      type ':' TK_IDENTIFICADOR //{ $1 $2 = 0; } 
+      type ':' TK_IDENTIFICADOR // 
     ;
 
 /*
@@ -94,6 +117,7 @@ type:
 /* 2.2 */
 func:
 	  type ':' TK_IDENTIFICADOR '(' func.param.decl.list ')' decl.list command.block
+        { ast_func($2); }
 	;
 
 func.param.decl.list:
