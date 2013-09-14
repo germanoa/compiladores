@@ -19,17 +19,16 @@ ADD_EXECUTABLE(main
   src/comp_grammar.c
   src/iks_ast.c
 )
-ADD_EXECUTABLE(test
-  ${FLEX_scanner_OUTPUTS}
-  ${BISON_parser_OUTPUTS}
-  src/tests/test.c
-  src/comp_dict.c
-  src/comp_list.c
-  src/comp_tree.c
-  src/comp_graph.c
-  src/comp_grammar.c
-  src/iks_ast.c
-)
-
 TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})
-TARGET_LINK_LIBRARIES(test ${FLEX_LIBRARIES})
+#ADD_EXECUTABLE(test
+#  ${FLEX_scanner_OUTPUTS}
+#  ${BISON_parser_OUTPUTS}
+#  src/tests/test.c
+#  src/comp_dict.c
+#  src/comp_list.c
+#  src/comp_tree.c
+#  src/comp_graph.c
+#  src/comp_grammar.c
+#  src/iks_ast.c
+#)
+#TARGET_LINK_LIBRARIES(test ${FLEX_LIBRARIES})

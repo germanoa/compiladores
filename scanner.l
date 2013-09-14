@@ -1,8 +1,10 @@
 %{
 #include <string.h>
 #include "comp_dict.h"
+#include "comp_tree.h"
 #include "comp_grammar.h"
 #include "parser.h"
+
 
 extern YYSTYPE yylval;
 
@@ -30,7 +32,7 @@ void push_to_symbol_table(int type) {
     comp_grammar_symbol_set(symbol,type,line_number,NULL);
 
     symbol_table_append(identifier,symbol);
-    yyval.symbol = *symbol;
+    yylval.symbol = symbol;
 }
 
 %}
@@ -62,6 +64,7 @@ output { return TK_PR_OUTPUT; }
 return { return TK_PR_RETURN; }
 
 [0-9]+ {
+    yylval.lit_int = atoi(yytext);
     push_to_symbol_table(TK_LIT_INT);
     return TK_LIT_INT;
 }

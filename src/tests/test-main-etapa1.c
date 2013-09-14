@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "parser.h"
+#include "comp_grammar.h"
 
 extern char *yytext;
 int getLineNumber (void)

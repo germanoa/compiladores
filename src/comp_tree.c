@@ -71,6 +71,20 @@ void comp_tree_depth_print_string(comp_tree_t *tree) {
 	printf("\n");
 }	
 
+void comp_tree_append(comp_tree_t *parent, comp_tree_t *child) {
+    comp_list_t *t;
+    t = new_comp_list();
+    comp_list_set_item(t, (void*) child);
+    comp_list_append(parent->children,t);
+}
+
+void comp_tree_insert(comp_tree_t *parent, comp_tree_t *child) {
+    comp_list_t *t;
+    t = new_comp_list();
+    comp_list_set_item(t, (void*) child);
+    comp_list_insert(parent->children,t);
+}
+
 int comp_tree_create_child(comp_tree_t *tree) {
 	if(tree == NULL) {
 		fprintf(stderr, "ERROR: Cannot create child for null tree.\n");

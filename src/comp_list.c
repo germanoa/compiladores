@@ -8,7 +8,7 @@ static inline void __comp_list_init(comp_list_t *list) {
     list->next = list;
 }
 
-static inline int __comp_list_is_empty(comp_list_t *list) {
+int comp_list_is_empty(comp_list_t *list) {
 	if(list == NULL)
 		return 1;
     else return list == list->next;
@@ -22,7 +22,7 @@ comp_list_t *new_comp_list() {
 }
 
 void comp_list_delete(comp_list_t *list) {
-    if (!__comp_list_is_empty) {
+    if (!comp_list_is_empty) {
         comp_list_t *temp;
         temp = list->next;
         do {

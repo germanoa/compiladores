@@ -6,30 +6,11 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include "comp_grammar.h" /* symbol_table is there.*/
-#include "iks_ast.h" /* ast is there.*/
-//#include "hash_table.h" /* hash table is there*/
-
-void ast_prog() {
-    iks_ast_node_value_t *v;
-    v = new_iks_ast_node_value();
-    iks_ast_node_value_set(v,IKS_AST_PROGRAMA,NULL);
-    //prog is root, so setting, not appending
-    comp_tree_set_item(ast,(void*)v);
-}
-
-void ast_func(char *id) {
-    comp_dict_t *d;
-    d = comp_dict_find(symbol_table,id);
-    if (d == NULL) {
-        printf("putz\n");
-    }
-    
-    iks_ast_node_value_t *v;
-    v = new_iks_ast_node_value();
-    iks_ast_node_value_set(v,IKS_AST_FUNCAO,d->item->value);
-    iks_ast_append(ast,v);
-}
+#include "comp_grammar.h"
+#include "comp_dict.h"
+#include "comp_tree.h"
+#include "iks_ast.h"
+//#include "hash_table.h"
 
 %}
 
@@ -59,18 +40,39 @@ DECLARATIONS
 %token TK_OC_AND	274
 %token TK_OC_OR		275
 
-%token TK_LIT_INT	280
-%token TK_LIT_FLOAT	281
-%token TK_LIT_FALSE	282
-%token TK_LIT_TRUE	283
-%token TK_LIT_CHAR	284	
-%token TK_LIT_STRING	285
-
-%token TK_IDENTIFICADOR 286
+%union {
+    int lit_int;
+    float lit_float;
+    int lit_bool;
+    char lit_char;
+    char* lit_string;
+    char* id;
+    comp_grammar_symbol_t *symbol;
+    comp_tree_t *nt;
+}
+%token<lit_int> TK_LIT_INT	280
+%token<lit_float> TK_LIT_FLOAT	281
+%token<lit_bool> TK_LIT_FALSE	282
+%token<lit_bool> TK_LIT_TRUE	283
+%token<lit_char> TK_LIT_CHAR	284	
+%token<lit_string> TK_LIT_STRING	285
+%token<id> TK_IDENTIFICADOR 286
 
 %token TOKEN_ERRO	290
 
 %start prog
+
+/* declaracoes nao sao nodos da arvore? */
+//%type<nt> prog
+%type<nt> func
+%type<nt> command.block 
+%type<nt> command.seq 
+%type<nt> command 
+%type<nt> ctrl.flow 
+%type<nt> output.list 
+%type<nt> expr 
+%type<nt> func.param.list
+%type<nt> param.list 
 
 %%
 
@@ -83,7 +85,15 @@ http://www.gnu.org/software/bison/manual/bison.html#Rules
 prog:
 	  prog global.decl
 	| prog func
-	| /* empty */ { ast_prog(); }
+        {
+            iks_ast_node_value_t *v;
+            v = new_iks_ast_node_value();
+            iks_ast_node_value_set(v,IKS_AST_PROGRAMA,NULL);
+            //prog is root, so setting, not appending
+            comp_tree_set_item(ast,(void*)v);
+            iks_ast_append(ast,$func);
+        }
+	| /* empty */
 	;
 
 /* 2.1 */
@@ -97,7 +107,7 @@ array.decl:
 	;
 
 decl:
-      type ':' TK_IDENTIFICADOR // 
+      type ':' TK_IDENTIFICADOR  
     ;
 
 /*
@@ -117,7 +127,24 @@ type:
 /* 2.2 */
 func:
 	  type ':' TK_IDENTIFICADOR '(' func.param.decl.list ')' decl.list command.block
-        { ast_func($2); }
+        {
+            //comp_dict_t *d;
+            //d = comp_dict_find(symbol_table,id);
+            //if (d == NULL) {
+            //    printf("putz\n");
+            //}
+            
+            iks_ast_node_value_t *v;
+            v = new_iks_ast_node_value();
+            //iks_ast_node_value_set(v,IKS_AST_FUNCAO,d->item->value);
+            iks_ast_node_value_set(v,IKS_AST_FUNCAO,yylval.symbol);
+           // if (comp_list_is_empty(ast->children)) {
+           //     iks_ast_append_value(ast,v);
+           // }
+           // else {
+           //     iks_ast_append(ast->children->prev->item,v);
+           // }
+        }
 	;
 
 func.param.decl.list:
@@ -138,6 +165,9 @@ decl.list: // pode ser vazia?
 /* 2.3 */
 command.block:
 	  '{' command.seq '}'
+        {
+            $$ = NULL;
+        }
 	;
 
 command.seq:
@@ -150,7 +180,7 @@ command.seq:
 command:
 	  command.block
     | ctrl.flow
-	| TK_IDENTIFICADOR '=' expr
+	| TK_IDENTIFICADOR '=' expr { }
     | TK_IDENTIFICADOR '[' expr ']' '=' expr
 	| TK_PR_OUTPUT output.list
     | TK_PR_INPUT TK_IDENTIFICADOR
@@ -218,9 +248,11 @@ ctrl.flow:
 
 %%
 
+/*
 void yyerror(char* str)
 {
 	fflush(stderr);
 	fprintf(stderr, "ERRO: \"%s\"\t Linha: %d token: %s\n", str, yy_line_number_get(), yy_last_token_identifier_get());
 	exit(RS_ERRO);
-}	
+}
+*/	

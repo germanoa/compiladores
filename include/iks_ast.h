@@ -72,11 +72,15 @@ void iks_ast_node_value_set(iks_ast_node_value_t *iks_ast_node_value, int type, 
  */
 void iks_ast_node_value_print(iks_ast_node_value_t *iks_ast_node_value);
 
+/**
+ * append a ast_node to another ast_node
+ */
+void iks_ast_append(comp_tree_t *parent, comp_tree_t *child);
 
 /**
  * append a ast_node_value as child(create one) to another ast_node
  */
-void iks_ast_append(comp_tree_t *parent, iks_ast_node_value_t *child_value);
+void iks_ast_append_value(comp_tree_t *parent, iks_ast_node_value_t *child_value);
 
 /**
  * initialize the ast

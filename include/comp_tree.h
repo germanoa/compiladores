@@ -23,6 +23,12 @@ void comp_tree_set_string(comp_tree_t *tree, const char *string);
 // print, depth first, entire tree contents as strings, separated by spaces
 void comp_tree_depth_print_string(comp_tree_t *tree);
 
+// append new node to tree
+void comp_tree_append(comp_tree_t *parent, comp_tree_t *child);
+
+// insert new node to tree
+void comp_tree_insert(comp_tree_t *parent, comp_tree_t *child);
+
 // alloc mem to child tree and append to children list
 // returns 1 if successful; 0 otherwise
 int comp_tree_create_child(comp_tree_t *tree);

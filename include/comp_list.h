@@ -20,7 +20,7 @@ static inline void __comp_list_init(comp_list_t *list);
 /**
  * Return 1 if list is empty
  */
-static inline int __comp_list_is_empty(comp_list_t *list);
+int comp_list_is_empty(comp_list_t *list);
 /**
  * Create a list, alloc mem and return address
  */
