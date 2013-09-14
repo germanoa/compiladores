@@ -41,22 +41,16 @@ DECLARATIONS
 %token TK_OC_OR		275
 
 %union {
-    int lit_int;
-    float lit_float;
-    int lit_bool;
-    char lit_char;
-    char* lit_string;
-    char* id;
     comp_grammar_symbol_t *symbol;
     comp_tree_t *nt;
 }
-%token<lit_int> TK_LIT_INT	280
-%token<lit_float> TK_LIT_FLOAT	281
-%token<lit_bool> TK_LIT_FALSE	282
-%token<lit_bool> TK_LIT_TRUE	283
-%token<lit_char> TK_LIT_CHAR	284	
-%token<lit_string> TK_LIT_STRING	285
-%token<id> TK_IDENTIFICADOR 286
+%token<symbol> TK_LIT_INT	280
+%token<symbol> TK_LIT_FLOAT	281
+%token<symbol> TK_LIT_FALSE	282
+%token<symbol> TK_LIT_TRUE	283
+%token<symbol> TK_LIT_CHAR	284	
+%token<symbol> TK_LIT_STRING	285
+%token<symbol> TK_IDENTIFICADOR 286
 
 %token TOKEN_ERRO	290
 
@@ -156,12 +150,15 @@ decl_list: // pode ser vazia?
 command_block:
 	  '{' command_seq '}'
         {
-            $$ = NULL;
+            $$ = $2;
         }
 	;
 
 command_seq:
 	  command ';' command_seq
+        {
+            iks_ast_append($command,$3);
+        }
 	| command
 	| /* empty */
 	;
@@ -170,7 +167,27 @@ command_seq:
 command:
 	  command_block
     | ctrl_flow
-	| TK_IDENTIFICADOR '=' expr { }
+	| TK_IDENTIFICADOR '=' expr
+        {
+            iks_ast_node_value_t *v;
+            v = new_iks_ast_node_value();
+            iks_ast_node_value_set(v,IKS_AST_ATRIBUICAO,NULL);
+            comp_tree_t *atribuicao;
+            atribuicao = new_comp_tree();
+            comp_tree_set_item(atribuicao,(void*)v);
+
+            iks_ast_node_value_t *v1;
+            v1 = new_iks_ast_node_value();
+            iks_ast_node_value_set(v,IKS_AST_IDENTIFICADOR,$1);
+            comp_tree_t *identificador;
+            identificador = new_comp_tree();
+            comp_tree_set_item(identificador,(void*)v1);
+
+            iks_ast_append(atribuicao,identificador);
+            iks_ast_append(atribuicao,$3);
+            $$ = atribuicao;
+                    
+        }
     | TK_IDENTIFICADOR '[' expr ']' '=' expr
 	| TK_PR_OUTPUT output_list
     | TK_PR_INPUT TK_IDENTIFICADOR

@@ -19,7 +19,7 @@ char *identifier;
 //yyval_t yyval;
 
 
-void push_to_symbol_table(int type) {
+comp_grammar_symbol_t *push_to_symbol_table(int type) {
     identifier = malloc(yyleng);
     int deslocamento=0;
     if (type==IKS_SIMBOLO_LITERAL_CHAR || type==IKS_SIMBOLO_LITERAL_STRING) {
@@ -32,7 +32,7 @@ void push_to_symbol_table(int type) {
     comp_grammar_symbol_set(symbol,type,line_number,NULL);
 
     symbol_table_append(identifier,symbol);
-    yylval.symbol = symbol;
+    return symbol;
 }
 
 %}
@@ -64,13 +64,14 @@ output { return TK_PR_OUTPUT; }
 return { return TK_PR_RETURN; }
 
 [0-9]+ {
-    yylval.lit_int = atoi(yytext);
-    push_to_symbol_table(TK_LIT_INT);
+    yylval.symbol = push_to_symbol_table(TK_LIT_INT);
+    yylval.symbol->type = TK_LIT_INT;
     return TK_LIT_INT;
 }
 
 ([0-9]+|-[0-9]+)\.[0-9]+ {
-    push_to_symbol_table(TK_LIT_FLOAT);
+    yylval.symbol = push_to_symbol_table(TK_LIT_FLOAT);
+    yylval.symbol->type = TK_LIT_FLOAT;
     return TK_LIT_FLOAT;
 }
 
@@ -79,18 +80,21 @@ true { return TK_LIT_TRUE; }
 false { return TK_LIT_FALSE; }
 
 '[^']' {
-    push_to_symbol_table(TK_LIT_CHAR);
+    yylval.symbol = push_to_symbol_table(TK_LIT_CHAR);
+    yylval.symbol->type = TK_LIT_CHAR;
     return TK_LIT_CHAR;
 }
 
 \"[^\"\n\r]*\" {
-    push_to_symbol_table(TK_LIT_STRING);
+    yylval.symbol = push_to_symbol_table(TK_LIT_STRING);
+    yylval.symbol->type = TK_LIT_STRING;
     return TK_LIT_STRING;
 }
 
 
 ([a-z]|[A-Z]|_)+([a-z]|[A-Z]|_|[0-9])* {
-    push_to_symbol_table(TK_IDENTIFICADOR);
+    yylval.symbol = push_to_symbol_table(TK_IDENTIFICADOR);
+    yylval.symbol->type = TK_IDENTIFICADOR;
     return TK_IDENTIFICADOR;
 }
 
