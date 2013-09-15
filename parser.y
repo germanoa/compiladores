@@ -92,13 +92,17 @@ prog:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_PROGRAMA,NULL);
+	    gv_declare(IKS_AST_PROGRAMA,v,NULL);
             comp_tree_set_item(ast,(void*)v);
+	
             // just the first function is child of ast
             if (comp_list_is_empty(ast->children)) {
                 iks_ast_append(ast,$func);
+                gv_connect(ast, $func);
             }
             else {
                 iks_ast_append((comp_tree_t*)ast->children->prev->item,$func);
+		gv_connect(( comp_tree_t*)ast->children->prev->item,$func);
             
             }
             $$ = ast;
@@ -142,8 +146,10 @@ func:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_FUNCAO,yylval.symbol);
+            gv_declare(IKS_AST_FUNCAO,v,yylval.symbol); 
             comp_tree_set_item($func,(void*)v);
             iks_ast_append($func,$command_block);
+            gv_connect($func,$command_block);
             $$ = $func;
         }
 	;
@@ -176,6 +182,7 @@ command_seq:
         {
             /* 3.A.10 */
             iks_ast_append($command,$3);
+gv_connect($command,$3);
         }
 	| command
 	;
@@ -190,6 +197,7 @@ command:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_ATRIBUICAO,NULL);
+            gv_declare(IKS_AST_ATRIBUICAO,v,NULL);
             comp_tree_t *atribuicao;
             atribuicao = new_comp_tree();
             comp_tree_set_item(atribuicao,(void*)v);
@@ -197,12 +205,15 @@ command:
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_IDENTIFICADOR,$1);
+	    gv_declare(IKS_AST_IDENTIFICADOR,v1,$1);
             comp_tree_t *identificador;
             identificador = new_comp_tree();
             comp_tree_set_item(identificador,(void*)v1);
 
             iks_ast_append(atribuicao,identificador);
+	    gv_connect(atribuicao,identificador);
             iks_ast_append(atribuicao,$3);
+	    gv_connect(atribuicao,$3);
             $$ = atribuicao;
                     
         }
@@ -212,6 +223,7 @@ command:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_ATRIBUICAO,NULL);
+	    gv_declare(IKS_AST_ATRIBUICAO,v,NULL);
             comp_tree_t *atribuicao;
             atribuicao = new_comp_tree();
             comp_tree_set_item(atribuicao,(void*)v);
@@ -220,12 +232,15 @@ command:
             v1 = new_iks_ast_node_value();
             //criar um atributo na tabela de simbolos para o tamanho do array?
             iks_ast_node_value_set(v1,IKS_AST_VETOR_INDEXADO,$1);
+	    gv_declare(IKS_AST_VETOR_INDEXADO,v1,$1);
             comp_tree_t *identificador;
             identificador = new_comp_tree();
             comp_tree_set_item(identificador,(void*)v1);
 
             iks_ast_append(atribuicao,identificador);
+	    gv_connect(atribuicao,identificador);
             iks_ast_append(atribuicao,$3);
+	    gv_connect(atribuicao,$3);
             $$ = atribuicao;
         }            
 	| TK_PR_OUTPUT output_list
@@ -234,11 +249,13 @@ command:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_OUTPUT,NULL);
+	    gv_declare(IKS_AST_OUTPUT,v,NULL);
             comp_tree_t *output;
             output = new_comp_tree();
             comp_tree_set_item(output,(void*)v);
 
             iks_ast_append(output,$2);
+	    gv_connect(output,$2);
             $$ = output;
         }
     | TK_PR_INPUT TK_IDENTIFICADOR
@@ -247,6 +264,7 @@ command:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_INPUT,NULL);
+	    gv_declare(IKS_AST_INPUT,v,NULL);
             comp_tree_t *input;
             input = new_comp_tree();
             comp_tree_set_item(input,(void*)v);
@@ -254,11 +272,13 @@ command:
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_IDENTIFICADOR,$2);
+            gv_declare(IKS_AST_IDENTIFICADOR,v1,$2);
             comp_tree_t *identificador;
             identificador = new_comp_tree();
             comp_tree_set_item(identificador,(void*)v1);
 
             iks_ast_append(input,identificador);
+	    gv_connect(input,identificador);
             $$ = input;
         }
     | TK_PR_RETURN expr 
@@ -267,11 +287,13 @@ command:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_RETURN,NULL);
+	    gv_declare(IKS_AST_RETURN,v,NULL);
             comp_tree_t *ret;
             ret = new_comp_tree();
             comp_tree_set_item(ret,(void*)v);
 
             iks_ast_append(ret,$expr);
+	    gv_connect(ret,$expr);
             $$ = ret;
         }
 	| { $$ = NULL; } /* empty */
@@ -282,6 +304,7 @@ output_list:
 	| expr ',' output_list
         {
             iks_ast_append($expr,$3);
+	    gv_connect($expr,$3);
         }
 	;
 
@@ -292,6 +315,7 @@ expr:
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
+	    gv_declare(IKS_AST_LITERAL,v1,$1);
             comp_tree_t *lit;
             lit = new_comp_tree();
             comp_tree_set_item(lit,(void*)v1);
@@ -302,6 +326,7 @@ expr:
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
+	    gv_declare(IKS_AST_LITERAL,v1,$1);
             comp_tree_t *lit;
             lit = new_comp_tree();
             comp_tree_set_item(lit,(void*)v1);
@@ -318,12 +343,15 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_ARIM_SOMA,NULL);
+	    gv_declare(IKS_AST_ARIM_SOMA,v,NULL);
             comp_tree_t *oo;
             oo = new_comp_tree();
             comp_tree_set_item(oo,(void*)v);
 
             iks_ast_append(oo,$1);
+	    gv_connect(oo,$1);
             iks_ast_append(oo,$3);
+	    gv_connect(oo,$3);
             $$ = oo;
         }
 	| expr '-' expr
@@ -332,12 +360,15 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_ARIM_SUBTRACAO,NULL);
+	    gv_declare(IKS_AST_ARIM_SUBTRACAO,v,NULL);
             comp_tree_t *oo;
             oo = new_comp_tree();
             comp_tree_set_item(oo,(void*)v);
 
             iks_ast_append(oo,$1);
+	    gv_connect(oo,$1);
             iks_ast_append(oo,$3);
+	    gv_connect(oo,$3);
             $$ = oo;
         }
 	| expr '*' expr
@@ -346,12 +377,15 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_ARIM_MULTIPLICACAO,NULL);
+	    gv_declare(IKS_AST_ARIM_MULTIPLICACAO,v,NULL);
             comp_tree_t *oo;
             oo = new_comp_tree();
             comp_tree_set_item(oo,(void*)v);
 
             iks_ast_append(oo,$1);
+	    gv_connect(oo,$1);
             iks_ast_append(oo,$3);
+	    gv_connect(oo,$3);
             $$ = oo;
         }
 	| expr '/' expr
@@ -360,12 +394,15 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_ARIM_DIVISAO,NULL);
+	    gv_declare(IKS_AST_ARIM_DIVISAO,v,NULL);
             comp_tree_t *oo;
             oo = new_comp_tree();
             comp_tree_set_item(oo,(void*)v);
 
             iks_ast_append(oo,$1);
+	    gv_connect(oo,$1);
             iks_ast_append(oo,$3);
+	    gv_connect(oo,$3);
             $$ = oo;
         }
 	| expr '<' expr
@@ -374,12 +411,15 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_LOGICO_COMP_L,NULL);
+	    gv_declare(IKS_AST_LOGICO_COMP_L,v,NULL);
             comp_tree_t *oo;
             oo = new_comp_tree();
             comp_tree_set_item(oo,(void*)v);
 
             iks_ast_append(oo,$1);
+	    gv_connect(oo,$1);
             iks_ast_append(oo,$3);
+	    gv_connect(oo,$3);
             $$ = oo;
         }
 	| expr '>' expr
@@ -388,12 +428,15 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_LOGICO_COMP_G,NULL);
+	    gv_declare(IKS_AST_LOGICO_COMP_G,v,NULL);
             comp_tree_t *oo;
             oo = new_comp_tree();
             comp_tree_set_item(oo,(void*)v);
 
             iks_ast_append(oo,$1);
+	    gv_connect(oo,$1);
             iks_ast_append(oo,$3);
+	    gv_connect(oo,$3);
             $$ = oo;
         }
 	| '!' expr
@@ -402,11 +445,13 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_LOGICO_COMP_NEGACAO,NULL);
+	    gv_declare(IKS_AST_LOGICO_COMP_NEGACAO,v,NULL);
             comp_tree_t *inv;
             inv = new_comp_tree();
             comp_tree_set_item(inv,(void*)v);
 
             iks_ast_append(inv,$2);
+	    gv_connect(inv,$2);
             $$ = inv;
         }
 	| expr TK_OC_LE expr
@@ -415,12 +460,15 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_LOGICO_COMP_LE,NULL);
+	    gv_declare(IKS_AST_LOGICO_COMP_LE,v,NULL);
             comp_tree_t *oo;
             oo = new_comp_tree();
             comp_tree_set_item(oo,(void*)v);
 
             iks_ast_append(oo,$1);
+	    gv_connect(oo,$1);
             iks_ast_append(oo,$3);
+	    gv_connect(oo,$3);
             $$ = oo;
         }
 	| expr TK_OC_GE expr
@@ -429,12 +477,15 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_LOGICO_COMP_GE,NULL);
+	    gv_declare(IKS_AST_LOGICO_COMP_GE,v,NULL);
             comp_tree_t *oo;
             oo = new_comp_tree();
             comp_tree_set_item(oo,(void*)v);
 
             iks_ast_append(oo,$1);
+	    gv_connect(oo,$1);
             iks_ast_append(oo,$3);
+	    gv_connect(oo,$3);
             $$ = oo;
         }
 	| expr TK_OC_EQ expr
@@ -443,12 +494,15 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_LOGICO_COMP_IGUAL,NULL);
+	    gv_declare(IKS_AST_LOGICO_COMP_IGUAL,v,NULL);
             comp_tree_t *oo;
             oo = new_comp_tree();
             comp_tree_set_item(oo,(void*)v);
 
             iks_ast_append(oo,$1);
+	    gv_connect(oo,$1);
             iks_ast_append(oo,$3);
+	    gv_connect(oo,$3);
             $$ = oo;
         }
 	| expr TK_OC_NE expr
@@ -457,12 +511,15 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_LOGICO_COMP_DIF,NULL);
+	    gv_declare(IKS_AST_LOGICO_COMP_DIF,v,NULL);
             comp_tree_t *oo;
             oo = new_comp_tree();
             comp_tree_set_item(oo,(void*)v);
 
             iks_ast_append(oo,$1);
+	    gv_connect(oo,$1);
             iks_ast_append(oo,$3);
+	    gv_connect(oo,$3);
             $$ = oo;
         }
 	| expr TK_OC_AND expr
@@ -471,12 +528,15 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_LOGICO_E,NULL);
+	    gv_declare(IKS_AST_LOGICO_E,v,NULL);
             comp_tree_t *oo;
             oo = new_comp_tree();
             comp_tree_set_item(oo,(void*)v);
 
             iks_ast_append(oo,$1);
+	    gv_connect(oo,$1);
             iks_ast_append(oo,$3);
+	    gv_connect(oo,$3);
             $$ = oo;
         }
 	| expr TK_OC_OR expr
@@ -485,12 +545,15 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_LOGICO_OU,NULL);
+	    gv_declare(IKS_AST_LOGICO_OU,v,NULL);
             comp_tree_t *oo;
             oo = new_comp_tree();
             comp_tree_set_item(oo,(void*)v);
 
             iks_ast_append(oo,$1);
+	    gv_connect(oo,$1);
             iks_ast_append(oo,$3);
+	    gv_connect(oo,$3);
             $$ = oo;
         }
 	//| '*' TK_IDENTIFICADOR //essa expr existe?
@@ -501,6 +564,7 @@ expr:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_CHAMADA_DE_FUNCAO,NULL);
+	    gv_declare(IKS_AST_CHAMADA_DE_FUNCAO,v,NULL);
             comp_tree_t *x;
             x = new_comp_tree();
             comp_tree_set_item(x,(void*)v);
@@ -508,12 +572,15 @@ expr:
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_IDENTIFICADOR,$1);
+	    gv_declare(IKS_AST_IDENTIFICADOR,v1,$1);
             comp_tree_t *identificador;
             identificador = new_comp_tree();
             comp_tree_set_item(identificador,(void*)v1);
 
             iks_ast_append(x,identificador);
+	    gv_connect(x,identificador);
             iks_ast_append(x,$3);
+	    gv_connect(x,$3);
             $$ = x;
                     
         }
@@ -526,6 +593,7 @@ terminal_value:
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
+	    gv_declare(IKS_AST_LITERAL,v1,$1);
             comp_tree_t *lit;
             lit = new_comp_tree();
             comp_tree_set_item(lit,(void*)v1);
@@ -537,6 +605,7 @@ terminal_value:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_ARIM_INVERSAO,NULL);
+	    gv_declare(IKS_AST_ARIM_INVERSAO,v,NULL);
             comp_tree_t *inv;
             inv = new_comp_tree();
             comp_tree_set_item(inv,(void*)v);
@@ -544,11 +613,13 @@ terminal_value:
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_LITERAL,$2);
+	    gv_declare(IKS_AST_LITERAL,v1,$2);
             comp_tree_t *lit;
             lit = new_comp_tree();
             comp_tree_set_item(lit,(void*)v1);
             
             iks_ast_append(inv,lit);
+	    gv_connect(inv,lit);
             $$ = inv;
         }
 	| TK_LIT_FLOAT
@@ -556,6 +627,7 @@ terminal_value:
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
+	    gv_declare(IKS_AST_LITERAL,v1,$1);
             comp_tree_t *lit;
             lit = new_comp_tree();
             comp_tree_set_item(lit,(void*)v1);
@@ -567,6 +639,7 @@ terminal_value:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_ARIM_INVERSAO,NULL);
+	    gv_declare(IKS_AST_ARIM_INVERSAO,v,NULL);
             comp_tree_t *inv;
             inv = new_comp_tree();
             comp_tree_set_item(inv,(void*)v);
@@ -574,11 +647,13 @@ terminal_value:
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_LITERAL,$2);
+	    gv_declare(IKS_AST_LITERAL,v1,$2);
             comp_tree_t *lit;
             lit = new_comp_tree();
             comp_tree_set_item(lit,(void*)v1);
             
             iks_ast_append(inv,lit);
+	    gv_connect(inv,lit);
             $$ = inv;
         }
 	| TK_LIT_FALSE
@@ -586,6 +661,7 @@ terminal_value:
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
+	    gv_declare(IKS_AST_LITERAL,v1,$1);
             comp_tree_t *lit;
             lit = new_comp_tree();
             comp_tree_set_item(lit,(void*)v1);
@@ -596,6 +672,7 @@ terminal_value:
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
+	    gv_declare(IKS_AST_LITERAL,v1,$1);
             comp_tree_t *lit;
             lit = new_comp_tree();
             comp_tree_set_item(lit,(void*)v1);
@@ -606,6 +683,7 @@ terminal_value:
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
+	    gv_declare(IKS_AST_LITERAL,v1,$1);
             comp_tree_t *lit;
             lit = new_comp_tree();
             comp_tree_set_item(lit,(void*)v1);
@@ -616,6 +694,7 @@ terminal_value:
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
+	    gv_declare(IKS_AST_LITERAL,v1,$1);
             comp_tree_t *lit;
             lit = new_comp_tree();
             comp_tree_set_item(lit,(void*)v1);
@@ -641,12 +720,15 @@ ctrl_flow:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_IF_ELSE,NULL);
+	    gv_declare(IKS_AST_IF_ELSE,v,NULL);
             comp_tree_t *if_else;
             if_else = new_comp_tree();
             comp_tree_set_item(if_else,(void*)v);
 
             iks_ast_append(if_else,$expr);
+	    gv_connect(if_else,$expr);
             iks_ast_append(if_else,$command);
+	    gv_connect(if_else,$command);
             $$ = if_else;
         }
 	| TK_PR_IF '(' expr ')' TK_PR_THEN command TK_PR_ELSE command
@@ -655,13 +737,17 @@ ctrl_flow:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_IF_ELSE,NULL);
+	    gv_declare(IKS_AST_IF_ELSE,v,NULl);
             comp_tree_t *if_else;
             if_else = new_comp_tree();
             comp_tree_set_item(if_else,(void*)v);
 
             iks_ast_append(if_else,$expr);
+	    gv_connect(if_else,$expr);
             iks_ast_append(if_else,$6);
+	    gv_connect(if_else,$6);
             iks_ast_append(if_else,$8);
+	    gv_connect(if_else,$8);
             $$ = if_else;
         }
 	| TK_PR_WHILE '(' expr ')' TK_PR_DO command
@@ -670,12 +756,15 @@ ctrl_flow:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_WHILE_DO,NULL);
+	    gv_declare(IKS_AST_WHILE_DO,v,NULL);
             comp_tree_t *while_do;
             while_do = new_comp_tree();
             comp_tree_set_item(while_do,(void*)v);
 
             iks_ast_append(while_do,$expr);
+	    gv_connect(while_do,$expr);
             iks_ast_append(while_do,$command);
+	    gv_connect(while_do,$command);
             $$ = while_do;
         }
     | TK_PR_DO command TK_PR_WHILE '(' expr ')' 
@@ -684,12 +773,15 @@ ctrl_flow:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_DO_WHILE,NULL);
+	    gv_declare(IKS_AST_DO_WHILE,v,NULL);
             comp_tree_t *do_while;
             do_while = new_comp_tree();
             comp_tree_set_item(do_while,(void*)v);
 
             iks_ast_append(do_while,$command);
+	    gv_connect(do_while,$command);
             iks_ast_append(do_while,$expr);
+	    gv_connect(do_while,$expr);
             $$ = do_while;
         }
 	;

@@ -24,9 +24,14 @@ void yyerror(char* str)
 int main (int argc, char **argv)
 {
   symbol_table_init();
+  
   iks_ast_init();
-  gv_init(NULL);
+  
+  gv_init("saida.odt");
+  
   int resultado = yyparse();
+  
   gv_close();
+  
   return resultado;
 }
