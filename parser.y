@@ -44,6 +44,7 @@ DECLARATIONS
     comp_grammar_symbol_t *symbol;
     comp_tree_t *nt;
 }
+
 %token<symbol> TK_LIT_INT	280
 %token<symbol> TK_LIT_FLOAT	281
 %token<symbol> TK_LIT_FALSE	282
@@ -68,6 +69,12 @@ DECLARATIONS
 %type<nt> func_param_list
 %type<nt> param_list 
 %type<nt> terminal_value
+
+%left '='
+%left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE TK_OC_AND TK_OC_OR
+%left '+' '-'
+%left '/' '*'
+%left '!'
 
 %%
 
@@ -171,7 +178,6 @@ command_seq:
             iks_ast_append($command,$3);
         }
 	| command
-	| { $$ = NULL; } /* empty */
 	;
 
 /* 2.4 */
@@ -487,8 +493,8 @@ expr:
             iks_ast_append(oo,$3);
             $$ = oo;
         }
-	| '*' TK_IDENTIFICADOR //essa expr existe?
-	| '&' TK_IDENTIFICADOR //essa expr existe?
+	//| '*' TK_IDENTIFICADOR //essa expr existe?
+	//| '&' TK_IDENTIFICADOR //essa expr existe?
 	| TK_IDENTIFICADOR '(' func_param_list ')'
         {
             /* 3.A.17 */
