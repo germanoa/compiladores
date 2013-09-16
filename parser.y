@@ -69,10 +69,12 @@ DECLARATIONS
 %type<nt> param_list 
 %type<nt> terminal_value
 
+%right TK_PR_THEN TK_PR_ELSE
 %right '='
 %left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE TK_OC_AND TK_OC_OR
 %left '+' '-'
 %left '*' '/'
+%left INVERSAO
 
 %%
 
@@ -555,8 +557,6 @@ expr:
 	    gv_connect(oo,$3);
             $$ = oo;
         }
-	| '*' TK_IDENTIFICADOR //essa expr existe?
-	| '&' TK_IDENTIFICADOR //essa expr existe?
 	| TK_IDENTIFICADOR '(' func_param_list ')'
         {
             /* 3.A.17 */
@@ -598,7 +598,7 @@ terminal_value:
             comp_tree_set_item(lit,(void*)v1);
             $$ = lit;
         }
-	| '-' TK_LIT_INT
+	| '-' TK_LIT_INT %prec INVERSAO
         {
             /* 3.A.13 */
             iks_ast_node_value_t *v;
@@ -632,7 +632,7 @@ terminal_value:
             comp_tree_set_item(lit,(void*)v1);
             $$ = lit;
         }
-	| '-' TK_LIT_FLOAT
+	| '-' TK_LIT_FLOAT %prec INVERSAO
         {
             /* 3.A.13 */
             iks_ast_node_value_t *v;
@@ -736,7 +736,7 @@ ctrl_flow:
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
             iks_ast_node_value_set(v,IKS_AST_IF_ELSE,NULL);
-	    gv_declare(IKS_AST_IF_ELSE,v,NULl);
+	    gv_declare(IKS_AST_IF_ELSE,v,NULL);
             comp_tree_t *if_else;
             if_else = new_comp_tree();
             comp_tree_set_item(if_else,(void*)v);
