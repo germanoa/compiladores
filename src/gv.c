@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "iks_ast.h"
+#include "gv.h"
 
 static FILE *fp = NULL;
 

@@ -3,6 +3,7 @@
 #include "comp_grammar.h"
 #include "comp_tree.h"
 #include "iks_ast.h"
+#include "gv.h"
 
 static inline void __iks_ast_node_value_init(iks_ast_node_value_t *iks_ast_node_value) {
     iks_ast_node_value->type = IKS_AST_INDEFINIDO;
@@ -26,6 +27,7 @@ void iks_ast_node_value_delete(iks_ast_node_value_t *iks_ast_node_value) {
 void iks_ast_node_value_set(iks_ast_node_value_t *iks_ast_node_value, int type, comp_grammar_symbol_t *symbol) {
     iks_ast_node_value->type = type;
     iks_ast_node_value->symbol = symbol;
+    //gv_declare(type,iks_ast_node_value,symbol);
 }
 
 //void iks_ast_node_value_print(iks_ast_node_value_t *iks_ast_node_value) {
@@ -34,6 +36,7 @@ void iks_ast_node_value_set(iks_ast_node_value_t *iks_ast_node_value, int type, 
 
 void iks_ast_append(comp_tree_t *parent, comp_tree_t *child) {
     comp_tree_append(parent,child);
+    //gv_connect(parent,child);
 }
 
 void iks_ast_append_value(comp_tree_t *parent, iks_ast_node_value_t *child_value) {

@@ -10,6 +10,7 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 #include "comp_dict.h"
 #include "comp_tree.h"
 #include "iks_ast.h"
+#include "gv.h"
 //#include "hash_table.h"
 
 %}

@@ -11,6 +11,7 @@
 #include "comp_graph.h"
 #include "comp_grammar.h"
 #include "iks_ast.h"
+#include "gv.h"
 #include "main.h"
 
 void yyerror(char* str)
