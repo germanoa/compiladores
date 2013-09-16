@@ -1,10 +1,11 @@
+assigned to:pedro 
+status:in process
 1. documentar no modo doxygen
-pedro 2. verificar porque doxygen nao estah gerando doc para as funcoes
+2. verificar porque doxygen nao estah gerando doc para as funcoes
+-----------------------------------------------------------------
 3. tratamento de erros (nos mallocs e outros)
-5. transformar dicionario em tabela hash
-7. enriquecimento da tabela de simbolos, tipo via union, not cast.
-8. yyerror em main
-9. yyerror sem exit
-10. return no parser
-11. etapa1: integer nao aceitar '-'
-12. yylval
+4. transformar dicionario em tabela hash
+5. enriquecimento da tabela de simbolos, tipo via union, not cast.
+6. return no parser
+7. etapa1: integer nao aceitar '-'
+8. yylval
