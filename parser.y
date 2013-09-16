@@ -69,7 +69,7 @@ DECLARATIONS
 %type<nt> param_list 
 %type<nt> terminal_value
 
-%left '='
+%right '='
 %left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE TK_OC_AND TK_OC_OR
 %left '+' '-'
 %left '*' '/'
