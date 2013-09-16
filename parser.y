@@ -74,6 +74,7 @@ DECLARATIONS
 %left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE TK_OC_AND TK_OC_OR
 %left '+' '-'
 %left '*' '/'
+%left '!'
 %left INVERSAO
 
 %%
@@ -182,10 +183,9 @@ command_seq:
         {
             /* 3.A.10 */
             iks_ast_append($command,$3);
-gv_connect($command,$3);
+		gv_connect($command,$3);
         }
 	| command
-	| { $$ = NULL; } /* empty */
 	;
 
 /* 2.4 */
