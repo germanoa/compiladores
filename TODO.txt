@@ -1,11 +1,33 @@
-assigned to:pedro 
-status:in process
+TASK LIST
+Last Update: 16-set-2013 
+
+---------------------------------------------------------------------
 1. documentar no modo doxygen
 2. verificar porque doxygen nao estah gerando doc para as funcoes
------------------------------------------------------------------
+	assigned to: Pedro
+	current status: in Process
+---------------------------------------------------------------------
 3. tratamento de erros (nos mallocs e outros)
+	assigned to:
+	current status:
+---------------------------------------------------------------------
 4. transformar dicionario em tabela hash
+	assigned to:
+	current status:
+---------------------------------------------------------------------
 5. enriquecimento da tabela de simbolos, tipo via union, not cast.
+	assigned to:
+	current status:
+---------------------------------------------------------------------
 6. return no parser
+	assigned to:
+	current status:
+---------------------------------------------------------------------
 7. etapa1: integer nao aceitar '-'
+	assigned to:
+	current status:
+---------------------------------------------------------------------
 8. yylval
+	assigned to:
+	current status:
+---------------------------------------------------------------------
