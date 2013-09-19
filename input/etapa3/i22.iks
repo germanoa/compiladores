@@ -1,0 +1,5 @@
+/* aritmética subtração */
+int:f()
+{
+	x = a - b;
+}

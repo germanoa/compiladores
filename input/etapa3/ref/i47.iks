@@ -1,0 +1,36 @@
+/* the non-recursive fibonacci by ta gh */
+/*
+* return fibonacci(entry), where you must define entry at beginning of programm.
+*/
+
+
+
+int : entry;
+
+int : rank;
+int : aux1;
+int : aux2;
+int : aux3;
+
+int : fibo (int : in) {
+	entry = in;
+
+	if (entry == 0) then return 0;
+	if (entry == 1) then return 1;
+
+	rank = 2;
+	aux1 = 0;
+	aux2 = 1;
+	aux3 = 1;
+
+	while (rank < entry) do
+	{
+		rank = rank + 1;
+		aux1 = aux2;
+		aux2 = aux3;
+		aux3 = aux1 + aux2;
+	};
+
+	return 
+	aux3
+}

@@ -1,0 +1,5 @@
+/* vetor indexado com expressão */
+int:f()
+{
+	x = vetor[10+20]
+}

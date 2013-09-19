@@ -1,0 +1,11 @@
+digraph G {
+node_0x974f890 [label="10"]
+node_0x974f8c0 [label="block"]
+node_0x974f8a8 [label="whiledo"]
+node_0x974f8a8 -> node_0x974f890
+node_0x974f8a8 -> node_0x974f8c0
+node_0x974f8f0 [label="f"]
+node_0x974f8f0 -> node_0x974f8a8
+node_0x974f908 [label="programa"]
+node_0x974f908 -> node_0x974f8f0
+}

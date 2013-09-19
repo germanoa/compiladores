@@ -1,0 +1,5 @@
+/* comando return */
+int:f()
+{
+	return 10
+}

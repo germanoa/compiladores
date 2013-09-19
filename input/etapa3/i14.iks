@@ -1,0 +1,6 @@
+/* blocos */
+int:f()
+{
+	{{return 10};{return 20}};
+	{return 30}
+}

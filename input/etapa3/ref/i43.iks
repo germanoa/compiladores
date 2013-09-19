@@ -1,0 +1,7 @@
+/* associatividade aritmética */
+int:f()
+{
+	x = a + b + c - d - e;
+	y = f * g * h / i / j;
+	z = k * l * m + n + o;
+}

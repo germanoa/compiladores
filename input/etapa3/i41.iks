@@ -1,0 +1,8 @@
+/* precedência aritmética */
+int:f()
+{
+	x = a + b * c;
+	y = d / e - f;
+	z = (g + h) * i;
+	w = j / (k - l);
+}

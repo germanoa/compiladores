@@ -1,0 +1,171 @@
+digraph G {
+node_0x81b4958 [label="positivo"]
+node_0x81b4998 [label="2"]
+node_0x81b49b0 [label="="]
+node_0x81b49b0 -> node_0x81b4958
+node_0x81b49b0 -> node_0x81b4998
+node_0x81b49c8 [label="negativo"]
+node_0x81b49e0 [label="positivo"]
+node_0x81b49f8 [label="-"]
+node_0x81b49f8 -> node_0x81b49e0
+node_0x81b4a10 [label="="]
+node_0x81b4a10 -> node_0x81b49c8
+node_0x81b4a10 -> node_0x81b49f8
+node_0x81b4a28 [label="dobro"]
+node_0x81b4a40 [label="positivo"]
+node_0x81b4a58 [label="negativo"]
+node_0x81b4a70 [label="-"]
+node_0x81b4a70 -> node_0x81b4a40
+node_0x81b4a70 -> node_0x81b4a58
+node_0x81b4a88 [label="="]
+node_0x81b4a88 -> node_0x81b4a28
+node_0x81b4a88 -> node_0x81b4a70
+node_0x81b4a10 -> node_0x81b4a88
+node_0x81b49b0 -> node_0x81b4a10
+node_0x81b4aa0 [label="inverte"]
+node_0x81b4aa0 -> node_0x81b49b0
+node_0x81b4b08 [label="convertido"]
+node_0x81b4b20 [label="inverte"]
+node_0x81b4b38 [label="2"]
+node_0x81b4b68 [label="call"]
+node_0x81b4b68 -> node_0x81b4b20
+node_0x81b4b68 -> node_0x81b4b38
+node_0x81b4b50 [label="!"]
+node_0x81b4b50 -> node_0x81b4b68
+node_0x81b4b80 [label="="]
+node_0x81b4b80 -> node_0x81b4b08
+node_0x81b4b80 -> node_0x81b4b50
+node_0x81b4b98 [label="converte"]
+node_0x81b4b98 -> node_0x81b4b80
+node_0x81b4c50 [label="indice"]
+node_0x81b4c90 [label="0"]
+node_0x81b4ca8 [label=">"]
+node_0x81b4ca8 -> node_0x81b4c50
+node_0x81b4ca8 -> node_0x81b4c90
+node_0x81b4cc0 [label="numero"]
+node_0x81b4cd8 [label="num2"]
+node_0x81b4cf0 [label="num1"]
+node_0x81b4d08 [label="num2"]
+node_0x81b4d20 [label="num3"]
+node_0x81b4d38 [label="+"]
+node_0x81b4d38 -> node_0x81b4d08
+node_0x81b4d38 -> node_0x81b4d20
+node_0x81b4d50 [label="num1"]
+node_0x81b4d68 [label="/"]
+node_0x81b4d68 -> node_0x81b4d38
+node_0x81b4d68 -> node_0x81b4d50
+node_0x81b4d80 [label="*"]
+node_0x81b4d80 -> node_0x81b4cf0
+node_0x81b4d80 -> node_0x81b4d68
+node_0x81b4d98 [label="positivo"]
+node_0x81b4db0 [label="+"]
+node_0x81b4db0 -> node_0x81b4d80
+node_0x81b4db0 -> node_0x81b4d98
+node_0x81b4dc8 [label="*"]
+node_0x81b4dc8 -> node_0x81b4cd8
+node_0x81b4dc8 -> node_0x81b4db0
+node_0x81b4de0 [label="="]
+node_0x81b4de0 -> node_0x81b4cc0
+node_0x81b4de0 -> node_0x81b4dc8
+node_0x81b4df8 [label="numero"]
+node_0x81b4e10 [label="numero"]
+node_0x81b4e28 [label="-"]
+node_0x81b4e28 -> node_0x81b4e10
+node_0x81b4e40 [label="="]
+node_0x81b4e40 -> node_0x81b4df8
+node_0x81b4e40 -> node_0x81b4e28
+node_0x81b4e58 [label="numero"]
+node_0x81b4e70 [label="numero"]
+node_0x81b4e88 [label="num3"]
+node_0x81b4ea0 [label="num2"]
+node_0x81b4eb8 [label="+"]
+node_0x81b4eb8 -> node_0x81b4e88
+node_0x81b4eb8 -> node_0x81b4ea0
+node_0x81b4ed0 [label="num1"]
+node_0x81b4ee8 [label="num2"]
+node_0x81b4f00 [label="*"]
+node_0x81b4f00 -> node_0x81b4ed0
+node_0x81b4f00 -> node_0x81b4ee8
+node_0x81b4f18 [label="+"]
+node_0x81b4f18 -> node_0x81b4eb8
+node_0x81b4f18 -> node_0x81b4f00
+node_0x81b4f30 [label="-"]
+node_0x81b4f30 -> node_0x81b4e70
+node_0x81b4f30 -> node_0x81b4f18
+node_0x81b4f48 [label="="]
+node_0x81b4f48 -> node_0x81b4e58
+node_0x81b4f48 -> node_0x81b4f30
+node_0x81b4f60 [label="numero"]
+node_0x81b4f78 [label="numero"]
+node_0x81b4f90 [label="matemagica"]
+node_0x81b4fa8 [label="indice"]
+node_0x81b4fc0 [label="2"]
+node_0x81b5000 [label="3"]
+node_0x81b4fc0 -> node_0x81b5000
+node_0x81b4fa8 -> node_0x81b4fc0
+node_0x81b5030 [label="call"]
+node_0x81b5030 -> node_0x81b4f90
+node_0x81b5030 -> node_0x81b4fa8
+node_0x81b5018 [label="+"]
+node_0x81b5018 -> node_0x81b4f78
+node_0x81b5018 -> node_0x81b5030
+node_0x81b5048 [label="="]
+node_0x81b5048 -> node_0x81b4f60
+node_0x81b5048 -> node_0x81b5018
+node_0x81b5060 [label="indice"]
+node_0x81b5078 [label="indice"]
+node_0x81b50b8 [label="1"]
+node_0x81b50d0 [label="-"]
+node_0x81b50d0 -> node_0x81b5078
+node_0x81b50d0 -> node_0x81b50b8
+node_0x81b50e8 [label="="]
+node_0x81b50e8 -> node_0x81b5060
+node_0x81b50e8 -> node_0x81b50d0
+node_0x81b5100 [label="numero"]
+node_0x81b5118 [label="return"]
+node_0x81b5118 -> node_0x81b5100
+node_0x81b50e8 -> node_0x81b5118
+node_0x81b5048 -> node_0x81b50e8
+node_0x81b4f48 -> node_0x81b5048
+node_0x81b4e40 -> node_0x81b4f48
+node_0x81b4de0 -> node_0x81b4e40
+node_0x81b5148 [label="block"]
+node_0x81b5148 -> node_0x81b4de0
+node_0x81b5130 [label="1"]
+node_0x81b5160 [label="return"]
+node_0x81b5160 -> node_0x81b5130
+node_0x81b5178 [label="block"]
+node_0x81b5178 -> node_0x81b5160
+node_0x81b5190 [label="ifelse"]
+node_0x81b5190 -> node_0x81b4ca8
+node_0x81b5190 -> node_0x81b5148
+node_0x81b5190 -> node_0x81b5178
+node_0x81b51c0 [label="matemagica"]
+node_0x81b51c0 -> node_0x81b5190
+node_0x81b51e8 [label="indice"]
+node_0x81b5228 [label="50"]
+node_0x81b5240 [label="="]
+node_0x81b5240 -> node_0x81b51e8
+node_0x81b5240 -> node_0x81b5228
+node_0x81b5258 [label="resultado"]
+node_0x81b5270 [label="matemagica"]
+node_0x81b5288 [label="indice"]
+node_0x81b52c8 [label="10"]
+node_0x81b5308 [label="40"]
+node_0x81b52c8 -> node_0x81b5308
+node_0x81b5288 -> node_0x81b52c8
+node_0x81b5338 [label="call"]
+node_0x81b5338 -> node_0x81b5270
+node_0x81b5338 -> node_0x81b5288
+node_0x81b5320 [label="="]
+node_0x81b5320 -> node_0x81b5258
+node_0x81b5320 -> node_0x81b5338
+node_0x81b5240 -> node_0x81b5320
+node_0x81b5368 [label="main"]
+node_0x81b5368 -> node_0x81b5240
+node_0x81b51c0 -> node_0x81b5368
+node_0x81b4b98 -> node_0x81b51c0
+node_0x81b5350 [label="programa"]
+node_0x81b5350 -> node_0x81b4aa0
+node_0x81b4aa0 -> node_0x81b4b98
+}

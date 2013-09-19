@@ -27,7 +27,6 @@ void iks_ast_node_value_delete(iks_ast_node_value_t *iks_ast_node_value) {
 void iks_ast_node_value_set(iks_ast_node_value_t *iks_ast_node_value, int type, comp_grammar_symbol_t *symbol) {
     iks_ast_node_value->type = type;
     iks_ast_node_value->symbol = symbol;
-    //gv_declare(type,iks_ast_node_value,symbol);
 }
 
 //void iks_ast_node_value_print(iks_ast_node_value_t *iks_ast_node_value) {

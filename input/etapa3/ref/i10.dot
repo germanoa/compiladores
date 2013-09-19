@@ -1,0 +1,9 @@
+digraph G {
+node_0x85cb890 [label="x"]
+node_0x85cb8c0 [label="output"]
+node_0x85cb8c0 -> node_0x85cb890
+node_0x85cb8d8 [label="f"]
+node_0x85cb8d8 -> node_0x85cb8c0
+node_0x85cb8f0 [label="programa"]
+node_0x85cb8f0 -> node_0x85cb8d8
+}

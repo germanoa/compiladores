@@ -1,0 +1,50 @@
+/* the euclidean division by ta gh */
+/*
+*	Implementation of Euclidean division in IKS
+*	return q where a = b*q+r and 0 <= r < |b|
+*	warning : doesn't always compute correct r (negatives numbers)
+*/
+
+
+int : a;
+int : b;
+bool : cas1;
+bool : cas2;
+
+int : q;
+int : r;
+
+int : euclidan_division (int : vara, int : varb) 
+{
+	a = vara;
+	b = varb;
+
+	cas1 = false;
+	cas2 = false;
+
+	if (a < 0) then
+	{
+		cas1 = true;
+		a = -a;
+	};
+	if (b < 0) then 
+	{
+		cas2 = true;
+		b = -b;
+	};
+
+	r = a;
+	q = 0;
+
+	while (r >= b) do {
+		q = q + 1;
+		r = r - b;
+	};
+
+
+if (cas1 && !cas2) then q = -q - 1;
+if (!cas1 && cas2) then q = -q; 
+if (cas1 && cas2) then q = q + 1;
+	return q;
+}
+

@@ -1,0 +1,5 @@
+/* aritmética divisão */
+int:f()
+{
+	x = a / b;
+}

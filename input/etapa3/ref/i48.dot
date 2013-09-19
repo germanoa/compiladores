@@ -1,0 +1,73 @@
+digraph G {
+node_0x91d76f8 [label="programa"]
+node_0x91d74a0 [label="fibonacci"]
+node_0x91d76f8 -> node_0x91d74a0
+node_0x91d7208 [label="ifelse"]
+node_0x91d74a0 -> node_0x91d7208
+node_0x91d7170 [label="=="]
+node_0x91d7208 -> node_0x91d7170
+node_0x91d70f8 [label="n"]
+node_0x91d7170 -> node_0x91d70f8
+node_0x91d7150 [label="0"]
+node_0x91d7170 -> node_0x91d7150
+node_0x91d71e8 [label="return"]
+node_0x91d7208 -> node_0x91d71e8
+node_0x91d71c8 [label="1"]
+node_0x91d71e8 -> node_0x91d71c8
+node_0x91d72c8 [label="ifelse"]
+node_0x91d7208 -> node_0x91d72c8
+node_0x91d7268 [label="=="]
+node_0x91d72c8 -> node_0x91d7268
+node_0x91d7228 [label="n"]
+node_0x91d7268 -> node_0x91d7228
+node_0x91d7248 [label="1"]
+node_0x91d7268 -> node_0x91d7248
+node_0x91d72a8 [label="return"]
+node_0x91d72c8 -> node_0x91d72a8
+node_0x91d7288 [label="1"]
+node_0x91d72a8 -> node_0x91d7288
+node_0x91d7480 [label="return"]
+node_0x91d72c8 -> node_0x91d7480
+node_0x91d7460 [label="+"]
+node_0x91d7480 -> node_0x91d7460
+node_0x91d7348 [label="call"]
+node_0x91d7460 -> node_0x91d7348
+node_0x91d7368 [label="fibonacci"]
+node_0x91d7348 -> node_0x91d7368
+node_0x91d7328 [label="-"]
+node_0x91d7348 -> node_0x91d7328
+node_0x91d72e8 [label="n"]
+node_0x91d7328 -> node_0x91d72e8
+node_0x91d7308 [label="1"]
+node_0x91d7328 -> node_0x91d7308
+node_0x91d7420 [label="call"]
+node_0x91d7460 -> node_0x91d7420
+node_0x91d7440 [label="fibonacci"]
+node_0x91d7420 -> node_0x91d7440
+node_0x91d7400 [label="-"]
+node_0x91d7420 -> node_0x91d7400
+node_0x91d7388 [label="n"]
+node_0x91d7400 -> node_0x91d7388
+node_0x91d73e0 [label="2"]
+node_0x91d7400 -> node_0x91d73e0
+node_0x91d76d8 [label="main"]
+node_0x91d74a0 -> node_0x91d76d8
+node_0x91d7590 [label="output"]
+node_0x91d76d8 -> node_0x91d7590
+node_0x91d7570 [label="Insira um numero: "]
+node_0x91d7590 -> node_0x91d7570
+node_0x91d75d0 [label="input"]
+node_0x91d7590 -> node_0x91d75d0
+node_0x91d75b0 [label="numero"]
+node_0x91d75d0 -> node_0x91d75b0
+node_0x91d76b8 [label="output"]
+node_0x91d75d0 -> node_0x91d76b8
+node_0x91d7638 [label="O valor fibonacci eh: "]
+node_0x91d76b8 -> node_0x91d7638
+node_0x91d7678 [label="call"]
+node_0x91d76b8 -> node_0x91d7678
+node_0x91d7698 [label="fibonacci"]
+node_0x91d7678 -> node_0x91d7698
+node_0x91d7658 [label="numero"]
+node_0x91d7678 -> node_0x91d7658
+}

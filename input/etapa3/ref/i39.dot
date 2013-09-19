@@ -1,0 +1,15 @@
+digraph G {
+node_0x95ab890 [label="k"]
+node_0x95ab8d0 [label="10"]
+node_0x95ab910 [label="20"]
+node_0x95ab950 [label="30"]
+node_0x95ab910 -> node_0x95ab950
+node_0x95ab8d0 -> node_0x95ab910
+node_0x95ab980 [label="call"]
+node_0x95ab980 -> node_0x95ab890
+node_0x95ab980 -> node_0x95ab8d0
+node_0x95ab968 [label="f"]
+node_0x95ab968 -> node_0x95ab980
+node_0x95ab9b0 [label="programa"]
+node_0x95ab9b0 -> node_0x95ab968
+}

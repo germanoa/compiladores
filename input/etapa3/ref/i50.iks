@@ -1,0 +1,45 @@
+/* a program named "unarios" by ta gf */
+int:positivo;
+int:negativo;
+int:dobro;
+int:numero;
+int:indice;
+int:resultado;
+
+bool: inverte()
+{
+	positivo = 2;
+	negativo = -positivo;
+	
+	dobro = positivo-negativo;
+
+	
+	
+}
+
+int: converte(bool:convertido)
+{
+	convertido=!inverte(2);
+}
+
+int:matemagica(int:num1, int:num2, int:num3)
+{
+	if(indice>0)then	
+	{	
+	numero = num2*((num1*((num2 + num3)/num1))+positivo);
+	numero = -numero;
+	numero = numero-(num3+num2+num1*num2);
+	numero = numero + matemagica(indice,2,3);
+	indice=indice - 1;
+	return numero;
+	}
+	else
+	{
+	return 1;
+	}
+}
+int:main()
+{
+	indice = 50;
+	resultado=matemagica(indice,10,40);
+}

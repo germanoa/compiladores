@@ -1,0 +1,5 @@
+/* comando output */
+int:f()
+{
+	output x
+}

@@ -1,0 +1,5 @@
+/* vetor indexado */
+int:f()
+{
+	x = vetor[10]
+}

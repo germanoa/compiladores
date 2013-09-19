@@ -1,0 +1,5 @@
+/* chamada de função com lista de argumentos */
+int:f()
+{
+	k(10,20,30);
+}

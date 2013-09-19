@@ -1,0 +1,19 @@
+digraph G {
+node_0x96cf890 [label="x"]
+node_0x96cf8d0 [label="vetor"]
+node_0x96cf910 [label="10"]
+node_0x96cf950 [label="20"]
+node_0x96cf968 [label="+"]
+node_0x96cf968 -> node_0x96cf910
+node_0x96cf968 -> node_0x96cf950
+node_0x96cf980 [label="[]"]
+node_0x96cf980 -> node_0x96cf8d0
+node_0x96cf980 -> node_0x96cf968
+node_0x96cf998 [label="="]
+node_0x96cf998 -> node_0x96cf890
+node_0x96cf998 -> node_0x96cf980
+node_0x96cf9c8 [label="f"]
+node_0x96cf9c8 -> node_0x96cf998
+node_0x96cf9e0 [label="programa"]
+node_0x96cf9e0 -> node_0x96cf9c8
+}

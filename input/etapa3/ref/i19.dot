@@ -1,0 +1,17 @@
+digraph G {
+node_0x85e2890 [label="iks"]
+node_0x85e28d0 [label="false"]
+node_0x85e28e8 [label="="]
+node_0x85e28e8 -> node_0x85e2890
+node_0x85e28e8 -> node_0x85e28d0
+node_0x85e2928 [label="caps"]
+node_0x85e2968 [label="true"]
+node_0x85e2980 [label="="]
+node_0x85e2980 -> node_0x85e2928
+node_0x85e2980 -> node_0x85e2968
+node_0x85e28e8 -> node_0x85e2980
+node_0x85e29b0 [label="f"]
+node_0x85e29b0 -> node_0x85e28e8
+node_0x85e29c8 [label="programa"]
+node_0x85e29c8 -> node_0x85e29b0
+}

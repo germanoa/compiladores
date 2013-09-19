@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "gv.h"
+#include "iks_ast.h"
 
 static inline __comp_tree_init(comp_tree_t *tree) {
 	tree->item = NULL;
@@ -17,9 +19,14 @@ comp_tree_t *new_comp_tree() {
     	fprintf(stderr, "ERROR: Allocation of new tree failed.\n");
     	return NULL;
     }
-    
+
+
     __comp_tree_init(tree);
-    
+
+    comp_list_t *l;
+    l = new_comp_list();
+    tree->children = l;
+
     return tree;
 }
 
@@ -29,6 +36,9 @@ void comp_tree_set_item(comp_tree_t *tree, void *item) {
 		return;
 	}
 	tree->item = item;
+    iks_ast_node_value_t *x;
+    x=tree->item;
+    gv_declare(x->type,tree,x->symbol);
 }
 
 void comp_tree_set_string(comp_tree_t *tree, const char *string) {

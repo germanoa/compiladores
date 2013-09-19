@@ -1,0 +1,147 @@
+digraph G {
+node_0x828c958 [label="k"]
+node_0x828c970 [label="tamanho"]
+node_0x828c9b0 [label="1"]
+node_0x828c9c8 [label="-"]
+node_0x828c9c8 -> node_0x828c970
+node_0x828c9c8 -> node_0x828c9b0
+node_0x828c9e0 [label="="]
+node_0x828c9e0 -> node_0x828c958
+node_0x828c9e0 -> node_0x828c9c8
+node_0x828c9f8 [label="i"]
+node_0x828ca38 [label="0"]
+node_0x828ca50 [label="="]
+node_0x828ca50 -> node_0x828c9f8
+node_0x828ca50 -> node_0x828ca38
+node_0x828ca68 [label="j"]
+node_0x828ca80 [label="0"]
+node_0x828ca98 [label="="]
+node_0x828ca98 -> node_0x828ca68
+node_0x828ca98 -> node_0x828ca80
+node_0x828cab0 [label="i"]
+node_0x828cac8 [label="tamanho"]
+node_0x828cae0 [label="<"]
+node_0x828cae0 -> node_0x828cab0
+node_0x828cae0 -> node_0x828cac8
+node_0x828caf8 [label="j"]
+node_0x828cb10 [label="0"]
+node_0x828cb28 [label="="]
+node_0x828cb28 -> node_0x828caf8
+node_0x828cb28 -> node_0x828cb10
+node_0x828cb40 [label="j"]
+node_0x828cb58 [label="k"]
+node_0x828cb70 [label="<"]
+node_0x828cb70 -> node_0x828cb40
+node_0x828cb70 -> node_0x828cb58
+node_0x828cb88 [label="vetor"]
+node_0x828cba0 [label="j"]
+node_0x828cbb8 [label="[]"]
+node_0x828cbb8 -> node_0x828cb88
+node_0x828cbb8 -> node_0x828cba0
+node_0x828cbd0 [label="vetor"]
+node_0x828cbe8 [label="j"]
+node_0x828cc00 [label="1"]
+node_0x828cc18 [label="+"]
+node_0x828cc18 -> node_0x828cbe8
+node_0x828cc18 -> node_0x828cc00
+node_0x828cc30 [label="[]"]
+node_0x828cc30 -> node_0x828cbd0
+node_0x828cc30 -> node_0x828cc18
+node_0x828cc48 [label=">"]
+node_0x828cc48 -> node_0x828cbb8
+node_0x828cc48 -> node_0x828cc30
+node_0x828cc60 [label="aux"]
+node_0x828cca0 [label="v"]
+node_0x828ccb8 [label="j"]
+node_0x828ccd0 [label="[]"]
+node_0x828ccd0 -> node_0x828cca0
+node_0x828ccd0 -> node_0x828ccb8
+node_0x828cce8 [label="="]
+node_0x828cce8 -> node_0x828cc60
+node_0x828cce8 -> node_0x828ccd0
+node_0x828cd00 [label="v"]
+node_0x828cd18 [label="j"]
+node_0x828cd30 [label="[]"]
+node_0x828cd30 -> node_0x828cd00
+node_0x828cd30 -> node_0x828cd18
+node_0x828cd48 [label="v"]
+node_0x828cd60 [label="j"]
+node_0x828cd78 [label="1"]
+node_0x828cd90 [label="+"]
+node_0x828cd90 -> node_0x828cd60
+node_0x828cd90 -> node_0x828cd78
+node_0x828cda8 [label="[]"]
+node_0x828cda8 -> node_0x828cd48
+node_0x828cda8 -> node_0x828cd90
+node_0x828cdc0 [label="="]
+node_0x828cdc0 -> node_0x828cd30
+node_0x828cdc0 -> node_0x828cda8
+node_0x828cdd8 [label="v"]
+node_0x828cdf0 [label="j"]
+node_0x828ce08 [label="1"]
+node_0x828ce20 [label="+"]
+node_0x828ce20 -> node_0x828cdf0
+node_0x828ce20 -> node_0x828ce08
+node_0x828ce38 [label="[]"]
+node_0x828ce38 -> node_0x828cdd8
+node_0x828ce38 -> node_0x828ce20
+node_0x828ce50 [label="aux"]
+node_0x828ce68 [label="="]
+node_0x828ce68 -> node_0x828ce38
+node_0x828ce68 -> node_0x828ce50
+node_0x828cdc0 -> node_0x828ce68
+node_0x828cce8 -> node_0x828cdc0
+node_0x828ce80 [label="block"]
+node_0x828ce80 -> node_0x828cce8
+node_0x828ce98 [label="ifelse"]
+node_0x828ce98 -> node_0x828cc48
+node_0x828ce98 -> node_0x828ce80
+node_0x828ceb0 [label="j"]
+node_0x828cec8 [label="j"]
+node_0x828cee0 [label="1"]
+node_0x828cef8 [label="+"]
+node_0x828cef8 -> node_0x828cec8
+node_0x828cef8 -> node_0x828cee0
+node_0x828cf10 [label="="]
+node_0x828cf10 -> node_0x828ceb0
+node_0x828cf10 -> node_0x828cef8
+node_0x828ce98 -> node_0x828cf10
+node_0x828cf40 [label="block"]
+node_0x828cf40 -> node_0x828ce98
+node_0x828cf28 [label="whiledo"]
+node_0x828cf28 -> node_0x828cb70
+node_0x828cf28 -> node_0x828cf40
+node_0x828cf58 [label="i"]
+node_0x828cf70 [label="i"]
+node_0x828cf88 [label="1"]
+node_0x828cfa0 [label="+"]
+node_0x828cfa0 -> node_0x828cf70
+node_0x828cfa0 -> node_0x828cf88
+node_0x828cfb8 [label="="]
+node_0x828cfb8 -> node_0x828cf58
+node_0x828cfb8 -> node_0x828cfa0
+node_0x828cfd0 [label="k"]
+node_0x828cfe8 [label="k"]
+node_0x828d000 [label="1"]
+node_0x828d018 [label="-"]
+node_0x828d018 -> node_0x828cfe8
+node_0x828d018 -> node_0x828d000
+node_0x828d030 [label="="]
+node_0x828d030 -> node_0x828cfd0
+node_0x828d030 -> node_0x828d018
+node_0x828cfb8 -> node_0x828d030
+node_0x828cf28 -> node_0x828cfb8
+node_0x828cb28 -> node_0x828cf28
+node_0x828d060 [label="block"]
+node_0x828d060 -> node_0x828cb28
+node_0x828d048 [label="whiledo"]
+node_0x828d048 -> node_0x828cae0
+node_0x828d048 -> node_0x828d060
+node_0x828ca98 -> node_0x828d048
+node_0x828ca50 -> node_0x828ca98
+node_0x828c9e0 -> node_0x828ca50
+node_0x828d090 [label="bubblesort"]
+node_0x828d090 -> node_0x828c9e0
+node_0x828d0a8 [label="programa"]
+node_0x828d0a8 -> node_0x828d090
+}

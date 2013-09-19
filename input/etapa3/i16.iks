@@ -1,0 +1,5 @@
+/* literais string */
+int:f()
+{
+	iks = "teste";
+}

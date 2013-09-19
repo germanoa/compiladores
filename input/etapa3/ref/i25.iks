@@ -1,0 +1,5 @@
+/* aritmética unária - */
+int:f()
+{
+	x = - y;
+}

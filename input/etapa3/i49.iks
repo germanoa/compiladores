@@ -1,0 +1,12 @@
+/* the recursive fatorial by ta gb */
+int: numero;
+
+int:main(){
+	output "Fatorial de ", numero, " = ", fatorial(numero);
+	return 0;
+}
+
+int:fatorial(int : n){
+	if (n == 1) then return 1;
+	return n * fatorial(n-1);
+}
