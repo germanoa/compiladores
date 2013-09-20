@@ -70,6 +70,7 @@ DECLARATIONS
 %type<nt> param_list 
 %type<nt> terminal_value
 %type<nt> id
+%type<nt> func_call
 
 %right TK_PR_THEN TK_PR_ELSE
 %right '='
@@ -212,13 +213,12 @@ command_seq:
             }
         }
 	| command
-            {
-            }
 	;
 
 /* 2.4 */
 command:
-	  command_block
+      func_call
+	 | command_block
         {
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
@@ -259,6 +259,7 @@ command:
             atribuicao = new_comp_tree();
             comp_tree_set_item(atribuicao,(void*)v);
 	        gv_declare(IKS_AST_ATRIBUICAO,atribuicao,NULL);
+
 
             iks_ast_append(atribuicao,$1);
 	        gv_connect(atribuicao,$1);
@@ -361,16 +362,23 @@ expr:
 	        gv_declare(IKS_AST_LITERAL,lit,$1->value);
             $$ = lit;
         }
-	| TK_IDENTIFICADOR '[' expr ']'
+	| id '[' expr ']'
         {
-            iks_ast_node_value_t *v1;
-            v1 = new_iks_ast_node_value();
-            iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
-            comp_tree_t *lit;
-            lit = new_comp_tree();
-            comp_tree_set_item(lit,(void*)v1);
-	        gv_declare(IKS_AST_LITERAL,lit,$1->value);
-            $$ = lit;
+            // []
+            iks_ast_node_value_t *v;
+            v = new_iks_ast_node_value();
+            iks_ast_node_value_set(v,IKS_AST_VETOR_INDEXADO,NULL);
+            comp_tree_t *vets;
+            vets = new_comp_tree();
+            comp_tree_set_item(vets,(void*)v);
+	        gv_declare(IKS_AST_VETOR_INDEXADO,vets,NULL);
+
+            iks_ast_append(vets,$id);
+	        gv_connect(vets,$id);
+            iks_ast_append(vets,$3);
+	        gv_connect(vets,$3);
+
+            $$ = vets;
         }
 	| terminal_value
 	| '(' expr ')'
@@ -591,12 +599,16 @@ expr:
 	        gv_declare(IKS_AST_LOGICO_OU,oo,NULL);
 
             iks_ast_append(oo,$1);
-	    gv_connect(oo,$1);
+	        gv_connect(oo,$1);
             iks_ast_append(oo,$3);
-	    gv_connect(oo,$3);
+	        gv_connect(oo,$3);
             $$ = oo;
         }
-	| TK_IDENTIFICADOR '(' func_param_list ')'
+    | func_call
+	;
+
+func_call:
+	id '(' func_param_list ')'
         {
             /* 3.A.17 */
             iks_ast_node_value_t *v;
@@ -607,22 +619,15 @@ expr:
             comp_tree_set_item(x,(void*)v);
 	        gv_declare(IKS_AST_CHAMADA_DE_FUNCAO,x,NULL);
 
-            iks_ast_node_value_t *v1;
-            v1 = new_iks_ast_node_value();
-            iks_ast_node_value_set(v1,IKS_AST_IDENTIFICADOR,$1);
-            comp_tree_t *identificador;
-            identificador = new_comp_tree();
-            comp_tree_set_item(identificador,(void*)v1);
-	        gv_declare(IKS_AST_IDENTIFICADOR,identificador,$1->value);
+            iks_ast_append(x,$id);
+	        gv_connect(x,$id);
 
-            iks_ast_append(x,identificador);
-	    gv_connect(x,identificador);
-            iks_ast_append(x,$3);
-	    gv_connect(x,$3);
+            if ($3) { //if no params, so NULL
+                iks_ast_append(x,$3);
+	            gv_connect(x,$3);
+            }
             $$ = x;
-                    
         }
-	;
 
 terminal_value:
         /* 3.A.11 */
@@ -749,6 +754,12 @@ func_param_list:
 param_list:
 	  expr
 	| expr ',' param_list
+        {    
+            if ($3) { //because can command_seq <- command <- empty
+                iks_ast_append($1,$3);
+	            gv_connect($1,$3);
+            }
+        }
 	;
 
 /* 2.6 */
