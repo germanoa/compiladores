@@ -61,6 +61,7 @@ DECLARATIONS
 %type<nt> prog
 %type<nt> func
 %type<nt> command_block 
+%type<nt> command_block_f
 %type<nt> command_seq 
 %type<nt> command 
 %type<nt> ctrl_flow 
@@ -162,7 +163,7 @@ type:
 
 /* 2.2 */
 func:
-	  type ':' TK_IDENTIFICADOR '(' func_param_decl_list ')' decl_list command_block
+	  type ':' TK_IDENTIFICADOR '(' func_param_decl_list ')' decl_list command_block_f
         {
             /* 3.A.2 */
             iks_ast_node_value_t *v;
@@ -172,9 +173,9 @@ func:
             funcao = new_comp_tree();
             comp_tree_set_item(funcao,(void*)v);
             gv_declare(IKS_AST_FUNCAO,funcao,$3->value); 
-            if ($command_block) {
-                iks_ast_append(funcao,$command_block);
-                gv_connect(funcao,$command_block);
+            if ($command_block_f) {
+                iks_ast_append(funcao,$command_block_f);
+                gv_connect(funcao,$command_block_f);
             }
             $$ = funcao;
         }
@@ -196,10 +197,29 @@ decl_list: // pode ser vazia?
 	;
 
 /* 2.3 */
-command_block:
+command_block_f://two command_block because cmd_blk from function isnt in ast
 	  '{' command_seq '}'
         {
             $$ = $command_seq;
+        }
+	;
+
+command_block:
+	  '{' command_seq '}'
+        {
+            iks_ast_node_value_t *v;
+            v = new_iks_ast_node_value();
+            iks_ast_node_value_set(v,IKS_AST_BLOCO,NULL);
+            comp_tree_t *bloco;
+            bloco = new_comp_tree();
+            comp_tree_set_item(bloco,(void*)v);
+            gv_declare(IKS_AST_BLOCO,bloco,NULL);
+
+            if ($command_seq) { //because can command_seq <- command <- empty
+                iks_ast_append(bloco,$command_seq);
+		        gv_connect(bloco,$command_seq);
+            }
+            $$ = bloco;
         }
 	;
 
@@ -218,17 +238,7 @@ command_seq:
 /* 2.4 */
 command:
       func_call
-	 | command_block
-        {
-            iks_ast_node_value_t *v;
-            v = new_iks_ast_node_value();
-            iks_ast_node_value_set(v,IKS_AST_BLOCO,NULL);
-            comp_tree_t *bloco;
-            bloco = new_comp_tree();
-            comp_tree_set_item(bloco,(void*)v);
-            gv_declare(IKS_AST_BLOCO,bloco,NULL);
-            $$ = bloco;
-        }
+	| command_block
     | ctrl_flow
 	| id '=' expr
         {
