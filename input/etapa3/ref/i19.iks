@@ -1,6 +1,0 @@
-/* literais booleanos */
-int:f()
-{
-	iks = false;
-	caps = true;
-}

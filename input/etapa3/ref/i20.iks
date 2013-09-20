@@ -1,5 +1,0 @@
-/* literais char */
-int:f()
-{
-	iks = 'c';
-}

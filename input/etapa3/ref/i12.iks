@@ -1,5 +1,0 @@
-/* comando atribuição */
-int:f()
-{
-	x = 10;
-}

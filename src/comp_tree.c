@@ -38,7 +38,6 @@ void comp_tree_set_item(comp_tree_t *tree, void *item) {
 	tree->item = item;
     iks_ast_node_value_t *x;
     x=tree->item;
-    gv_declare(x->type,tree,x->symbol);
 }
 
 void comp_tree_set_string(comp_tree_t *tree, const char *string) {

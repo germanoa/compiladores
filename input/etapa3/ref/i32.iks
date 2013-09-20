@@ -1,5 +1,0 @@
-/* lógicas menor ou igual que */
-int:f()
-{
-	x = a <= b;
-}

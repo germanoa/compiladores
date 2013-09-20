@@ -1,5 +1,0 @@
-/* chamada de função */
-int:f()
-{
-	k();
-}

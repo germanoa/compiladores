@@ -9,7 +9,7 @@
 extern YYSTYPE yylval;
 
 int line_number = 1;
-char *identifier;
+const char *last_identifier;
 
 //typedef struct yyval_t yyval_t;
 //struct yyval_t {
@@ -20,16 +20,20 @@ char *identifier;
 
 
 comp_grammar_symbol_t *push_to_symbol_table(int type) {
+    char *identifier;
     identifier = malloc(yyleng);
     int deslocamento=0;
-    if (type==IKS_SIMBOLO_LITERAL_CHAR || type==IKS_SIMBOLO_LITERAL_STRING) {
+    int d2=0;
+    if (type==TK_LIT_CHAR || type==TK_LIT_STRING) {
         deslocamento=1; /* para eliminar '' e "" */
+        d2=1;
     }
-    strncpy(identifier,&yytext[deslocamento],yyleng-1-deslocamento);     
+    strncpy(identifier,&yytext[deslocamento],yyleng-deslocamento-d2);     
+    last_identifier=identifier;
     
     comp_grammar_symbol_t *symbol;
     symbol = new_comp_grammar_symbol();
-    comp_grammar_symbol_set(symbol,type,line_number,NULL);
+    comp_grammar_symbol_set(symbol,type,line_number,identifier);
 
     symbol_table_append(identifier,symbol);
     return symbol;
@@ -118,7 +122,7 @@ int yy_line_number_get() {
     return line_number;
 }
 
-char *yy_last_token_identifier_get() {
-    return identifier;
+const char *yy_last_token_identifier_get() {
+    return last_identifier;
 }
 

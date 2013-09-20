@@ -1,5 +1,0 @@
-/* chamada de função com lista de argumentos que são expressões */
-int:f()
-{
-	k(10+10,20+20,30+30);
-}

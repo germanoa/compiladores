@@ -1,5 +1,0 @@
-/* lógicas igual */
-int:f()
-{
-	x = a == b;
-}

@@ -1,5 +1,0 @@
-/* literais inteiro */
-int:f()
-{
-	iks = 10;
-}

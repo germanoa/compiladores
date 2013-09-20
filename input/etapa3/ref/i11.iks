@@ -1,5 +1,0 @@
-/* comando output com lista de saidas */
-int:f()
-{
-	output x, y, z;
-}

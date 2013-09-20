@@ -1,9 +1,0 @@
-digraph G {
-node_0x95aa890 [label="x"]
-node_0x95aa8a8 [label="input"]
-node_0x95aa8a8 -> node_0x95aa890
-node_0x95aa8d8 [label="f"]
-node_0x95aa8d8 -> node_0x95aa8a8
-node_0x95aa8f0 [label="programa"]
-node_0x95aa8f0 -> node_0x95aa8d8
-}

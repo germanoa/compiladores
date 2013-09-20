@@ -1,5 +1,0 @@
-/* literais float */
-int:f()
-{
-	iks = 10.12;
-}

@@ -1,5 +1,0 @@
-/* comando while do */
-int:f()
-{
-	while (10) do { }
-}

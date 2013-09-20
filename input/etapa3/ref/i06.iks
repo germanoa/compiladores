@@ -1,5 +1,0 @@
-/* comando if com else */
-int:f()
-{
-  if ( 10 ) then {} else {};
-}

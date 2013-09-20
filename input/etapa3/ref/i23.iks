@@ -1,5 +1,0 @@
-/* aritmética multiplicação */
-int:f()
-{
-	x = a * b;
-}

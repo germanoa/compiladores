@@ -1,5 +1,0 @@
-/* comando input */
-int:f()
-{
-	input x
-}
