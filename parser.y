@@ -72,11 +72,19 @@ DECLARATIONS
 %type<nt> param_list 
 %type<nt> terminal_value
 %type<nt> id
+%type<nt> idv
 %type<nt> func_call
 
 %right TK_PR_THEN TK_PR_ELSE
 %right '='
-%left '<' '>' TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE TK_OC_AND TK_OC_OR
+%left '<'
+%left '>'
+%left TK_OC_LE
+%left TK_OC_GE
+%left TK_OC_EQ
+%left TK_OC_NE
+%left TK_OC_OR
+%left TK_OC_AND
 %left '+' '-'
 %left '*' '/'
 %left '!'
@@ -249,15 +257,13 @@ commands:
             comp_tree_set_item(atribuicao,(void*)v);
             gv_declare(IKS_AST_ATRIBUICAO,atribuicao,NULL);
 
-
             iks_ast_append(atribuicao,$1);
 	        gv_connect(atribuicao,$1);
             iks_ast_append(atribuicao,$3);
 	        gv_connect(atribuicao,$3);
             $$ = atribuicao;
-                    
         }
-    | id '[' expr ']' '=' expr
+	| idv '=' expr
         {
             /* 3.A.8 */
             iks_ast_node_value_t *v;
@@ -266,15 +272,14 @@ commands:
             comp_tree_t *atribuicao;
             atribuicao = new_comp_tree();
             comp_tree_set_item(atribuicao,(void*)v);
-	        gv_declare(IKS_AST_ATRIBUICAO,atribuicao,NULL);
-
+            gv_declare(IKS_AST_ATRIBUICAO,atribuicao,NULL);
 
             iks_ast_append(atribuicao,$1);
 	        gv_connect(atribuicao,$1);
             iks_ast_append(atribuicao,$3);
 	        gv_connect(atribuicao,$3);
             $$ = atribuicao;
-        }            
+        }
 	| TK_PR_OUTPUT output_list
         {
             /* 3.A.7 */
@@ -341,6 +346,25 @@ id:
             comp_tree_set_item(identificador,(void*)v1);
 	        gv_declare(IKS_AST_IDENTIFICADOR,identificador,$1->value);
             $$ = identificador;
+    }
+    ;
+idv:
+    id '[' expr ']'
+    {
+            // []
+            iks_ast_node_value_t *v;
+            v = new_iks_ast_node_value();
+            iks_ast_node_value_set(v,IKS_AST_VETOR_INDEXADO,NULL);
+            comp_tree_t *vets;
+            vets = new_comp_tree();
+            comp_tree_set_item(vets,(void*)v);
+	        gv_declare(IKS_AST_VETOR_INDEXADO,vets,NULL);
+
+            iks_ast_append(vets,$id);
+	        gv_connect(vets,$id);
+            iks_ast_append(vets,$3);
+	        gv_connect(vets,$3);
+            $$ = vets;
     }
     ;
 
@@ -486,9 +510,9 @@ expr:
 	        gv_declare(IKS_AST_LOGICO_COMP_G,oo,NULL);
 
             iks_ast_append(oo,$1);
-	    gv_connect(oo,$1);
+	        gv_connect(oo,$1);
             iks_ast_append(oo,$3);
-	    gv_connect(oo,$3);
+	        gv_connect(oo,$3);
             $$ = oo;
         }
 	| '!' expr
@@ -503,7 +527,22 @@ expr:
 	        gv_declare(IKS_AST_LOGICO_COMP_NEGACAO,inv,NULL);
 
             iks_ast_append(inv,$2);
-	    gv_connect(inv,$2);
+	        gv_connect(inv,$2);
+            $$ = inv;
+        }
+	| '-' expr %prec INVERSAO
+        {
+            /* 3.A.15 */
+            iks_ast_node_value_t *v;
+            v = new_iks_ast_node_value();
+            iks_ast_node_value_set(v,IKS_AST_ARIM_INVERSAO,NULL);
+            comp_tree_t *inv;
+            inv = new_comp_tree();
+            comp_tree_set_item(inv,(void*)v);
+	        gv_declare(IKS_AST_ARIM_INVERSAO,inv,NULL);
+
+            iks_ast_append(inv,$2);
+	        gv_connect(inv,$2);
             $$ = inv;
         }
 	| expr TK_OC_LE expr
@@ -646,29 +685,28 @@ terminal_value:
 	        gv_declare(IKS_AST_LITERAL,lit,$1->value);
             $$ = lit;
         }
-	| '-' TK_LIT_INT %prec INVERSAO
-        {
-            /* 3.A.13 */
-            iks_ast_node_value_t *v;
-            v = new_iks_ast_node_value();
-            iks_ast_node_value_set(v,IKS_AST_ARIM_INVERSAO,NULL);
-            comp_tree_t *inv;
-            inv = new_comp_tree();
-            comp_tree_set_item(inv,(void*)v);
-	        gv_declare(IKS_AST_ARIM_INVERSAO,inv,NULL);
+	//| '-' TK_LIT_INT %prec INVERSAO
+    //    {
+    //        /* 3.A.13 */
+    //        iks_ast_node_value_t *v;
+    //        v = new_iks_ast_node_value();
+    //        comp_tree_t *inv;
+    //        inv = new_comp_tree();
+    //        comp_tree_set_item(inv,(void*)v);
+	//        gv_declare(IKS_AST_ARIM_INVERSAO,inv,NULL);
 
-            iks_ast_node_value_t *v1;
-            v1 = new_iks_ast_node_value();
-            iks_ast_node_value_set(v1,IKS_AST_LITERAL,$2);
-            comp_tree_t *lit;
-            lit = new_comp_tree();
-            comp_tree_set_item(lit,(void*)v1);
-	        gv_declare(IKS_AST_LITERAL,lit,$2->value);
-            
-            iks_ast_append(inv,lit);
-	    gv_connect(inv,lit);
-            $$ = inv;
-        }
+    //        iks_ast_node_value_t *v1;
+    //        v1 = new_iks_ast_node_value();
+    //        iks_ast_node_value_set(v1,IKS_AST_LITERAL,$2);
+    //        comp_tree_t *lit;
+    //        lit = new_comp_tree();
+    //        comp_tree_set_item(lit,(void*)v1);
+	//        gv_declare(IKS_AST_LITERAL,lit,$2->value);
+    //        
+    //        iks_ast_append(inv,lit);
+	//    gv_connect(inv,lit);
+    //        $$ = inv;
+    //    }
 	| TK_LIT_FLOAT
         {
             iks_ast_node_value_t *v1;
@@ -680,29 +718,29 @@ terminal_value:
 	        gv_declare(IKS_AST_LITERAL,lit,$1->value);
             $$ = lit;
         }
-	| '-' TK_LIT_FLOAT %prec INVERSAO
-        {
-            /* 3.A.13 */
-            iks_ast_node_value_t *v;
-            v = new_iks_ast_node_value();
-            iks_ast_node_value_set(v,IKS_AST_ARIM_INVERSAO,NULL);
-            comp_tree_t *inv;
-            inv = new_comp_tree();
-            comp_tree_set_item(inv,(void*)v);
-	        gv_declare(IKS_AST_ARIM_INVERSAO,inv,NULL);
+	//| '-' TK_LIT_FLOAT %prec INVERSAO
+    //    {
+    //        /* 3.A.13 */
+    //        iks_ast_node_value_t *v;
+    //        v = new_iks_ast_node_value();
+    //        iks_ast_node_value_set(v,IKS_AST_ARIM_INVERSAO,NULL);
+    //        comp_tree_t *inv;
+    //        inv = new_comp_tree();
+    //        comp_tree_set_item(inv,(void*)v);
+	//        gv_declare(IKS_AST_ARIM_INVERSAO,inv,NULL);
 
-            iks_ast_node_value_t *v1;
-            v1 = new_iks_ast_node_value();
-            iks_ast_node_value_set(v1,IKS_AST_LITERAL,$2);
-            comp_tree_t *lit;
-            lit = new_comp_tree();
-            comp_tree_set_item(lit,(void*)v1);
-	        gv_declare(IKS_AST_LITERAL,lit,$2->value);
-            
-            iks_ast_append(inv,lit);
-	    gv_connect(inv,lit);
-            $$ = inv;
-        }
+    //        iks_ast_node_value_t *v1;
+    //        v1 = new_iks_ast_node_value();
+    //        iks_ast_node_value_set(v1,IKS_AST_LITERAL,$2);
+    //        comp_tree_t *lit;
+    //        lit = new_comp_tree();
+    //        comp_tree_set_item(lit,(void*)v1);
+	//        gv_declare(IKS_AST_LITERAL,lit,$2->value);
+    //        
+    //        iks_ast_append(inv,lit);
+	//    gv_connect(inv,lit);
+    //        $$ = inv;
+    //    }
 	| TK_LIT_FALSE
         {
             iks_ast_node_value_t *v1;

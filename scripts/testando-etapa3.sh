@@ -16,5 +16,5 @@ VAI=$1
 build/main < input/etapa3/$VAI.iks
 mv output/etapa3/saida.dot output/etapa3/$VAI.dot 
 dot output/etapa3/$VAI.dot -Tpng -o output/etapa3/png/$VAI.png
-display output/etapa3/png/$VAI.png
+display output/etapa3/png/$VAI.png &
 display input/etapa3/$VAI.dot.png 
