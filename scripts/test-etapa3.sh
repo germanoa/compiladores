@@ -3,7 +3,7 @@
 
 scripts/compila.sh
 
-for i in `ls -1 input/etapa3/i*.iks |cut -d '/' -f3 |sed -e 's/\..*$//'`
+for i in `ls -1 input/etapa3/*.iks |cut -d '/' -f3 |sed -e 's/\..*$//'`
 do
     build/main < input/etapa3/$i.iks
     mv output/etapa3/saida.dot output/etapa3/$i.dot
