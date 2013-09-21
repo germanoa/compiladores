@@ -125,7 +125,7 @@ prog:
                 iks_ast_append($1,$2);
 		        gv_connect($1,$2);
             }
-            $$ = $func;
+            $$ = $2;
         }
 	| /* empty */
 	;
@@ -170,9 +170,9 @@ func:
             funcao = new_comp_tree();
             comp_tree_set_item(funcao,(void*)v);
             gv_declare(IKS_AST_FUNCAO,funcao,$3->value); 
-            if ($command_block_f) {
-                iks_ast_append(funcao,$command_block_f);
-                gv_connect(funcao,$command_block_f);
+            if ($8) {
+                iks_ast_append(funcao,$8);
+                gv_connect(funcao,$8);
             }
             $$ = funcao;
         }
@@ -197,7 +197,7 @@ decl_list: // pode ser vazia?
 command_block_f://two command_block because cmd_blk from function isnt in ast
 	  '{' command_seq '}'
         {
-            $$ = $command_seq;
+            $$ = $2;
         }
 	;
 
@@ -212,9 +212,9 @@ command_block:
             comp_tree_set_item(bloco,(void*)v);
             gv_declare(IKS_AST_BLOCO,bloco,NULL);
 
-            if ($command_seq) { //because can command_seq <- command <- empty
-                iks_ast_append(bloco,$command_seq);
-		        gv_connect(bloco,$command_seq);
+            if ($2) { //because can command_seq <- command <- empty
+                iks_ast_append(bloco,$2);
+		        gv_connect(bloco,$2);
             }
             $$ = bloco;
         }
@@ -225,8 +225,8 @@ command_seq:
         {
             /* 3.A.10 */
             if ($3) { //because can command_seq <- command <- empty
-                iks_ast_append($command,$3);
-		        gv_connect($command,$3);
+                iks_ast_append($1,$3);
+		        gv_connect($1,$3);
             }
         }
 	| command
@@ -329,8 +329,8 @@ commands:
             comp_tree_set_item(ret,(void*)v);
 	        gv_declare(IKS_AST_RETURN,ret,NULL);
 
-            iks_ast_append(ret,$expr);
-	        gv_connect(ret,$expr);
+            iks_ast_append(ret,$2);
+	        gv_connect(ret,$2);
             $$ = ret;
         }
 	;
@@ -360,8 +360,8 @@ idv:
             comp_tree_set_item(vets,(void*)v);
 	        gv_declare(IKS_AST_VETOR_INDEXADO,vets,NULL);
 
-            iks_ast_append(vets,$id);
-	        gv_connect(vets,$id);
+            iks_ast_append(vets,$1);
+	        gv_connect(vets,$1);
             iks_ast_append(vets,$3);
 	        gv_connect(vets,$3);
             $$ = vets;
@@ -372,8 +372,8 @@ output_list:
 	  expr
 	| expr ',' output_list
         {
-            iks_ast_append($expr,$3);
-	    gv_connect($expr,$3);
+            iks_ast_append($1,$3);
+	        gv_connect($1,$3);
         }
 	;
 
@@ -401,8 +401,8 @@ expr:
             comp_tree_set_item(vets,(void*)v);
 	        gv_declare(IKS_AST_VETOR_INDEXADO,vets,NULL);
 
-            iks_ast_append(vets,$id);
-	        gv_connect(vets,$id);
+            iks_ast_append(vets,$1);
+	        gv_connect(vets,$1);
             iks_ast_append(vets,$3);
 	        gv_connect(vets,$3);
 
@@ -662,8 +662,8 @@ func_call:
             comp_tree_set_item(x,(void*)v);
 	        gv_declare(IKS_AST_CHAMADA_DE_FUNCAO,x,NULL);
 
-            iks_ast_append(x,$id);
-	        gv_connect(x,$id);
+            iks_ast_append(x,$1);
+	        gv_connect(x,$1);
 
             if ($3) { //if no params, so NULL
                 iks_ast_append(x,$3);
@@ -816,10 +816,10 @@ ctrl_flow:
             comp_tree_set_item(if_else,(void*)v);
 	        gv_declare(IKS_AST_IF_ELSE,if_else,NULL);
 
-            iks_ast_append(if_else,$expr);
-	    gv_connect(if_else,$expr);
-            iks_ast_append(if_else,$commands);
-	    gv_connect(if_else,$commands);
+            iks_ast_append(if_else,$3);
+	    gv_connect(if_else,$3);
+            iks_ast_append(if_else,$6);
+	    gv_connect(if_else,$6);
             $$ = if_else;
         }
 	| TK_PR_IF '(' expr ')' TK_PR_THEN commands TK_PR_ELSE commands
@@ -833,8 +833,8 @@ ctrl_flow:
             comp_tree_set_item(if_else,(void*)v);
 	        gv_declare(IKS_AST_IF_ELSE,if_else,NULL);
 
-            iks_ast_append(if_else,$expr);
-	        gv_connect(if_else,$expr);
+            iks_ast_append(if_else,$3);
+	        gv_connect(if_else,$3);
             iks_ast_append(if_else,$6);
 	        gv_connect(if_else,$6);
             iks_ast_append(if_else,$8);
@@ -852,10 +852,10 @@ ctrl_flow:
             comp_tree_set_item(while_do,(void*)v);
 	        gv_declare(IKS_AST_WHILE_DO,while_do,NULL);
 
-            iks_ast_append(while_do,$expr);
-	        gv_connect(while_do,$expr);
-            iks_ast_append(while_do,$commands);
-	        gv_connect(while_do,$commands);
+            iks_ast_append(while_do,$3);
+	        gv_connect(while_do,$3);
+            iks_ast_append(while_do,$6);
+	        gv_connect(while_do,$6);
             $$ = while_do;
         }
     | TK_PR_DO commands TK_PR_WHILE '(' expr ')' 
@@ -869,10 +869,10 @@ ctrl_flow:
             comp_tree_set_item(do_while,(void*)v);
 	        gv_declare(IKS_AST_DO_WHILE,do_while,NULL);
 
-            iks_ast_append(do_while,$commands);
-	    gv_connect(do_while,$commands);
-            iks_ast_append(do_while,$expr);
-	    gv_connect(do_while,$expr);
+            iks_ast_append(do_while,$2);
+	    gv_connect(do_while,$2);
+            iks_ast_append(do_while,$5);
+	    gv_connect(do_while,$5);
             $$ = do_while;
         }
 	;
