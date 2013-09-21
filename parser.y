@@ -778,7 +778,6 @@ terminal_value:
         {
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
-            printf("%s\n",$1->value);
             iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
             comp_tree_t *lit;
             lit = new_comp_tree();
