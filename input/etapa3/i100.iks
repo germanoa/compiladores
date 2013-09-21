@@ -1,50 +1,60 @@
 /* priority queues. Shell Sort */
-int: MAX = 10;
-int: C[MAX];
+int: C[10];
 
-void: ins_direta(int: c[], int: tam){
-	int: i;
-	int: j;
-	int: chave;
-	
-	for(j=1; j<tam; j++) then {
+int: insDireta(int : tam)
+int: i;
+int: j;
+int: chave;
+{	
+	j = 1;
+
+	while(j<tam) do {
 		chave = C[j];
 		i = j-1;
-		while((i>=0) && (C[i])>chave) do{
-			C[i+1] = C[i]
-			i--;
+		while((i>=0) && (C[i])>chave) do {
+			C[i+1] = C[i];
+			i = i-1;
 		};
 	C[i+1] = chave;
+	j = j+1;
 	};
 }
 
-void: insDiretaShellSort(int: c[], int: s, int: f, int: h){
-	int: i;
-	int: j;
-	int: chave;
-	
-	for(j = f+h; j < s; j += h) then {
+int: insDiretaShellSort(int: s, int: f, int: h)
+int: i;
+int: j;
+int: chave;
+{
+	j = f+h;
+
+	while(j < s) do {
 		chave = C[j];
-		i = j - h;
-		
-		while((i>0) && (C[i] > chave) do {
+		i = j-h;
+	
+		while((i>0) && (C[i] > chave)) do {
 			C[i+h] = C[i];
-			i = i - h;
+			i = i-h;
 		};
 		C[i+h] = chave;
+ 		j = j+h;	
 	};
 }
 
-void shellSort(int C[], int np, int n){
-	int: p;
-	int: h;
-	int: j;
-	
-	for(p = np; p>1 p++){
-		h = (p-1) * (p-1)
-		for(j = 1; j<h; j++)
-			insDiretaShellSort(C, n, j, h):
-	}
+int: shellSort(int: np, int: n)
+int: p;
+int: h;
+int: j;
+{	
+	p = np;
+	while(p>1) do {
+		h = (p-1) * (p-1);
+		j = 1;
+		while(j<h) do {
+			insDiretaShellSort(n, j, h);
+			j = j+1;
+		};
+		p = p+1;
+	};
 }
 
 int: main()
@@ -59,11 +69,9 @@ int: main()
 	C[7] = 49;
 	C[8] = 76;
 	C[9] = 98;
-	C[10] = 34;
 	
-	shellSort(C[], MAX/2, MAX+1);
+	/* shellSort(C[], 5, 10); */
 
 	return 0;   
 	
 }
-
