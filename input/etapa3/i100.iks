@@ -1,0 +1,69 @@
+/* priority queues. Shell Sort */
+int: MAX = 10;
+int: C[MAX];
+
+void: ins_direta(int: c[], int: tam){
+	int: i;
+	int: j;
+	int: chave;
+	
+	for(j=1; j<tam; j++) then {
+		chave = C[j];
+		i = j-1;
+		while((i>=0) && (C[i])>chave) do{
+			C[i+1] = C[i]
+			i--;
+		};
+	C[i+1] = chave;
+	};
+}
+
+void: insDiretaShellSort(int: c[], int: s, int: f, int: h){
+	int: i;
+	int: j;
+	int: chave;
+	
+	for(j = f+h; j < s; j += h) then {
+		chave = C[j];
+		i = j - h;
+		
+		while((i>0) && (C[i] > chave) do {
+			C[i+h] = C[i];
+			i = i - h;
+		};
+		C[i+h] = chave;
+	};
+}
+
+void shellSort(int C[], int np, int n){
+	int: p;
+	int: h;
+	int: j;
+	
+	for(p = np; p>1 p++){
+		h = (p-1) * (p-1)
+		for(j = 1; j<h; j++)
+			insDiretaShellSort(C, n, j, h):
+	}
+}
+
+int: main()
+{
+	C[0] = 32;
+	C[1] = 41;
+	C[2] = 21;
+	C[3] = 65;
+	C[4] = 73;
+	C[5] = 36;
+	C[6] = 29;
+	C[7] = 49;
+	C[8] = 76;
+	C[9] = 98;
+	C[10] = 34;
+	
+	shellSort(C[], MAX/2, MAX+1);
+
+	return 0;   
+	
+}
+
