@@ -23,7 +23,7 @@ typedef struct comp_grammar_symbol_t comp_grammar_symbol_t;
 struct comp_grammar_symbol_t {
     int type;
     int code_line_number;
-    const char *value;    
+    char *value;    
 };
 
 /**
@@ -42,7 +42,7 @@ void comp_grammar_symbol_delete(comp_grammar_symbol_t *grammar_symbol);
 /**
  * set grammar_symbol
  */
-void comp_grammar_symbol_set(comp_grammar_symbol_t *grammar_symbol, int type, int code_line_number, const char *value);
+void comp_grammar_symbol_set(comp_grammar_symbol_t *grammar_symbol, int type, int code_line_number, char *value);
 
 /**
  * print grammar_symbol

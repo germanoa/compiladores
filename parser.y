@@ -64,6 +64,7 @@ DECLARATIONS
 %type<nt> command_block_f
 %type<nt> command_seq 
 %type<nt> command 
+%type<nt> commands 
 %type<nt> ctrl_flow 
 %type<nt> output_list 
 %type<nt> expr 
@@ -119,18 +120,6 @@ prog:
             $$ = $func;
         }
 	| /* empty */
-        //{
-        //    if (!ast->item) {
-        //        printf("prog: empty\n");
-        //        /* 3.A.1 */
-        //        iks_ast_node_value_t *v;
-        //        v = new_iks_ast_node_value();
-        //        iks_ast_node_value_set(v,IKS_AST_PROGRAMA,NULL);
-	    //        gv_declare(IKS_AST_PROGRAMA,v,NULL);
-        //        comp_tree_set_item(ast,(void*)v);
-        //        $$ = ast;
-        //    }
-        //}
 	;
 
 /* 2.1 */
@@ -236,7 +225,16 @@ command_seq:
 	;
 
 /* 2.4 */
+
 command:
+    commands
+	| /* empty */
+        {
+            $$ = NULL;
+        }
+    ;
+
+commands:
       func_call
 	| command_block
     | ctrl_flow
@@ -329,10 +327,6 @@ command:
             iks_ast_append(ret,$expr);
 	        gv_connect(ret,$expr);
             $$ = ret;
-        }
-	| /* empty */
-        {
-            $$ = NULL;
         }
 	;
 
@@ -774,7 +768,7 @@ param_list:
 
 /* 2.6 */
 ctrl_flow:
-      TK_PR_IF '(' expr ')' TK_PR_THEN command
+      TK_PR_IF '(' expr ')' TK_PR_THEN commands
         {
             /* 3.A.3 */
             iks_ast_node_value_t *v;
@@ -787,11 +781,11 @@ ctrl_flow:
 
             iks_ast_append(if_else,$expr);
 	    gv_connect(if_else,$expr);
-            iks_ast_append(if_else,$command);
-	    gv_connect(if_else,$command);
+            iks_ast_append(if_else,$commands);
+	    gv_connect(if_else,$commands);
             $$ = if_else;
         }
-	| TK_PR_IF '(' expr ')' TK_PR_THEN command TK_PR_ELSE command
+	| TK_PR_IF '(' expr ')' TK_PR_THEN commands TK_PR_ELSE commands
         {
             /* 3.A.3 */
             iks_ast_node_value_t *v;
@@ -810,7 +804,7 @@ ctrl_flow:
 	        gv_connect(if_else,$8);
             $$ = if_else;
         }
-	| TK_PR_WHILE '(' expr ')' TK_PR_DO command
+	| TK_PR_WHILE '(' expr ')' TK_PR_DO commands
         {
             /* 3.A.5 */
             iks_ast_node_value_t *v;
@@ -823,11 +817,11 @@ ctrl_flow:
 
             iks_ast_append(while_do,$expr);
 	        gv_connect(while_do,$expr);
-            iks_ast_append(while_do,$command);
-	        gv_connect(while_do,$command);
+            iks_ast_append(while_do,$commands);
+	        gv_connect(while_do,$commands);
             $$ = while_do;
         }
-    | TK_PR_DO command TK_PR_WHILE '(' expr ')' 
+    | TK_PR_DO commands TK_PR_WHILE '(' expr ')' 
         {
             /* 3.A.4 */
             iks_ast_node_value_t *v;
@@ -838,8 +832,8 @@ ctrl_flow:
             comp_tree_set_item(do_while,(void*)v);
 	        gv_declare(IKS_AST_DO_WHILE,do_while,NULL);
 
-            iks_ast_append(do_while,$command);
-	    gv_connect(do_while,$command);
+            iks_ast_append(do_while,$commands);
+	    gv_connect(do_while,$commands);
             iks_ast_append(do_while,$expr);
 	    gv_connect(do_while,$expr);
             $$ = do_while;

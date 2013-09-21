@@ -23,7 +23,7 @@ void comp_grammar_symbol_delete(comp_grammar_symbol_t *grammar_symbol) {
     grammar_symbol = NULL;
 }
 
-void comp_grammar_symbol_set(comp_grammar_symbol_t *grammar_symbol, int type, int code_line_number, const char *value) {
+void comp_grammar_symbol_set(comp_grammar_symbol_t *grammar_symbol, int type, int code_line_number, char *value) {
     grammar_symbol->type = type;
     grammar_symbol->code_line_number = code_line_number;
     grammar_symbol->value = value;
