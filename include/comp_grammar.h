@@ -24,6 +24,7 @@ struct comp_grammar_symbol_t {
     int type;
     int code_line_number;
     char *value;    
+    int decl_type;
 };
 
 /**

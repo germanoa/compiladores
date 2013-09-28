@@ -4,20 +4,13 @@
 #include "comp_tree.h"
 #include "comp_grammar.h"
 #include "parser.h"
+#include "iks_types.h"
 
 
 extern YYSTYPE yylval;
 
 int line_number = 1;
 const char *last_identifier;
-
-//typedef struct yyval_t yyval_t;
-//struct yyval_t {
-//    comp_grammar_symbol_t symbol;
-//};
-//
-//yyval_t yyval;
-
 
 comp_grammar_symbol_t *push_to_symbol_table(int type) {
     char *identifier;

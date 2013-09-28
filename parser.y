@@ -10,6 +10,7 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 #include "comp_dict.h"
 #include "comp_tree.h"
 #include "iks_ast.h"
+#include "iks_types.h"
 #include "gv.h"
 //#include "hash_table.h"
 
@@ -20,11 +21,11 @@ DECLARATIONS
 */
 
 /* Declaração dos tokens da gramática da Linguagem K */
-%token TK_PR_INT	256		
-%token TK_PR_FLOAT	257
-%token TK_PR_BOOL	258
-%token TK_PR_CHAR	259
-%token TK_PR_STRING	260
+%token<int> TK_PR_INT	256		
+%token<int> TK_PR_FLOAT	257
+%token<int> TK_PR_BOOL	258
+%token<int> TK_PR_CHAR	259
+%token<int> TK_PR_STRING	260
 %token TK_PR_IF		261
 %token TK_PR_THEN	262
 %token TK_PR_ELSE	263
@@ -42,6 +43,7 @@ DECLARATIONS
 %token TK_OC_OR		275
 
 %union {
+    int type;
     comp_grammar_symbol_t *symbol;
     comp_tree_t *nt;
 }
@@ -74,6 +76,8 @@ DECLARATIONS
 %type<nt> id
 %type<nt> idv
 %type<nt> func_call
+
+%type<type> type
 
 %right TK_PR_THEN TK_PR_ELSE
 %right '='
@@ -139,21 +143,33 @@ array_decl:
 	;
 
 decl:
-      type ':' TK_IDENTIFICADOR  
+      type ':' TK_IDENTIFICADOR
+        {
+          $3->decl_type = $1;
+        }  
     ;
-
-/*
-type_and_id:
-	  type ':' TK_IDENTIFICADOR
-	;
-*/
 
 type:
 	  TK_PR_INT
+      {
+        $$ = IKS_INT;
+      }
 	| TK_PR_FLOAT
+      {
+        $$ = IKS_FLOAT;
+      }
 	| TK_PR_BOOL
+      {
+        $$ = IKS_BOOL;
+      }
 	| TK_PR_CHAR
+      {
+        $$ = IKS_CHAR;
+      }
 	| TK_PR_STRING
+      {
+        $$ = IKS_STRING;
+      }
 	;
 
 /* 2.2 */

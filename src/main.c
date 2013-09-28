@@ -36,6 +36,8 @@ int main (int argc, char **argv)
   int resultado = yyparse();
   
   gv_close();
+
+  symbol_table_print();
   
   return resultado;
 }

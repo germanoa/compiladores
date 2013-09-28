@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include "comp_grammar.h"
 #include "comp_dict.h"
+#include "iks_types.h"
 
 static inline void __comp_grammar_symbol_init(comp_grammar_symbol_t *grammar_symbol) {
     grammar_symbol->type = IKS_SIMBOLO_INDEFINIDO;
     grammar_symbol->code_line_number = 0;
     grammar_symbol->value = NULL;
+    grammar_symbol->type = IKS_NOTYPE;
 }
 
 comp_grammar_symbol_t *new_comp_grammar_symbol() {
@@ -50,6 +52,20 @@ void symbol_table_init() {
 }
 
 void symbol_table_print() {
-    comp_dict_print(symbol_table);
+    comp_dict_t *temp;
+    temp = symbol_table;
+    int i=0;
+    do {
+        comp_grammar_symbol_t *s;
+        s = temp->item->value;
+        printf("symbol: %s\n\ttype: %d\n\tline: %d\n\tidentifier: %s\n\tdecl_type: %d\n", \
+          comp_dict_item_key_get(temp->item),\
+          s->type,\
+          s->code_line_number,\
+          s->value,\
+          s->decl_type);
+        temp = temp->next;    
+    } while(temp != symbol_table);
+    printf("\n");
 }
 
