@@ -87,7 +87,14 @@ void iks_ast_append_value(comp_tree_t *parent, iks_ast_node_value_t *child_value
  */
 void iks_ast_init();
 
+/**
+ * collection of procedures to make a ast node
+ */
+comp_tree_t *iks_ast_new_node(int type, comp_grammar_symbol_t *symbol);
 
-
+/**
+ * collection of procedures to connect two ast nodes
+ */
+void iks_ast_connect_nodes(comp_tree_t *parent, comp_tree_t *child);
 
 #endif

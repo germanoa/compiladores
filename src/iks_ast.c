@@ -46,7 +46,23 @@ void iks_ast_init() {
     ast = new_comp_tree();
 }
 
-//void iks_ast_print() {
-//    comp_dict_print(iks_ast);
-//}
+comp_tree_t *iks_ast_new_node(int type, comp_grammar_symbol_t *symbol) {
+  iks_ast_node_value_t *v;
+  v = new_iks_ast_node_value();
+  iks_ast_node_value_set(v,type,symbol);
+  comp_tree_t *t;
+  t = new_comp_tree();
+  comp_tree_set_item(t,(void*)v);
+  if (symbol) {
+    gv_declare(type,t,symbol->value);
+  }
+  else {
+    gv_declare(type,t,NULL);
+  }
+  return t;
+}
 
+void iks_ast_connect_nodes(comp_tree_t *parent, comp_tree_t *child) {
+  iks_ast_append(parent,child);
+  gv_connect(parent,child);
+}
