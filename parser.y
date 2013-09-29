@@ -14,6 +14,8 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 #include "gv.h"
 //#include "hash_table.h"
 
+comp_tree_t *ptr_funcao;
+
 %}
 
 /*
@@ -21,11 +23,11 @@ DECLARATIONS
 */
 
 /* Declaração dos tokens da gramática da Linguagem K */
-%token<int> TK_PR_INT	256		
-%token<int> TK_PR_FLOAT	257
-%token<int> TK_PR_BOOL	258
-%token<int> TK_PR_CHAR	259
-%token<int> TK_PR_STRING	260
+%token TK_PR_INT	256		
+%token TK_PR_FLOAT	257
+%token TK_PR_BOOL	258
+%token TK_PR_CHAR	259
+%token TK_PR_STRING	260
 %token TK_PR_IF		261
 %token TK_PR_THEN	262
 %token TK_PR_ELSE	263
@@ -146,6 +148,7 @@ decl:
       type ':' TK_IDENTIFICADOR
         {
           $3->decl_type = $1;
+          $3->scope = scope;
         }  
     ;
 
@@ -174,17 +177,22 @@ type:
 
 /* 2.2 */
 func:
-	  type ':' TK_IDENTIFICADOR '(' func_param_decl_list ')' decl_list command_block_f
+	  type ':' TK_IDENTIFICADOR '(' func_param_decl_list ')'
         {
             /* 3.A.2 */
             comp_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3);
-            if ($8) {
-                iks_ast_connect_nodes(funcao,$8);
-            }
-            $$ = funcao;
+            scope=funcao;
+            ptr_funcao=funcao;
         }
+	  decl_list command_block_f
+      {
+            if ($command_block_f) {
+                iks_ast_connect_nodes(ptr_funcao,$command_block_f);
+            }
+            $$ = ptr_funcao;
+      }
 	;
-
+ 	
 func_param_decl_list:
 	  param_decl_list
 	| /* empty */

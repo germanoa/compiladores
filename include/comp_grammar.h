@@ -2,6 +2,7 @@
 #define COMP_GRAMMAR_H
 
 #include "comp_dict.h"
+#include "comp_tree.h"
 
 #define IKS_SIMBOLO_INDEFINIDO 0
 #define IKS_SIMBOLO_LITERAL_INT 1
@@ -25,6 +26,7 @@ struct comp_grammar_symbol_t {
     int code_line_number;
     char *value;    
     int decl_type;
+    comp_tree_t *scope;
 };
 
 /**

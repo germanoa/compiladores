@@ -58,11 +58,12 @@ void symbol_table_print() {
     do {
         comp_grammar_symbol_t *s;
         s = temp->item->value;
-        printf("symbol: %s\n\ttype: %d\n\tline: %d\n\tidentifier: %s\n\tdecl_type: %d\n", \
+        printf("symbol: %s\n\ttype: %d\n\tline: %d\n\tidentifier: %s\n\tscope: %X\n\tdecl_type: %d\n", \
           comp_dict_item_key_get(temp->item),\
           s->type,\
           s->code_line_number,\
           s->value,\
+          s->scope,\
           s->decl_type);
         temp = temp->next;    
     } while(temp != symbol_table);

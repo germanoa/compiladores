@@ -11,6 +11,7 @@
 #include "comp_graph.h"
 #include "comp_grammar.h"
 #include "iks_ast.h"
+#include "iks_types.h"
 #include "gv.h"
 #include "main.h"
 
@@ -21,12 +22,16 @@ void yyerror(char* str)
             str, yy_line_number_get(), yy_last_token_identifier_get());
 }
 
+void iks_init() {
+  symbol_table_init();
+  iks_ast_init();
+  scope=NULL;
+}
+
 
 int main (int argc, char **argv)
 {
-  symbol_table_init();
-  
-  iks_ast_init();
+  iks_init();  
   
   //printf("\n\n\n%s\n\n\n\n", argv[0]);
   //printf("\n\n\n%s\n\n\n\n", argv[1]);
