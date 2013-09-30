@@ -28,7 +28,7 @@ comp_grammar_symbol_t *push_to_symbol_table(int type) {
     symbol = new_comp_grammar_symbol();
     comp_grammar_symbol_set(symbol,type,line_number,identifier);
 
-    symbol_table_append(identifier,symbol);
+    /* symbol_table_append(identifier,symbol); - migrated to parser.y:decl*/
     return symbol;
 }
 

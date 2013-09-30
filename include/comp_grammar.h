@@ -68,5 +68,10 @@ void symbol_table_init();
  */
 void symbol_table_print();
 
+/**
+ * verify if symbol already exists at symbol_table and scope
+ * return 1 if exists, 0 if not
+ */
+int exist_symbol(comp_grammar_symbol_t *symbol, int force_type);
 
 #endif /* COMP_GRAMMAR_H */

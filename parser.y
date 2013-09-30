@@ -149,6 +149,13 @@ decl:
         {
           $3->decl_type = $1;
           $3->scope = scope;
+          if (!exist_symbol($3,0)) {
+            symbol_table_append($3->value,$3);
+          }
+          else {
+            fprintf(stderr,"line %d: identificador '%s' já declarado\n",$3->code_line_number,$3->value);
+            exit(IKS_ERROR_DECLARED);
+          }
         }  
     ;
 
@@ -177,14 +184,14 @@ type:
 
 /* 2.2 */
 func:
-	  type ':' TK_IDENTIFICADOR '(' func_param_decl_list ')'
+	  type ':' TK_IDENTIFICADOR
         {
             /* 3.A.2 */
             comp_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3);
             scope=funcao;
             ptr_funcao=funcao;
         }
-	  decl_list command_block_f
+	  '(' func_param_decl_list ')' decl_list command_block_f
       {
             if ($command_block_f) {
                 iks_ast_connect_nodes(ptr_funcao,$command_block_f);
@@ -295,8 +302,14 @@ commands:
 id:
     TK_IDENTIFICADOR
     {
-            comp_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,$1);
-            $$ = identificador;
+      if (exist_symbol($1,0)) {
+        comp_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,$1);
+        $$ = identificador;
+      }
+      else {
+        fprintf(stderr,"line %d: identificador '%s' não declarado\n",$1->code_line_number,$1->value);
+        exit(IKS_ERROR_UNDECLARED);
+      }
     }
     ;
 idv:

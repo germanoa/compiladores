@@ -70,3 +70,29 @@ void symbol_table_print() {
     printf("\n");
 }
 
+int exist_symbol(comp_grammar_symbol_t *symbol, int force_type) {
+    int ret = 0;
+    comp_dict_t *temp;
+    temp = symbol_table;
+    do {
+        comp_grammar_symbol_t *s;
+        s = temp->item->value;
+        if (s->value) {
+          int diff = strcmp(symbol->value,s->value);
+          if (force_type) {
+            if ( (!diff) && (symbol->scope==s->scope) && (symbol->decl_type==s->decl_type) ) {
+              ret = 1;
+              break;
+            }
+          }
+          else {
+            if ( (!diff) && (symbol->scope==s->scope) ){
+              ret = 1;
+              break;
+            }
+          }
+        }
+        temp = temp->next;    
+    } while(temp != symbol_table);
+    return ret;
+}
