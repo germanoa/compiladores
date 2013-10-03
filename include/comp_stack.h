@@ -30,11 +30,11 @@ void comp_stack_delete(comp_stack_t *stack);
 /**
  * push item to stack
  */
-void comp_stack_push(comp_stack_t *stack, void *item);
+comp_stack_t *comp_stack_push(comp_stack_t *stack, void *item);
 /**
  * pop item from stack
  */
-void comp_stack_pop(comp_stack_t *stack);
+comp_stack_t *comp_stack_pop(comp_stack_t *stack);
 /**
  * return pointer item from stack top
  */

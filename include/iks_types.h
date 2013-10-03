@@ -13,6 +13,10 @@
 #define IKS_STRING 4
 #define IKS_BOOL 5
 
+#define IKS_DECL_VAR 1
+#define IKS_DECL_VECTOR 2
+#define IKS_DECL_FUNCTION 3
+
 #define IKS_ERROR_UNDECLARED 1
 #define IKS_ERROR_DECLARED 2
 #define IKS_ERROR_VARIABLE 3
@@ -28,7 +32,7 @@
 #define IKS_ERROR_WRONG_PAR_OUTPUT 13
 #define IKS_ERROR_WRONG_PAR_RETURN 14
 
-/* if scope=NULL then global else scope=ptr_to_function */
+/* stack of symbol_tables(scope) */
 comp_stack_t *scope; 
 
 

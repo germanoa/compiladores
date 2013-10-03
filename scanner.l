@@ -62,13 +62,13 @@ return { return TK_PR_RETURN; }
 
 [0-9]+ {
     yylval.symbol = push_to_symbol_table(TK_LIT_INT);
-    yylval.symbol->type = TK_LIT_INT;
+    yylval.symbol->token_type = TK_LIT_INT;
     return TK_LIT_INT;
 }
 
 ([0-9]+|-[0-9]+)\.[0-9]+ {
     yylval.symbol = push_to_symbol_table(TK_LIT_FLOAT);
-    yylval.symbol->type = TK_LIT_FLOAT;
+    yylval.symbol->token_type = TK_LIT_FLOAT;
     return TK_LIT_FLOAT;
 }
 
@@ -78,20 +78,20 @@ false { return TK_LIT_FALSE; }
 
 '[^']' {
     yylval.symbol = push_to_symbol_table(TK_LIT_CHAR);
-    yylval.symbol->type = TK_LIT_CHAR;
+    yylval.symbol->token_type = TK_LIT_CHAR;
     return TK_LIT_CHAR;
 }
 
 \"[^\"\n\r]*\" {
     yylval.symbol = push_to_symbol_table(TK_LIT_STRING);
-    yylval.symbol->type = TK_LIT_STRING;
+    yylval.symbol->token_type = TK_LIT_STRING;
     return TK_LIT_STRING;
 }
 
 
 ([a-z]|[A-Z]|_)+([a-z]|[A-Z]|_|[0-9])* {
     yylval.symbol = push_to_symbol_table(TK_IDENTIFICADOR);
-    yylval.symbol->type = TK_IDENTIFICADOR;
+    yylval.symbol->token_type = TK_IDENTIFICADOR;
     return TK_IDENTIFICADOR;
 }
 

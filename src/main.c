@@ -23,7 +23,7 @@ void yyerror(char* str)
 }
 
 void iks_init() {
-  symbol_table_init();
+//  symbol_table_init();
   iks_ast_init();
   scope=new_comp_stack();
 }
@@ -41,7 +41,7 @@ int main (int argc, char **argv)
   
   gv_close();
 
-  symbol_table_print();
-  
+  symbol_table_print((comp_dict_t*)comp_stack_top(scope));
+
   return resultado;
 }

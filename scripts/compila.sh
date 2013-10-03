@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CMAKEFLAGS=" -DCMAKE_BUILD_TYPE=Debug "
+CMAKEFLAGS=" -g3 -DCMAKE_BUILD_TYPE=Debug "
 
 cd build
 cmake $CMAKEFLAGS ..

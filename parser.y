@@ -62,7 +62,7 @@ DECLARATIONS
 
 %start p
 
-/* declaracoes nao sao nodos da arvore? */
+%type<symbol> decl
 %type<nt> prog
 %type<nt> func
 %type<nt> command_block 
@@ -108,6 +108,10 @@ http://www.gnu.org/software/bison/manual/bison.html#Rules
 
 p:
     {    
+            //
+            comp_dict_t *symbol_table_global;
+            symbol_table_global = new_comp_dict();
+            scope = comp_stack_push(scope,(void*)symbol_table_global);
             // just the first function is child of ast
             iks_ast_node_value_t *v;
             v = new_iks_ast_node_value();
@@ -130,6 +134,7 @@ prog:
             else {
               iks_ast_connect_nodes($1,$2);
             }
+            symbol_table_print((comp_dict_t*)comp_stack_top(scope));
             $$ = $2;
         }
 	| /* empty */
@@ -143,20 +148,18 @@ global_decl:
 
 array_decl:
 	  decl '[' TK_LIT_INT ']'
+      {
+          $1->decl_type = IKS_DECL_VECTOR; //overwriting DECL_VAR
+      }
 	;
 
 decl:
       type ':' TK_IDENTIFICADOR
         {
-          $3->decl_type = $1;
-          $3->scope = comp_stack_top(scope);
-          if (!exist_symbol($3,0)) {
-            symbol_table_append($3->value,$3);
+          if (!decl_symbol($1,$3,IKS_DECL_VAR,comp_stack_top(scope))) {
+            return(IKS_ERROR_DECLARED);
           }
-          else {
-            fprintf(stderr,"line %d: identificador '%s' já declarado\n",$3->code_line_number,$3->value);
-            exit(IKS_ERROR_DECLARED);
-          }
+          $$ = $3;
         }  
     ;
 
@@ -187,17 +190,26 @@ type:
 func:
 	  type ':' TK_IDENTIFICADOR
         {
-            /* 3.A.2 */
-            comp_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3);
-            comp_stack_push(scope,(void*)funcao);
-            ptr_funcao=funcao;
+          if (!decl_symbol($1,$3,IKS_DECL_FUNCTION,comp_stack_top(scope))) {
+            return(IKS_ERROR_DECLARED);
+          }
+          comp_dict_t *symbol_table_local;
+          symbol_table_local = new_comp_dict();
+          /* 3.A.2 */
+          comp_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3);
+          scope = comp_stack_push(scope,(void*)symbol_table_local);
+          ptr_funcao=funcao;
         }
-	  '(' func_param_decl_list ')' decl_list command_block_f
+	  '(' func_param_decl_list ')' decl_list
+      {
+            symbol_table_print((comp_dict_t*)comp_stack_top(scope));
+      }
+      command_block_f
       {
             if ($command_block_f) {
                 iks_ast_connect_nodes(ptr_funcao,$command_block_f);
             }
-            comp_stack_pop(scope);
+            scope = comp_stack_pop(scope);
             $$ = ptr_funcao;
       }
 	;
@@ -284,12 +296,11 @@ commands:
             iks_ast_connect_nodes(output,$2);
             $$ = output;
         }
-    | TK_PR_INPUT TK_IDENTIFICADOR
+    | TK_PR_INPUT id
         {
             /* 3.A.6 */
             comp_tree_t *input = iks_ast_new_node(IKS_AST_INPUT,NULL);
-            comp_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,$2);
-            iks_ast_connect_nodes(input,identificador);
+            iks_ast_connect_nodes(input,$2);
             $$ = input;
         }
     | TK_PR_RETURN expr 
@@ -304,13 +315,13 @@ commands:
 id:
     TK_IDENTIFICADOR
     {
-      if (exist_symbol($1,0)) {
+      if (exist_symbol_global($1,0,scope)) {
         comp_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,$1);
         $$ = identificador;
       }
       else {
         fprintf(stderr,"line %d: identificador '%s' não declarado\n",$1->code_line_number,$1->value);
-        exit(IKS_ERROR_UNDECLARED);
+        return(IKS_ERROR_UNDECLARED);
       }
     }
     ;
@@ -335,11 +346,7 @@ output_list:
 
 /* 2.5 */
 expr:
-	  TK_IDENTIFICADOR
-        {
-            comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
-            $$ = lit;
-        }
+	  id
 	| id '[' expr ']'
         {
             // []
@@ -469,13 +476,23 @@ expr:
 func_call:
 	id '(' func_param_list ')'
         {
+            iks_ast_node_value_t *n;
+            n = $1->item; 
+            comp_grammar_symbol_t *s;
+            s = n->symbol;
             /* 3.A.17 */
-            comp_tree_t *x = iks_ast_new_node(IKS_AST_CHAMADA_DE_FUNCAO,NULL);
-            iks_ast_connect_nodes(x,$1);
-            if ($3) { //if no params, so NULL
-              iks_ast_connect_nodes(x,$3);
+            if(symbol_is_decl_type(s,IKS_DECL_FUNCTION)) {
+              comp_tree_t *x = iks_ast_new_node(IKS_AST_CHAMADA_DE_FUNCAO,NULL);
+              iks_ast_connect_nodes(x,$1);
+              if ($3) { //if no params, so NULL
+                iks_ast_connect_nodes(x,$3);
+              }
+              $$ = x;
             }
-            $$ = x;
+            else {
+              fprintf(stderr,"line %d: identificador '%s' deve ser usado como funcao\n",s->code_line_number,s->value);
+
+            }
         }
 
 terminal_value:

@@ -3,6 +3,7 @@
 
 #include "comp_dict.h"
 #include "comp_tree.h"
+#include "comp_stack.h"
 
 #define IKS_SIMBOLO_INDEFINIDO 0
 #define IKS_SIMBOLO_LITERAL_INT 1
@@ -15,18 +16,20 @@
 #define RS_SUCESSO 0
 #define RS_ERRO 1
 
-comp_dict_t *symbol_table;
+//comp_dict_t *symbol_table;
 
 /**
  * Symbol struct
  */
 typedef struct comp_grammar_symbol_t comp_grammar_symbol_t;
 struct comp_grammar_symbol_t {
-    int type;
+    int token_type;
     int code_line_number;
     char *value;    
     int decl_type;
-    comp_tree_t *scope;
+    int iks_type;
+    comp_dict_t *symbol_table;
+    //comp_tree_t *scope;
 };
 
 /**
@@ -45,7 +48,7 @@ void comp_grammar_symbol_delete(comp_grammar_symbol_t *grammar_symbol);
 /**
  * set grammar_symbol
  */
-void comp_grammar_symbol_set(comp_grammar_symbol_t *grammar_symbol, int type, int code_line_number, char *value);
+void comp_grammar_symbol_set(comp_grammar_symbol_t *grammar_symbol, int token_type, int code_line_number, char *value);
 
 /**
  * print grammar_symbol
@@ -56,7 +59,7 @@ void comp_grammar_symbol_print(comp_grammar_symbol_t *grammar_symbol);
 /**
  * append a symbol to the symbol_table
  */
-void symbol_table_append(char *identifier, comp_grammar_symbol_t *symbol);
+void symbol_table_append(char *identifier, comp_grammar_symbol_t *symbol, comp_dict_t *symbol_table);
 
 /**
  * initialize the symbol_table
@@ -72,6 +75,14 @@ void symbol_table_print();
  * verify if symbol already exists at symbol_table and scope
  * return 1 if exists, 0 if not
  */
-int exist_symbol(comp_grammar_symbol_t *symbol, int force_type);
+int exist_symbol_global(comp_grammar_symbol_t *symbol, int force_type, comp_stack_t *scope);
+int exist_symbol_local(comp_grammar_symbol_t *symbol, int force_type, comp_dict_t *symbol_table);
+
+
+/**
+ * add symbol to a symbol_table
+ */
+int decl_symbol(int type, comp_grammar_symbol_t *s,int decl_type, void *symbol_table);
+
 
 #endif /* COMP_GRAMMAR_H */
