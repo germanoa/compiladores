@@ -9,6 +9,7 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 #include "comp_grammar.h"
 #include "comp_dict.h"
 #include "comp_tree.h"
+#include "comp_stack.h"
 #include "iks_ast.h"
 #include "iks_types.h"
 #include "gv.h"
@@ -148,7 +149,7 @@ decl:
       type ':' TK_IDENTIFICADOR
         {
           $3->decl_type = $1;
-          $3->scope = scope;
+          $3->scope = comp_stack_top(scope);
           if (!exist_symbol($3,0)) {
             symbol_table_append($3->value,$3);
           }
@@ -188,7 +189,7 @@ func:
         {
             /* 3.A.2 */
             comp_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3);
-            scope=funcao;
+            comp_stack_push(scope,(void*)funcao);
             ptr_funcao=funcao;
         }
 	  '(' func_param_decl_list ')' decl_list command_block_f
@@ -196,6 +197,7 @@ func:
             if ($command_block_f) {
                 iks_ast_connect_nodes(ptr_funcao,$command_block_f);
             }
+            comp_stack_pop(scope);
             $$ = ptr_funcao;
       }
 	;

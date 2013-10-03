@@ -30,7 +30,7 @@ static inline void __comp_dict_init(comp_dict_t *dict);
 /**
  * return 0 if dict is empty
  */
-static inline int __comp_dict_is_empty(struct comp_dict_t *dict);
+inline int comp_dict_is_empty(struct comp_dict_t *dict);
 /**
  * create a dict, alloc mem and return address
  */

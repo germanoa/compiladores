@@ -16,6 +16,7 @@ ADD_EXECUTABLE(main
   src/comp_list.c
   src/comp_tree.c
   src/comp_graph.c
+  src/comp_stack.c
   src/comp_grammar.c
   src/iks_ast.c
 )

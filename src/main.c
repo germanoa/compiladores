@@ -25,7 +25,7 @@ void yyerror(char* str)
 void iks_init() {
   symbol_table_init();
   iks_ast_init();
-  scope=NULL;
+  scope=new_comp_stack();
 }
 
 

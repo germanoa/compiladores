@@ -7,7 +7,7 @@ static inline void __comp_dict_init(comp_dict_t *dict) {
     dict->next = dict;
 }
 
-static inline int __comp_dict_is_empty(comp_dict_t *dict) {
+inline int comp_dict_is_empty(comp_dict_t *dict) {
     return dict == dict->next;
 }
 
@@ -19,7 +19,7 @@ comp_dict_t *new_comp_dict() {
 }
 
 void comp_dict_delete(comp_dict_t *dict) {
-    if (!__comp_dict_is_empty) {
+    if (!comp_dict_is_empty) {
         comp_dict_t *temp;
         temp = dict->next;
         do {

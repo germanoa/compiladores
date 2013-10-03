@@ -4,7 +4,7 @@
 #ifndef __IKS_TYPES_H
 #define __IKS_TYPES_H
 
-#include "comp_tree.h"
+#include "comp_stack.h"
 
 #define IKS_NOTYPE 0
 #define IKS_INT 1
@@ -28,9 +28,8 @@
 #define IKS_ERROR_WRONG_PAR_OUTPUT 13
 #define IKS_ERROR_WRONG_PAR_RETURN 14
 
-
-// if global, scope=NULL . if local, scope=ast node of the function
-comp_tree_t *scope; 
+/* if scope=NULL then global else scope=ptr_to_function */
+comp_stack_t *scope; 
 
 
 

@@ -38,17 +38,31 @@ void comp_grammar_symbol_print(comp_grammar_symbol_t *grammar_symbol) {
 void symbol_table_append(char *identifier, comp_grammar_symbol_t *symbol) {
     comp_dict_t *new_entry;
     new_entry = new_comp_dict();
-    new_entry->item = new_comp_dict_item();
-    comp_dict_item_set(new_entry->item,identifier,(void *)symbol);
-    comp_dict_append(symbol_table,new_entry);
+    if (comp_dict_is_empty(symbol_table)) {
+      symbol_table->item = new_comp_dict_item();
+      comp_dict_item_set(symbol_table->item,identifier,(void *)symbol);
+      symbol_table->next=new_entry;
+      symbol_table->prev=new_entry;
+      new_entry->next=symbol_table;
+      new_entry->prev=symbol_table;
+      //new_entry->item = new_comp_dict_item();
+      //comp_grammar_symbol_t *symbol;
+      //symbol = new_comp_grammar_symbol();
+      //comp_dict_item_set(new_entry->item,NULL,(void *)symbol);
+    }
+    else {
+      new_entry->item = new_comp_dict_item();
+      comp_dict_item_set(new_entry->item,identifier,(void *)symbol);
+      comp_dict_append(symbol_table,new_entry);
+    }
 }
 
 void symbol_table_init() {
     symbol_table = new_comp_dict();
-    comp_grammar_symbol_t *symbol;
-    symbol = new_comp_grammar_symbol();
-    symbol_table->item = new_comp_dict_item();
-    comp_dict_item_set(symbol_table->item,"root",(void *)symbol);
+    //comp_grammar_symbol_t *symbol;
+    //symbol = new_comp_grammar_symbol();
+    //symbol_table->item = new_comp_dict_item();
+    //comp_dict_item_set(symbol_table->item,"empty",(void *)symbol);
 }
 
 void symbol_table_print() {
@@ -56,43 +70,49 @@ void symbol_table_print() {
     temp = symbol_table;
     int i=0;
     do {
-        comp_grammar_symbol_t *s;
-        s = temp->item->value;
-        printf("symbol: %s\n\ttype: %d\n\tline: %d\n\tidentifier: %s\n\tscope: %X\n\tdecl_type: %d\n", \
-          comp_dict_item_key_get(temp->item),\
-          s->type,\
-          s->code_line_number,\
-          s->value,\
-          s->scope,\
-          s->decl_type);
-        temp = temp->next;    
+        if (temp->item) {
+        if (temp->item->value) {
+          comp_grammar_symbol_t *s;
+          s = temp->item->value;
+          printf("symbol: %s\n\ttype: %d\n\tline: %d\n\tidentifier: %s\n\tscope: %X\n\tdecl_type: %d\n", \
+            comp_dict_item_key_get(temp->item),\
+            s->type,\
+            s->code_line_number,\
+            s->value,\
+            s->scope,\
+            s->decl_type);
+        }} 
+        temp = temp->next;
     } while(temp != symbol_table);
     printf("\n");
 }
 
 int exist_symbol(comp_grammar_symbol_t *symbol, int force_type) {
     int ret = 0;
-    comp_dict_t *temp;
-    temp = symbol_table;
-    do {
-        comp_grammar_symbol_t *s;
-        s = temp->item->value;
-        if (s->value) {
-          int diff = strcmp(symbol->value,s->value);
-          if (force_type) {
-            if ( (!diff) && (symbol->scope==s->scope) && (symbol->decl_type==s->decl_type) ) {
-              ret = 1;
-              break;
+    if (!comp_dict_is_empty(symbol_table)) {
+      comp_dict_t *temp;
+      temp = symbol_table;
+      do {
+          if (temp->item) {
+          if (temp->item->value) {
+            comp_grammar_symbol_t *s;
+            s = temp->item->value;
+            int diff = strcmp(symbol->value,s->value);
+            if (force_type) {
+              if ( (!diff) && (symbol->scope==s->scope) && (symbol->decl_type==s->decl_type) ) {
+                ret = 1;
+                break;
+              }
             }
-          }
-          else {
-            if ( (!diff) && (symbol->scope==s->scope) ){
-              ret = 1;
-              break;
+            else {
+              if ( (!diff) && (symbol->scope==s->scope) ){
+                ret = 1;
+                break;
+              }
             }
-          }
-        }
-        temp = temp->next;    
-    } while(temp != symbol_table);
+          }}
+          temp = temp->next;    
+      } while(temp != symbol_table);
+    }
     return ret;
 }
