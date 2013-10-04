@@ -282,24 +282,30 @@ commands:
             iks_ast_node_value_t *idn,*exprn;
             idn = $1->item;
             exprn = $3->item;
+            
             comp_grammar_symbol_t *ids,*exprs;
             ids = idn->symbol;
             exprs = exprn->symbol;
+            
             if(ids->iks_type == IKS_STRING) { //strings set size dinamically
               update_decl_symbol(ids,IKS_STRING,exprs);
             }
-            if (exprs) {
-              if(ids->iks_type!=exprs->iks_type) {
-                int coercion=verify_coercion($1,$3);
-                if (coercion) {
-                  return coercion;
-                }
-              }
-            }
+            
             comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
             iks_ast_connect_nodes(atribuicao,$1);
             iks_ast_connect_nodes(atribuicao,$3);
             $$ = atribuicao;
+            
+            if (exprs) {
+              if(ids->iks_type!=exprs->iks_type) {
+                int coercion=verify_coercion($1,$3);
+                if (coercion) { //if coercion is invalid
+                  return coercion;
+                } else { //attribute id type to attribution
+          		  
+              	}
+              }
+            }
         }
 	| idv '=' expr
         {
