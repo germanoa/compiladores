@@ -366,8 +366,65 @@ idv:
 
 output_list:
 	  expr
+	  	{
+	  		iks_ast_node_value_t *exprn;
+            exprn = $1->item;
+            
+            case(exprn->type)
+            {
+            	case IKS_AST_LITERAL:
+            		comp_grammar_symbol_t *exprs;
+            		exprs = exprn->symbol;
+            		
+            		if(exprs->iks_type != IKS_STRING) {
+            			fprintf(stderr,"line %d: '%s' não é string\n",exprs->code_line_number, exprs->value);
+        				return(IKS_ERROR_TYPE);
+            		}
+            		break;
+            	
+            	case IKS_AST_ARIM_SOMA:
+            	case IKS_AST_ARIM_SUBTRACAO:
+            	case IKS_AST_ARIM_MULTIPLICACAO:
+            	case IKS_AST_ARIM_DIVISAO:
+            	case IKS_AST_ARIM_INVERSAO:
+            		break;
+            	
+            	case default:
+            		fprintf(stderr,"erro ao tentar usar output com expressão inválida.");
+            		return(IKS_ERROR_USE);
+            		break;
+            }
+	  	}
 	| expr ',' output_list
         {
+        	iks_ast_node_value_t *exprn;
+            exprn = $1->item;
+            
+            case(exprn->type)
+            {
+            	case IKS_AST_LITERAL:
+            		comp_grammar_symbol_t *exprs;
+            		exprs = exprn->symbol;
+            		
+            		if(exprs->iks_type != IKS_STRING) {
+            			fprintf(stderr,"line %d: '%s' não é string\n",exprs->code_line_number, exprs->value);
+        				return(IKS_ERROR_TYPE);
+            		}
+            		break;
+            	
+            	case IKS_AST_ARIM_SOMA:
+            	case IKS_AST_ARIM_SUBTRACAO:
+            	case IKS_AST_ARIM_MULTIPLICACAO:
+            	case IKS_AST_ARIM_DIVISAO:
+            	case IKS_AST_ARIM_INVERSAO:
+            		break;
+            	
+            	case default:
+            		fprintf(stderr,"erro ao tentar usar output com expressão inválida.");
+            		return(IKS_ERROR_USE);
+            		break;
+            }
+            
             iks_ast_connect_nodes($1,$3);
         }
 	;
@@ -375,7 +432,7 @@ output_list:
 /* 2.5 */
 expr:
 	  id
-      {
+      	{
             iks_ast_node_value_t *n;
             n = $1->item; 
             comp_grammar_symbol_t *s;
@@ -383,7 +440,7 @@ expr:
             if(!symbol_is_decl_type(s,IKS_DECL_VAR)) {
               return iks_error(s,IKS_ERROR_USE);
             }
-        }
+      	}
 	| id '[' expr ']'
         {
             // []
