@@ -370,7 +370,7 @@ output_list:
 	  		iks_ast_node_value_t *exprn;
             exprn = $1->item;
             
-            case(exprn->type)
+            switch(exprn->type)
             {
             	case IKS_AST_LITERAL:
             		comp_grammar_symbol_t *exprs;
@@ -400,7 +400,7 @@ output_list:
         	iks_ast_node_value_t *exprn;
             exprn = $1->item;
             
-            case(exprn->type)
+            switch(exprn->type)
             {
             	case IKS_AST_LITERAL:
             		comp_grammar_symbol_t *exprs;
