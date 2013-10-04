@@ -28,6 +28,7 @@ struct comp_grammar_symbol_t {
     char *value;    
     int decl_type;
     int iks_type;
+    int iks_size;
     comp_dict_t *symbol_table;
     //comp_tree_t *scope;
 };
@@ -82,8 +83,17 @@ int exist_symbol_local(comp_grammar_symbol_t *symbol, comp_dict_t *symbol_table)
 /**
  * add symbol to a symbol_table
  */
-int decl_symbol(int type, comp_grammar_symbol_t *s,int decl_type, void *symbol_table);
+int decl_symbol(comp_grammar_symbol_t *s, int iks_type, int decl_type, void *symbol_table);
 
+/**
+ * update a symbol at symbol_table
+ */
+int update_decl_symbol(comp_grammar_symbol_t *s, int decl_type, comp_grammar_symbol_t *lit);
+
+/**
+ * verify if symbol is of decl_type
+ */
+int symbol_is_decl_type(comp_grammar_symbol_t *s,int decl_type);
 
 /**
  * handling errors

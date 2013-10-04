@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "comp_grammar.h"
 #include "comp_dict.h"
 #include "iks_types.h"
@@ -75,13 +76,14 @@ void symbol_table_print(comp_dict_t *symbol_table) {
         if (temp->item->value) {
           comp_grammar_symbol_t *s;
           s = temp->item->value;
-          printf("symbol: %s\n\ttoken_type: %d\n\tline: %d\n\tidentifier: %s\n\tsymbol_table: %X\n\tdecl_type: %d\n\tiks_type: %d\n", \
+          printf("symbol: %s\n\ttoken_type: %d\n\tline: %d\n\tidentifier: %s\n\tsymbol_table: %X\n\tdecl_type: %d\n\tiks_size: %d\n\t iks_type: %d\n", \
             comp_dict_item_key_get(temp->item),\
             s->token_type,\
             s->code_line_number,\
             s->value,\
             s->symbol_table,\
             s->decl_type,\
+            s->iks_size,\
             s->iks_type);
         }} 
         temp = temp->next;
@@ -156,9 +158,26 @@ int exist_symbol_local(comp_grammar_symbol_t *symbol, comp_dict_t *symbol_table)
 }
 
 
-int decl_symbol(int type, comp_grammar_symbol_t *s,int decl_type, void *symbol_table) {
+int decl_symbol(comp_grammar_symbol_t *s,int iks_type, int decl_type, void *symbol_table) {
   int ret=1;
-  s->iks_type = type; 
+  s->iks_type = iks_type;
+  switch (iks_type) {
+    case IKS_INT:
+      s->iks_size=4;
+      break;
+    case IKS_FLOAT:
+      s->iks_size=8;
+      break;
+    case IKS_BOOL:
+      s->iks_size=1;
+      break;
+    case IKS_CHAR:
+      s->iks_size=1;
+      break;
+    case IKS_STRING:
+      s->iks_size=1;
+      break;
+  }
   s->decl_type = decl_type;
   s->symbol_table = (comp_dict_t*)symbol_table;
   if (!exist_symbol_local(s,s->symbol_table)) {
@@ -169,6 +188,18 @@ int decl_symbol(int type, comp_grammar_symbol_t *s,int decl_type, void *symbol_t
     fprintf(stderr,"line %d: identificador '%s' já declarado\n",s->code_line_number,s->value);
   }
   return ret;
+}
+
+int update_decl_symbol(comp_grammar_symbol_t *s,int any_type,comp_grammar_symbol_t *lit) {
+  switch(any_type) {
+    case IKS_DECL_VECTOR:
+      s->decl_type=any_type;
+      s->iks_size = s->iks_size * atoi(lit->value);
+      break;
+    case IKS_STRING:
+      s->iks_size = strlen(lit->value);
+  }
+  return 0;
 }
 
 int symbol_is_decl_type(comp_grammar_symbol_t *s,int decl_type) {

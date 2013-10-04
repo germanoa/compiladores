@@ -152,14 +152,15 @@ global_decl:
 array_decl:
 	  decl '[' TK_LIT_INT ']'
       {
-          $1->decl_type = IKS_DECL_VECTOR; //overwriting DECL_VAR
+          update_decl_symbol($1,IKS_DECL_VECTOR,$3);
+          //$1->decl_type = IKS_DECL_VECTOR; //overwriting DECL_VAR
       }
 	;
 
 decl:
       type ':' TK_IDENTIFICADOR
         {
-          if (!decl_symbol($1,$3,IKS_DECL_VAR,comp_stack_top(scope))) {
+          if (!decl_symbol($3,$1,IKS_DECL_VAR,comp_stack_top(scope))) {
             return(IKS_ERROR_DECLARED);
           }
           $$ = $3;
@@ -193,7 +194,7 @@ type:
 func:
 	  type ':' TK_IDENTIFICADOR
         {
-          if (!decl_symbol($1,$3,IKS_DECL_FUNCTION,comp_stack_top(scope))) {
+          if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,comp_stack_top(scope))) {
             return(IKS_ERROR_DECLARED);
           }
           comp_dict_t *symbol_table_local;
@@ -279,6 +280,16 @@ commands:
 	| id '=' expr
         {
             /* 3.A.8 */
+            iks_ast_node_value_t *n,*n1;
+            n = $1->item;
+            n1 = $3->item;
+            comp_grammar_symbol_t *s,*s1;
+            s = n->symbol;
+            s1 = n1->symbol;
+            if(s->iks_type == IKS_STRING) { //strings set size dinamically
+              update_decl_symbol(s,IKS_STRING,s1);
+            }
+
             comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
             iks_ast_connect_nodes(atribuicao,$1);
             iks_ast_connect_nodes(atribuicao,$3);
