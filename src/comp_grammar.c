@@ -89,49 +89,26 @@ void symbol_table_print(comp_dict_t *symbol_table) {
     printf("\n");
 }
 
-int exist_symbol_global(comp_grammar_symbol_t *symbol, int force_type,comp_stack_t *scope) {
-    int ret = 0;
-
+comp_grammar_symbol_t *search_symbol_global(comp_grammar_symbol_t *symbol, comp_stack_t *scope) {
+    comp_grammar_symbol_t *ret=NULL;
     comp_stack_t *it_scope;
     it_scope = scope;
     do {
-      printf("%X e %X\n",scope,it_scope);
       comp_dict_t *symbol_table;
       symbol_table = comp_stack_top(it_scope);
-      printf("global looking for %s at: %X\n",symbol->value,symbol_table);
-      if (!comp_dict_is_empty(symbol_table)) {
-        comp_dict_t *temp;
-        temp = symbol_table;
-        do {
-            if (temp->item) {
-            if (temp->item->value) {
-              comp_grammar_symbol_t *s;
-              s = temp->item->value;
-              int diff = strcmp(symbol->value,s->value);
-              if (force_type) {
-                if ( (!diff) && (symbol->symbol_table==s->symbol_table) && (symbol->iks_type==s->iks_type) ) {
-                  ret = 1;
-                  break;
-                }
-              }
-              else {
-                if ( (!diff) && (symbol->symbol_table==s->symbol_table) ){
-                  ret = 1;
-                  break;
-                }
-              }
-            }}
-            temp = temp->next;    
-        } while(temp != symbol_table);
-      }
+      //printf("global looking for %s at: %X\n",symbol->value,symbol_table);
+      ret = search_symbol_local(symbol,symbol_table); 
       it_scope = it_scope->below;
-    } while (it_scope != it_scope->below); 
+    } while ((ret==NULL) && (it_scope != it_scope->below)); 
+    if (ret==NULL) { //look at global
+      ret = search_symbol_local(symbol,comp_stack_top(it_scope)); 
+    }
     return ret;
 }
 
-int exist_symbol_local(comp_grammar_symbol_t *symbol, int force_type,comp_dict_t *symbol_table) {
-    int ret = 0;
-    printf("looking at: %X\n",symbol_table);
+comp_grammar_symbol_t *search_symbol_local(comp_grammar_symbol_t *symbol, comp_dict_t *symbol_table) {
+    comp_grammar_symbol_t *ret =NULL;
+    //printf("local looking at: %X\n",symbol_table);
     if (!comp_dict_is_empty(symbol_table)) {
       comp_dict_t *temp;
       temp = symbol_table;
@@ -141,17 +118,35 @@ int exist_symbol_local(comp_grammar_symbol_t *symbol, int force_type,comp_dict_t
             comp_grammar_symbol_t *s;
             s = temp->item->value;
             int diff = strcmp(symbol->value,s->value);
-            if (force_type) {
-              if ( (!diff) && (symbol->symbol_table==s->symbol_table) && (symbol->iks_type==s->iks_type) ) {
-                ret = 1;
-                break;
-              }
+            //printf("%s == %s :%d\n",symbol->value,s->value,diff);
+            if (!diff) {
+              ret = s;
+              break;
             }
-            else {
-              if ( (!diff) && (symbol->symbol_table==s->symbol_table) ){
-                ret = 1;
-                break;
-              }
+          }}
+          temp = temp->next;    
+      } while(temp != symbol_table);
+    }
+    return ret;
+}
+
+
+int exist_symbol_local(comp_grammar_symbol_t *symbol, comp_dict_t *symbol_table) {
+    int ret = 0;
+    //printf("local looking at: %X\n",symbol_table);
+    if (!comp_dict_is_empty(symbol_table)) {
+      comp_dict_t *temp;
+      temp = symbol_table;
+      do {
+          if (temp->item) {
+          if (temp->item->value) {
+            comp_grammar_symbol_t *s;
+            s = temp->item->value;
+            int diff = strcmp(symbol->value,s->value);
+            //printf("%s == %s :%d\n",symbol->value,s->value,diff);
+            if (!diff) {
+              ret = 1;
+              break;
             }
           }}
           temp = temp->next;    
@@ -166,7 +161,7 @@ int decl_symbol(int type, comp_grammar_symbol_t *s,int decl_type, void *symbol_t
   s->iks_type = type; 
   s->decl_type = decl_type;
   s->symbol_table = (comp_dict_t*)symbol_table;
-  if (!exist_symbol_local(s,0,s->symbol_table)) {
+  if (!exist_symbol_local(s,s->symbol_table)) {
     symbol_table_append(s->value,s,s->symbol_table);
   }
   else {
@@ -182,4 +177,27 @@ int symbol_is_decl_type(comp_grammar_symbol_t *s,int decl_type) {
     ret=0;
   }
   return ret;
+}
+
+
+int iks_error(comp_grammar_symbol_t *s, int error_type) {
+  int ret=0;
+  switch(error_type) {
+    case IKS_ERROR_USE:
+      if (s->decl_type==IKS_DECL_VAR) {
+        fprintf(stderr,"line %d: identificador '%s' deve ser usado como variavel\n",s->code_line_number,s->value);      
+        ret=IKS_ERROR_VARIABLE;
+      }
+      else if (s->decl_type==IKS_DECL_VECTOR) {
+        fprintf(stderr,"line %d: identificador '%s' deve ser usado como vetor\n",s->code_line_number,s->value);      
+        ret=IKS_ERROR_VECTOR;
+      }
+      else if (s->decl_type==IKS_DECL_FUNCTION) {
+        fprintf(stderr,"line %d: identificador '%s' deve ser usado como funcao\n",s->code_line_number,s->value);      
+        ret=IKS_ERROR_FUNCTION;
+      }
+      break;
+  }
+  return ret;
+
 }

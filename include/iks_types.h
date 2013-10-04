@@ -32,6 +32,10 @@
 #define IKS_ERROR_WRONG_PAR_OUTPUT 13
 #define IKS_ERROR_WRONG_PAR_RETURN 14
 
+#define IKS_ERROR_USE 100
+#define IKS_ERROR_DECL 100
+#define IKS_ERROR_TYPE 100
+
 /* stack of symbol_tables(scope) */
 comp_stack_t *scope; 
 

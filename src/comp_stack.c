@@ -45,7 +45,7 @@ comp_stack_t *comp_stack_push(comp_stack_t *stack, void *item) {
     stack->item = item;
     stack->below = old_stack_top; 
   }
-  //printf("stack push: %X\n",stack->item);
+  //printf("stack push: %X -> %X\n",stack, stack->item);
   return stack;
 }
 
@@ -53,15 +53,15 @@ comp_stack_t *comp_stack_pop(comp_stack_t *stack) {
 	if(!comp_stack_is_empty(stack)) {
     comp_stack_t *temp;
     temp = stack;
-    //printf("stack pop sai: %X\n",stack->item);
+    //printf("stack pop sai: %X -> %X\n",stack,stack->item);
     stack = stack->below;
-    //printf("stack pop novo top: %X\n",stack->item);
+    //printf("stack pop novo top: %X -> %X\n",stack,stack->item);
     free(temp);
   }
   return stack;
 }
 
 void *comp_stack_top(comp_stack_t *stack) {
-  //printf("stack top: %X\n",stack->item);
+  //printf("stack top: %X -> %X\n",stack,stack->item);
   return stack->item;
 }

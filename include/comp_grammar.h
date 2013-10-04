@@ -75,14 +75,20 @@ void symbol_table_print();
  * verify if symbol already exists at symbol_table and scope
  * return 1 if exists, 0 if not
  */
-int exist_symbol_global(comp_grammar_symbol_t *symbol, int force_type, comp_stack_t *scope);
-int exist_symbol_local(comp_grammar_symbol_t *symbol, int force_type, comp_dict_t *symbol_table);
-
+comp_grammar_symbol_t *search_symbol_global(comp_grammar_symbol_t *symbol, comp_stack_t *scope);
+comp_grammar_symbol_t *search_symbol_local(comp_grammar_symbol_t *symbol, comp_dict_t *symbol_table);
+int exist_symbol_local(comp_grammar_symbol_t *symbol, comp_dict_t *symbol_table);
 
 /**
  * add symbol to a symbol_table
  */
 int decl_symbol(int type, comp_grammar_symbol_t *s,int decl_type, void *symbol_table);
+
+
+/**
+ * handling errors
+ */
+int iks_error(comp_grammar_symbol_t *s, int error_type);
 
 
 #endif /* COMP_GRAMMAR_H */

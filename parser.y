@@ -124,6 +124,9 @@ p:
 
 prog:
 	  prog global_decl
+        {
+            //symbol_table_print((comp_dict_t*)comp_stack_top(scope));
+        }
 	| prog func
         {
             /* 3.A.1 */
@@ -134,7 +137,7 @@ prog:
             else {
               iks_ast_connect_nodes($1,$2);
             }
-            symbol_table_print((comp_dict_t*)comp_stack_top(scope));
+            //symbol_table_print((comp_dict_t*)comp_stack_top(scope));
             $$ = $2;
         }
 	| /* empty */
@@ -202,7 +205,7 @@ func:
         }
 	  '(' func_param_decl_list ')' decl_list
       {
-            symbol_table_print((comp_dict_t*)comp_stack_top(scope));
+            //symbol_table_print((comp_dict_t*)comp_stack_top(scope));
       }
       command_block_f
       {
@@ -315,8 +318,10 @@ commands:
 id:
     TK_IDENTIFICADOR
     {
-      if (exist_symbol_global($1,0,scope)) {
-        comp_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,$1);
+      comp_grammar_symbol_t *s = $1;
+      s = search_symbol_global($1,scope);
+      if (s) {
+        comp_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,s);
         $$ = identificador;
       }
       else {
@@ -347,13 +352,31 @@ output_list:
 /* 2.5 */
 expr:
 	  id
+      {
+            iks_ast_node_value_t *n;
+            n = $1->item; 
+            comp_grammar_symbol_t *s;
+            s = n->symbol;
+            if(!symbol_is_decl_type(s,IKS_DECL_VAR)) {
+              return iks_error(s,IKS_ERROR_USE);
+            }
+        }
 	| id '[' expr ']'
         {
             // []
-            comp_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
-            iks_ast_connect_nodes(vets,$1);
-            iks_ast_connect_nodes(vets,$3);
-            $$ = vets;
+            iks_ast_node_value_t *n;
+            n = $1->item; 
+            comp_grammar_symbol_t *s;
+            s = n->symbol;
+            if(symbol_is_decl_type(s,IKS_DECL_VECTOR)) {
+              comp_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
+              iks_ast_connect_nodes(vets,$1);
+              iks_ast_connect_nodes(vets,$3);
+              $$ = vets;
+            }
+            else {
+              return iks_error(s,IKS_ERROR_USE);
+            }
         }
 	| terminal_value
 	| '(' expr ')'
@@ -490,8 +513,7 @@ func_call:
               $$ = x;
             }
             else {
-              fprintf(stderr,"line %d: identificador '%s' deve ser usado como funcao\n",s->code_line_number,s->value);
-
+              return iks_error(s,IKS_ERROR_USE);
             }
         }
 
