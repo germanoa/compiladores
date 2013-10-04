@@ -533,6 +533,7 @@ func_call:
               return iks_error(s,IKS_ERROR_USE);
             }
         }
+    ;
 
 terminal_value:
         /* 3.A.11 */
