@@ -5,6 +5,7 @@
 #define __IKS_TYPES_H
 
 #include "comp_stack.h"
+#include "comp_tree.h"
 
 #define IKS_NOTYPE 0
 #define IKS_INT 1
@@ -33,12 +34,19 @@
 #define IKS_ERROR_WRONG_PAR_RETURN 14
 
 #define IKS_ERROR_USE 100
-#define IKS_ERROR_DECL 100
-#define IKS_ERROR_TYPE 100
+#define IKS_ERROR_DECL 101
+#define IKS_ERROR_TYPE 102
+
+#define IKS_COERCION_INT_TO_FLOAT 1
+#define IKS_COERCION_INT_TO_BOOL 2
+#define IKS_COERCION_FLOAT_TO_INT 3
+#define IKS_COERCION_FLOAT_TO_BOOL 4
+#define IKS_COERCION_BOOL_TO_INT 5
+#define IKS_COERCION_BOOL_TO_FLOAT 6
 
 /* stack of symbol_tables(scope) */
 comp_stack_t *scope; 
 
-
+int verify_coercion(comp_tree_t *id, comp_tree_t *expr);
 
 #endif

@@ -19,6 +19,7 @@ ADD_EXECUTABLE(main
   src/comp_stack.c
   src/comp_grammar.c
   src/iks_ast.c
+  src/iks_types.c
 )
 TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})
 #ADD_EXECUTABLE(test
@@ -31,5 +32,6 @@ TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})
 #  src/comp_graph.c
 #  src/comp_grammar.c
 #  src/iks_ast.c
+#  src/iks_types.c
 #)
 #TARGET_LINK_LIBRARIES(test ${FLEX_LIBRARIES})

@@ -198,6 +198,7 @@ int update_decl_symbol(comp_grammar_symbol_t *s,int any_type,comp_grammar_symbol
       break;
     case IKS_STRING:
       s->iks_size = strlen(lit->value);
+      break;
   }
   return 0;
 }

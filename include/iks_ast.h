@@ -47,6 +47,7 @@ typedef struct iks_ast_node_value_t iks_ast_node_value_t;
 struct iks_ast_node_value_t {
     int type;
     comp_grammar_symbol_t *symbol;
+    int need_coercion;
 };
 
 /**

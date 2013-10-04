@@ -22,7 +22,6 @@ comp_grammar_symbol_t *push_to_symbol_table(int type) {
         d2=1;
     }
     strncpy(identifier,&yytext[deslocamento],yyleng-deslocamento-d2);     
-    identifier[yyleng-deslocamento-d2]='\0';
     last_identifier=identifier;
     
     comp_grammar_symbol_t *symbol;

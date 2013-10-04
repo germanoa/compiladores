@@ -153,7 +153,6 @@ array_decl:
 	  decl '[' TK_LIT_INT ']'
       {
           update_decl_symbol($1,IKS_DECL_VECTOR,$3);
-          //$1->decl_type = IKS_DECL_VECTOR; //overwriting DECL_VAR
       }
 	;
 
@@ -280,16 +279,23 @@ commands:
 	| id '=' expr
         {
             /* 3.A.8 */
-            iks_ast_node_value_t *n,*n1;
-            n = $1->item;
-            n1 = $3->item;
-            comp_grammar_symbol_t *s,*s1;
-            s = n->symbol;
-            s1 = n1->symbol;
-            if(s->iks_type == IKS_STRING) { //strings set size dinamically
-              update_decl_symbol(s,IKS_STRING,s1);
+            iks_ast_node_value_t *idn,*exprn;
+            idn = $1->item;
+            exprn = $3->item;
+            comp_grammar_symbol_t *ids,*exprs;
+            ids = idn->symbol;
+            exprs = exprn->symbol;
+            if(ids->iks_type == IKS_STRING) { //strings set size dinamically
+              update_decl_symbol(ids,IKS_STRING,exprs);
             }
-
+            if (exprs) {
+              if(ids->iks_type!=exprs->iks_type) {
+                int coercion=verify_coercion($1,$3);
+                if (coercion) {
+                  return coercion;
+                }
+              }
+            }
             comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
             iks_ast_connect_nodes(atribuicao,$1);
             iks_ast_connect_nodes(atribuicao,$3);
@@ -532,16 +538,19 @@ terminal_value:
         /* 3.A.11 */
 	  TK_LIT_INT
         {
+            $1->iks_type=IKS_INT;
             comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
             $$ = lit;
         }
 	| TK_LIT_FLOAT
         {
+            $1->iks_type=IKS_FLOAT;
             comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
             $$ = lit;
         }
 	| TK_LIT_FALSE
         {
+            $1->iks_type=IKS_BOOL;
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
@@ -553,6 +562,7 @@ terminal_value:
         }
 	| TK_LIT_TRUE
         {
+            $1->iks_type=IKS_BOOL;
             iks_ast_node_value_t *v1;
             v1 = new_iks_ast_node_value();
             iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
@@ -564,11 +574,13 @@ terminal_value:
         }
 	| TK_LIT_CHAR
         {
+            $1->iks_type=IKS_CHAR;
             comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
             $$ = lit;
         }
 	| TK_LIT_STRING
         {
+            $1->iks_type=IKS_STRING;
             comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
             $$ = lit;
         }
