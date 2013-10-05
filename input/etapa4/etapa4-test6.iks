@@ -1,4 +1,8 @@
 int: a;
+float: b;
+bool: c;
+char: d;
+string: e;
 
 int: soma(int:x, int:y) {
   output x+y;
@@ -11,4 +15,10 @@ int: main() {
   //output soma(4,5);
   output a-soma(4,5);
   soma(6,7);
+  input a;
+  input b;
+  input c;
+  input d;
+  input e;
+  //input 2;
 }
