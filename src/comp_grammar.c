@@ -228,6 +228,11 @@ int iks_error(comp_grammar_symbol_t *s, int error_type) {
         fprintf(stderr,"line %d: identificador '%s' deve ser usado como funcao\n",s->code_line_number,s->value);      
         ret=IKS_ERROR_FUNCTION;
       }
+      else {
+        fprintf(stderr,"line %d: identificador '%s' ???????????\n",s->code_line_number,s->value);      
+        ret=99999;
+
+      }
       break;
   }
   return ret;

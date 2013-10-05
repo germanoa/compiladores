@@ -286,6 +286,10 @@ commands:
             comp_grammar_symbol_t *ids,*exprs;
             ids = idn->symbol;
             exprs = exprn->symbol;
+
+            if(!symbol_is_decl_type(ids,IKS_DECL_VAR)) {
+              return iks_error(ids,IKS_ERROR_USE);
+            }
             
             if(ids->iks_type == IKS_STRING) { //strings set size dinamically
               update_decl_symbol(ids,IKS_STRING,exprs);
@@ -310,6 +314,18 @@ commands:
 	| idv '=' expr
         {
             /* 3.A.8 */
+            comp_list_t *id_child;
+            id_child =  $1->children;
+            comp_tree_t *id_tree;
+            id_tree = id_child->next->item;
+            iks_ast_node_value_t *idn;
+            idn = (iks_ast_node_value_t*)id_tree->item;
+            comp_grammar_symbol_t *ids;
+            ids = idn->symbol;
+            if(!symbol_is_decl_type(ids,IKS_DECL_VECTOR)) {
+              return iks_error(ids,IKS_ERROR_USE);
+            }
+
             comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
             iks_ast_connect_nodes(atribuicao,$1);
             iks_ast_connect_nodes(atribuicao,$3);

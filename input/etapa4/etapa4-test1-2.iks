@@ -1,0 +1,37 @@
+int: a;
+float: b;
+char: c;
+string: d;
+bool: e;
+int: vec[10];
+
+int: fn() {
+  output "ok";
+}
+
+//int: a() {
+//  output "ok";
+//}
+
+int: main()
+  bool:c;
+  //string:c;
+{
+  //a1 = 1;
+  //b = 1.0 + b1;
+  //c = fn1();
+  //e1 = true;
+  fn();
+  //fn = 1;
+  a = 1;
+  vec[3] = 1;
+  //fn[3] = 1;
+  b = 1.0 + b;
+  c = fn();
+  e = true;
+  //e = vec;
+  e = vec[4];
+  //e = 1 + fn;
+  e = 1 + fn();
+  //e = a() + fn();
+}
