@@ -50,11 +50,11 @@ DECLARATIONS
     comp_grammar_symbol_t *symbol;
     comp_tree_t *nt;
 }
-%token<symbol> TK_LIT_INT	280
-%token<symbol> TK_LIT_FLOAT	281
-%token<symbol> TK_LIT_FALSE	282
-%token<symbol> TK_LIT_TRUE	283
-%token<symbol> TK_LIT_CHAR	284	
+%token<symbol> TK_LIT_INT		280
+%token<symbol> TK_LIT_FLOAT		281
+%token<symbol> TK_LIT_FALSE		282
+%token<symbol> TK_LIT_TRUE		283
+%token<symbol> TK_LIT_CHAR		284	
 %token<symbol> TK_LIT_STRING	285
 %token<symbol> TK_IDENTIFICADOR 286
 
@@ -386,15 +386,18 @@ output_list:
 	  		iks_ast_node_value_t *exprn;
 		    exprn = $1->item;
 		    comp_grammar_symbol_t *exprs;
+    		exprs = exprn->symbol;
 		    
 		    switch(exprn->type)
 		    {
 		    	case IKS_AST_LITERAL:
-		    		exprs = exprn->symbol;
-		    		if(exprs->iks_type != IKS_STRING) {
-		    			fprintf(stderr,"line %d: '%s' não é literal string\n",exprs->code_line_number, exprs->value);
-		    		return(IKS_ERROR_WRONG_PAR_OUTPUT);
+		    		if(exprs != NULL) {
+						if(exprs->iks_type != IKS_STRING) {
+							fprintf(stderr,"line %d: '%s' não é literal string\n",exprs->code_line_number, exprs->value);
+							return(IKS_ERROR_WRONG_PAR_OUTPUT);
+						}
 		    		}
+		    		else fprintf(stderr,"literal em parametro de output sem simbolo\n");
 		    		break;
 		    	
 		    	case IKS_AST_ARIM_SOMA:
@@ -406,10 +409,12 @@ output_list:
 		    	
 		    	default:
 		          if (exprs) {
-		    			fprintf(stderr,"line %d: '%s' não é expressao\n",exprs->code_line_number, exprs->value);
+		    			fprintf(stderr,"line %d: '%s' não é expressao artimetica ou string\n",exprs->code_line_number, exprs->value);
+		    			fprintf(stderr,"tipo do no: %d\n", exprn->type);
 		          }
 		          else {
-		    			fprintf(stderr,"parametro não é expressao\n");
+		    			fprintf(stderr,"parametro de output não é expressao artimetica ou string\n");
+		    			fprintf(stderr,"tipo do no: %d\n", exprn->type);
 
 		          }
 		    		return(IKS_ERROR_WRONG_PAR_OUTPUT);

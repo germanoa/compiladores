@@ -1,5 +1,6 @@
 %{
 #include <string.h>
+#include <stdio.h>
 #include "comp_dict.h"
 #include "comp_tree.h"
 #include "comp_grammar.h"
@@ -14,13 +15,16 @@ const char *last_identifier;
 
 comp_grammar_symbol_t *push_to_symbol_table(int type) {
     char *identifier;
-    identifier = malloc(yyleng);
     int deslocamento=0;
     int d2=0;
+    
     if (type==TK_LIT_CHAR || type==TK_LIT_STRING) {
         deslocamento=1; /* para eliminar '' e "" */
         d2=1;
     }
+    
+    identifier = malloc(yyleng+1-deslocamento-d2);
+    
     strncpy(identifier,&yytext[deslocamento],yyleng-deslocamento-d2);     
     last_identifier=identifier;
     
