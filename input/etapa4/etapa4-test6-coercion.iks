@@ -1,0 +1,30 @@
+int:i;
+float:f;
+bool:b;
+char:c;
+string:s;
+
+int:main() {
+
+  i = i;
+  i = f;
+  i = b;
+  //i = c;
+  //i = s;
+  f = f;
+  f = i;
+  f = b;
+  //f = c;
+  //f = s;
+  b = b;
+  b = i;
+  b = f;
+  b = c;
+  //b = s;
+  c = c;
+  //c = i;
+  //c = f;
+  c = b;
+  c = s; 
+
+}

@@ -41,7 +41,7 @@ int main (int argc, char **argv)
   
   gv_close();
 
-  symbol_table_print((comp_dict_t*)comp_stack_top(scope));
+  //symbol_table_print((comp_dict_t*)comp_stack_top(scope));
 
   return resultado;
 }

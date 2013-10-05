@@ -368,62 +368,59 @@ output_list:
 	  expr
 	  	{
 	  		iks_ast_node_value_t *exprn;
-            exprn = $1->item;
-            
-            switch(exprn->type)
-            {
-            	case IKS_AST_LITERAL:
-            		comp_grammar_symbol_t *exprs;
-            		exprs = exprn->symbol;
-            		
-            		if(exprs->iks_type != IKS_STRING) {
-            			fprintf(stderr,"line %d: '%s' não é string\n",exprs->code_line_number, exprs->value);
-        				return(IKS_ERROR_TYPE);
-            		}
-            		break;
-            	
-            	case IKS_AST_ARIM_SOMA:
-            	case IKS_AST_ARIM_SUBTRACAO:
-            	case IKS_AST_ARIM_MULTIPLICACAO:
-            	case IKS_AST_ARIM_DIVISAO:
-            	case IKS_AST_ARIM_INVERSAO:
-            		break;
-            	
-            	case default:
-            		fprintf(stderr,"erro ao tentar usar output com expressão inválida.");
-            		return(IKS_ERROR_USE);
-            		break;
-            }
+        exprn = $1->item;
+        comp_grammar_symbol_t *exprs;
+        
+        switch(exprn->type)
+        {
+        	case IKS_AST_LITERAL:
+        		exprs = exprn->symbol;
+        		if(exprs->iks_type != IKS_STRING) {
+        			fprintf(stderr,"line %d: '%s' não é string\n",exprs->code_line_number, exprs->value);
+        		return(IKS_ERROR_TYPE);
+        		}
+        		break;
+        	
+        	case IKS_AST_ARIM_SOMA:
+        	case IKS_AST_ARIM_SUBTRACAO:
+        	case IKS_AST_ARIM_MULTIPLICACAO:
+        	case IKS_AST_ARIM_DIVISAO:
+        	case IKS_AST_ARIM_INVERSAO:
+        		break;
+        	
+        	default:
+        		fprintf(stderr,"erro ao tentar usar output com expressão inválida.");
+        		return(IKS_ERROR_USE);
+        		break;
+        }
 	  	}
 	| expr ',' output_list
         {
-        	iks_ast_node_value_t *exprn;
-            exprn = $1->item;
-            
-            switch(exprn->type)
-            {
-            	case IKS_AST_LITERAL:
-            		comp_grammar_symbol_t *exprs;
-            		exprs = exprn->symbol;
-            		
-            		if(exprs->iks_type != IKS_STRING) {
-            			fprintf(stderr,"line %d: '%s' não é string\n",exprs->code_line_number, exprs->value);
-        				return(IKS_ERROR_TYPE);
-            		}
-            		break;
-            	
-            	case IKS_AST_ARIM_SOMA:
-            	case IKS_AST_ARIM_SUBTRACAO:
-            	case IKS_AST_ARIM_MULTIPLICACAO:
-            	case IKS_AST_ARIM_DIVISAO:
-            	case IKS_AST_ARIM_INVERSAO:
-            		break;
-            	
-            	case default:
-            		fprintf(stderr,"erro ao tentar usar output com expressão inválida.");
-            		return(IKS_ERROR_USE);
-            		break;
-            }
+	  		iks_ast_node_value_t *exprn;
+        exprn = $1->item;
+        comp_grammar_symbol_t *exprs;
+        
+        switch(exprn->type)
+        {
+        	case IKS_AST_LITERAL:
+        		exprs = exprn->symbol;
+        		if(exprs->iks_type != IKS_STRING) {
+        			fprintf(stderr,"line %d: '%s' não é string\n",exprs->code_line_number, exprs->value);
+        		return(IKS_ERROR_TYPE);
+        		}
+        		break;
+        	
+        	case IKS_AST_ARIM_SOMA:
+        	case IKS_AST_ARIM_SUBTRACAO:
+        	case IKS_AST_ARIM_MULTIPLICACAO:
+        	case IKS_AST_ARIM_DIVISAO:
+        	case IKS_AST_ARIM_INVERSAO:
+        		break;
+        	
+        	default:
+        		fprintf(stderr,"erro ao tentar usar output com expressão inválida.");
+        		return(IKS_ERROR_USE);
+        }
             
             iks_ast_connect_nodes($1,$3);
         }

@@ -1,0 +1,6 @@
+int: a;
+
+char: f(int b:) int:b; {
+  b = 1;
+}
+

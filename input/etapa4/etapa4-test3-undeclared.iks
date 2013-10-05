@@ -1,0 +1,7 @@
+int: x;
+
+int: funcao(int: a, int:b)
+  int:z;
+  {
+  r = 2;
+  }

@@ -1,0 +1,30 @@
+int: x;
+bool: vec[17];
+bool: xb;
+string: teste;
+
+int: funcao(int: a, int:b)
+  int:c;
+  {
+  teste = "germano";
+  vec[3]=funcao(1);
+  //vec[3]=funcao2(1);
+  output "ok";
+  }
+
+int: funcao2(int:l)
+  int:m;
+  int:n;
+  {
+  vec[3]=funcao(1);
+  //vec[3]=funcao;
+  n = funcao2(1);
+  //funcao = 2+x[2];
+  //funcao = 2+vec;
+  //x = n(1,2);
+  xb=true;
+  x=xb;
+  output "ok";
+  }
+
+int: y;
