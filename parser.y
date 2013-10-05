@@ -392,8 +392,8 @@ output_list:
         	case IKS_AST_LITERAL:
         		exprs = exprn->symbol;
         		if(exprs->iks_type != IKS_STRING) {
-        			fprintf(stderr,"line %d: '%s' não é string\n",exprs->code_line_number, exprs->value);
-        		return(IKS_ERROR_TYPE);
+        			fprintf(stderr,"line %d: '%s' não é literal string\n",exprs->code_line_number, exprs->value);
+        		return(IKS_ERROR_WRONG_PAR_OUTPUT);
         		}
         		break;
         	
@@ -405,8 +405,14 @@ output_list:
         		break;
         	
         	default:
-        		fprintf(stderr,"erro ao tentar usar output com expressão inválida.");
-        		return(IKS_ERROR_USE);
+              if (exprs) {
+        			fprintf(stderr,"line %d: '%s' não é expressao\n",exprs->code_line_number, exprs->value);
+              }
+              else {
+        			fprintf(stderr,"parametro não é expressao\n");
+
+              }
+        		return(IKS_ERROR_WRONG_PAR_OUTPUT);
         		break;
         }
 	  	}

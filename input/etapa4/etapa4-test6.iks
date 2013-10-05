@@ -1,0 +1,14 @@
+int: a;
+
+int: soma(int:x, int:y) {
+  output x+y;
+}
+
+int: main() {
+  //output "ok";
+  //output 1+soma(3,2);
+  //output a;
+  //output soma(4,5);
+  output a-soma(4,5);
+  soma(6,7);
+}
