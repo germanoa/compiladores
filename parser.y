@@ -384,67 +384,74 @@ output_list:
 	  expr
 	  	{
 	  		iks_ast_node_value_t *exprn;
-        exprn = $1->item;
-        comp_grammar_symbol_t *exprs;
-        
-        switch(exprn->type)
-        {
-        	case IKS_AST_LITERAL:
-        		exprs = exprn->symbol;
-        		if(exprs->iks_type != IKS_STRING) {
-        			fprintf(stderr,"line %d: '%s' não é literal string\n",exprs->code_line_number, exprs->value);
-        		return(IKS_ERROR_WRONG_PAR_OUTPUT);
-        		}
-        		break;
-        	
-        	case IKS_AST_ARIM_SOMA:
-        	case IKS_AST_ARIM_SUBTRACAO:
-        	case IKS_AST_ARIM_MULTIPLICACAO:
-        	case IKS_AST_ARIM_DIVISAO:
-        	case IKS_AST_ARIM_INVERSAO:
-        		break;
-        	
-        	default:
-              if (exprs) {
-        			fprintf(stderr,"line %d: '%s' não é expressao\n",exprs->code_line_number, exprs->value);
-              }
-              else {
-        			fprintf(stderr,"parametro não é expressao\n");
+		    exprn = $1->item;
+		    comp_grammar_symbol_t *exprs;
+		    
+		    switch(exprn->type)
+		    {
+		    	case IKS_AST_LITERAL:
+		    		exprs = exprn->symbol;
+		    		if(exprs->iks_type != IKS_STRING) {
+		    			fprintf(stderr,"line %d: '%s' não é literal string\n",exprs->code_line_number, exprs->value);
+		    		return(IKS_ERROR_WRONG_PAR_OUTPUT);
+		    		}
+		    		break;
+		    	
+		    	case IKS_AST_ARIM_SOMA:
+		    	case IKS_AST_ARIM_SUBTRACAO:
+		    	case IKS_AST_ARIM_MULTIPLICACAO:
+		    	case IKS_AST_ARIM_DIVISAO:
+		    	case IKS_AST_ARIM_INVERSAO:
+		    		break;
+		    	
+		    	default:
+		          if (exprs) {
+		    			fprintf(stderr,"line %d: '%s' não é expressao\n",exprs->code_line_number, exprs->value);
+		          }
+		          else {
+		    			fprintf(stderr,"parametro não é expressao\n");
 
-              }
-        		return(IKS_ERROR_WRONG_PAR_OUTPUT);
-        		break;
-        }
+		          }
+		    		return(IKS_ERROR_WRONG_PAR_OUTPUT);
+		    		break;
+		    }
 	  	}
 	| expr ',' output_list
         {
 	  		iks_ast_node_value_t *exprn;
-        exprn = $1->item;
-        comp_grammar_symbol_t *exprs;
-        
-        switch(exprn->type)
-        {
-        	case IKS_AST_LITERAL:
-        		exprs = exprn->symbol;
-        		if(exprs->iks_type != IKS_STRING) {
-        			fprintf(stderr,"line %d: '%s' não é string\n",exprs->code_line_number, exprs->value);
-        		return(IKS_ERROR_TYPE);
-        		}
-        		break;
-        	
-        	case IKS_AST_ARIM_SOMA:
-        	case IKS_AST_ARIM_SUBTRACAO:
-        	case IKS_AST_ARIM_MULTIPLICACAO:
-        	case IKS_AST_ARIM_DIVISAO:
-        	case IKS_AST_ARIM_INVERSAO:
-        		break;
-        	
-        	default:
-        		fprintf(stderr,"erro ao tentar usar output com expressão inválida.");
-        		return(IKS_ERROR_USE);
-        }
-            
-            iks_ast_connect_nodes($1,$3);
+		    exprn = $1->item;
+		    comp_grammar_symbol_t *exprs;
+		    
+		    switch(exprn->type)
+		    {
+		    	case IKS_AST_LITERAL:
+		    		exprs = exprn->symbol;
+		    		if(exprs->iks_type != IKS_STRING) {
+		    			fprintf(stderr,"line %d: '%s' não é literal string\n",exprs->code_line_number, exprs->value);
+		    		return(IKS_ERROR_WRONG_PAR_OUTPUT);
+		    		}
+		    		break;
+		    	
+		    	case IKS_AST_ARIM_SOMA:
+		    	case IKS_AST_ARIM_SUBTRACAO:
+		    	case IKS_AST_ARIM_MULTIPLICACAO:
+		    	case IKS_AST_ARIM_DIVISAO:
+		    	case IKS_AST_ARIM_INVERSAO:
+		    		break;
+		    	
+		    	default:
+		          if (exprs) {
+		    			fprintf(stderr,"line %d: '%s' não é expressao\n",exprs->code_line_number, exprs->value);
+		          }
+		          else {
+		    			fprintf(stderr,"parametro não é expressao\n");
+
+		          }
+		    		return(IKS_ERROR_WRONG_PAR_OUTPUT);
+		    		break;
+		    }
+		        
+		        iks_ast_connect_nodes($1,$3);
         }
 	;
 
