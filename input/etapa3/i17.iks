@@ -1,4 +1,5 @@
 /* literais inteiro */
+int:iks;
 int:f()
 {
 	iks = 10;

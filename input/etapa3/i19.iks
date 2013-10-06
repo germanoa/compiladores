@@ -1,4 +1,6 @@
 /* literais booleanos */
+bool:iks;
+bool:caps;
 int:f()
 {
 	iks = false;

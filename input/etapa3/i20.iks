@@ -1,4 +1,5 @@
 /* literais char */
+char:iks;
 int:f()
 {
 	iks = 'c';

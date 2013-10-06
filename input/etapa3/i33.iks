@@ -1,4 +1,7 @@
 /* lógicas maior ou igual que */
+int:a;
+int:b;
+int:x;
 int:f()
 {
 	x = a >= b;

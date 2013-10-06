@@ -1,4 +1,7 @@
 /* comando output com lista de saidas */
+int:x;
+int:y;
+int:z;
 int:f()
 {
 	output x, y, z;

@@ -1,4 +1,6 @@
 /* vetor indexado com expressão */
+int:x;
+int:vetor[30];
 int:f()
 {
 	x = vetor[10+20]

@@ -54,4 +54,10 @@ void comp_list_set_item(comp_list_t *list, void *item);
  */
 void comp_list_print(comp_list_t *list) ;
 
+/*
+ * print list items
+ */
+int comp_list_size(comp_list_t *list) ;
+
+
 #endif /* COMP_LIST_H */

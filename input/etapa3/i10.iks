@@ -1,4 +1,5 @@
 /* comando output */
+int:x;
 int:f()
 {
 	output x

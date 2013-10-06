@@ -1,4 +1,10 @@
 /* identificadores */
+int:iks;
+int:zede;
+int:ka;
+int:erre;
+int:caps;
+int:_tres;
 int:f()
 {
 	iks = zede;

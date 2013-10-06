@@ -1,15 +1,17 @@
 
 /* incomplete dijkstra. will we have matrix? */
 
+  int: distance[10];
+  bool: visited[100];
+
 int: dijsktra(int: source)
   /* adj matrix ?*/
   int: graphx;
   int: graphy;
-  int: distance;
-  bool: visited;
   int: destination;
   int: i;
   int: j;
+  int: v;
   int: infinite;
 {
 

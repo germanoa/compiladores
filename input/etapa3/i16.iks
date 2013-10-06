@@ -1,4 +1,5 @@
 /* literais string */
+string:iks;
 int:f()
 {
 	iks = "teste";

@@ -138,7 +138,7 @@ void gv_close (void)
  * identificador), IKS_AST_LITERAL (o lexema do literal) ou
  * IKS_AST_FUNCAO (o lexema do identificador da função).
  */
-void gv_declare (const int tipo, const void *pointer, const char *name)
+void gv_declare (const int tipo, const void *pointer, char *name)
 {
   __gv_test_valid_fp (__FUNCTION__);
   __gv_test_valid_ast_pointer (__FUNCTION__, pointer);

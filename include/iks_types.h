@@ -64,4 +64,6 @@ comp_stack_t *scope;
 
 int verify_coercion(comp_tree_t *id, comp_tree_t *expr);
 
+int verify_function_args(comp_grammar_symbol_t *s, comp_list_t *args);
+
 #endif

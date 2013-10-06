@@ -1,4 +1,5 @@
 /* comando atribuição */
+int:x;
 int:f()
 {
 	x = 10;

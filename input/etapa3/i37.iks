@@ -1,4 +1,7 @@
 /* chamada de função */
+int: k() {
+
+}
 int:f()
 {
 	k();

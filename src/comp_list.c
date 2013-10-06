@@ -100,3 +100,14 @@ void comp_list_print(comp_list_t *list) {
     } while(temp != list);
     printf("\n");
 }
+
+int comp_list_size(comp_list_t *list) {
+  int ret=-1;
+  comp_list_t *temp;
+  temp = list;
+  do {
+      ret+=1;
+      temp = temp->next;    
+  } while(temp != list);
+  return ret;
+}

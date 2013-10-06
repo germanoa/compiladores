@@ -1,0 +1,13 @@
+int: f(bool:a,bool:b,char:c) {
+  output "Hello World!";
+}
+
+int: main()
+  int:x;
+  bool:y;
+  char:z;
+{
+  f(1,y,z);
+  //f(1,y);
+  //f(1,y,z,2);
+}

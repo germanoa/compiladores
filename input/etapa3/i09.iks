@@ -1,4 +1,5 @@
 /* comando input */
+int:x;
 int:f()
 {
 	input x

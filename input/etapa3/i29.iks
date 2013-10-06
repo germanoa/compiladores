@@ -1,4 +1,7 @@
 /* lógicas igual */
+int:a;
+int:x;
+int:b;
 int:f()
 {
 	x = a == b;

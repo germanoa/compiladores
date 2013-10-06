@@ -1,4 +1,7 @@
 /* lógicas menor ou igual que */
+int:x;
+int:a;
+int:b;
 int:f()
 {
 	x = a <= b;

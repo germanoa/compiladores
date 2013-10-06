@@ -1,4 +1,6 @@
 /* aritmética unária - */
+int:x;
+int:y;
 int:f()
 {
 	x = - y;

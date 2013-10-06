@@ -1,4 +1,6 @@
 /* vetor indexado */
+int:x;
+int:vetor[11];
 int:f()
 {
 	x = vetor[10]

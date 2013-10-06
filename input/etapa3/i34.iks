@@ -1,4 +1,6 @@
 /* lógica unária */
+int:x;
+int:z;
 int:f()
 {
 	x = !z

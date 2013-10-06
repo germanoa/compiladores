@@ -1,4 +1,7 @@
 /* aritmética multiplicação */
+int:x;
+int:a;
+int:b;
 int:f()
 {
 	x = a * b;

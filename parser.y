@@ -15,7 +15,9 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 #include "gv.h"
 //#include "hash_table.h"
 
-comp_tree_t *ptr_funcao;
+comp_tree_t *ptr_function;
+comp_grammar_symbol_t *function_with_param;
+comp_list_t *args;
 
 %}
 
@@ -109,6 +111,8 @@ http://www.gnu.org/software/bison/manual/bison.html#Rules
 p:
     {    
             //
+            ptr_function=NULL;
+            function_with_param=NULL;
             comp_dict_t *symbol_table_global;
             symbol_table_global = new_comp_dict();
             scope = comp_stack_push(scope,(void*)symbol_table_global);
@@ -159,7 +163,7 @@ array_decl:
 decl:
       type ':' TK_IDENTIFICADOR
         {
-          if (!decl_symbol($3,$1,IKS_DECL_VAR,comp_stack_top(scope))) {
+          if (!decl_symbol($3,$1,IKS_DECL_VAR,comp_stack_top(scope),function_with_param)) {
             return(IKS_ERROR_DECLARED);
           }
           $$ = $3;
@@ -193,7 +197,7 @@ type:
 func:
 	  type ':' TK_IDENTIFICADOR
         {
-          if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,comp_stack_top(scope))) {
+          if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,comp_stack_top(scope),function_with_param)) {
             return(IKS_ERROR_DECLARED);
           }
           comp_dict_t *symbol_table_local;
@@ -201,19 +205,24 @@ func:
           /* 3.A.2 */
           comp_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3);
           scope = comp_stack_push(scope,(void*)symbol_table_local);
-          ptr_funcao=funcao;
+          ptr_function=funcao;
+          function_with_param=$3; //begin params decl
         }
-	  '(' func_param_decl_list ')' decl_list
+	  '(' func_param_decl_list ')'
+      {
+            function_with_param=NULL; // end params decl
+      }
+    decl_list
       {
             //symbol_table_print((comp_dict_t*)comp_stack_top(scope));
       }
       command_block_f
       {
             if ($command_block_f) {
-                iks_ast_connect_nodes(ptr_funcao,$command_block_f);
+                iks_ast_connect_nodes(ptr_function,$command_block_f);
             }
             scope = comp_stack_pop(scope);
-            $$ = ptr_funcao;
+            $$ = ptr_function;
       }
 	;
  	
@@ -608,25 +617,40 @@ expr:
 	;
 
 func_call:
-	id '(' func_param_list ')'
-        {
-            iks_ast_node_value_t *n;
-            n = $1->item; 
-            comp_grammar_symbol_t *s;
-            s = n->symbol;
-            /* 3.A.17 */
-            if(symbol_is_decl_type(s,IKS_DECL_FUNCTION)) {
-              comp_tree_t *x = iks_ast_new_node(IKS_AST_CHAMADA_DE_FUNCAO,NULL);
-              iks_ast_connect_nodes(x,$1);
-              if ($3) { //if no params, so NULL
-                iks_ast_connect_nodes(x,$3);
-              }
-              $$ = x;
-            }
-            else {
-              return iks_error(s,IKS_ERROR_USE);
-            }
-        }
+	id
+   {
+       iks_ast_node_value_t *n;
+       n = $1->item; 
+       comp_grammar_symbol_t *s;
+       s = n->symbol;
+       /* 3.A.17 */
+       if(symbol_is_decl_type(s,IKS_DECL_FUNCTION)) {
+         comp_tree_t *x = iks_ast_new_node(IKS_AST_CHAMADA_DE_FUNCAO,NULL);
+         iks_ast_connect_nodes(x,$1);
+        ptr_function=x;
+       }
+       else {
+         return iks_error(s,IKS_ERROR_USE);
+       }
+       args = new_comp_list();
+       function_with_param=s;
+   }
+	'(' func_param_list ')'
+    {
+         // not so good, better if analyze during parser?
+         int arg_analyze = verify_function_args(function_with_param,args);
+         function_with_param=NULL;
+         if (arg_analyze==0) {
+          if ($func_param_list) { //if no params, so NULL
+             iks_ast_connect_nodes(ptr_function,$func_param_list);
+          }
+          $$ = ptr_function;
+         }
+         else {
+          return arg_analyze; //arg error
+         }
+         //comp_list_delete(args);
+    }
     ;
 
 terminal_value:
@@ -688,9 +712,27 @@ func_param_list:
 
 param_list:
 	  expr
+    {
+       iks_ast_node_value_t *n;
+       n = $1->item; 
+       comp_grammar_symbol_t *s;
+       s = n->symbol;
+       comp_list_t *l; 
+       l = new_comp_list();
+       comp_list_set_item(l,(void*)s);
+       comp_list_insert(args,l);
+    }
 	| expr ',' param_list
         {    
             if ($3) { //because can command_seq <- command <- empty
+              iks_ast_node_value_t *n;
+              n = $1->item; 
+              comp_grammar_symbol_t *s;
+              s = n->symbol;
+              comp_list_t *l; 
+              l = new_comp_list();
+              comp_list_set_item(l,(void*)s);     
+              comp_list_insert(args,l);
               iks_ast_connect_nodes($1,$3);
             }
         }
