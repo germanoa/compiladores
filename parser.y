@@ -304,14 +304,19 @@ commands:
               update_decl_symbol(ids,IKS_STRING,exprs);
             }
             
-            comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
-            iks_ast_connect_nodes(atribuicao,$1);
-            iks_ast_connect_nodes(atribuicao,$3);
-            $$ = atribuicao;
-            
+            comp_tree_t *e;
+            e=$3;
+            if(exprn->type==IKS_AST_CHAMADA_DE_FUNCAO) {
+              comp_list_t *expr_child;
+              expr_child =  $3->children;
+              e = expr_child->next->item;
+              iks_ast_node_value_t *en;
+              en = (iks_ast_node_value_t*)e->item;
+              exprs = en->symbol;
+            }            
             if (exprs) {
               if(ids->iks_type!=exprs->iks_type) {
-                int coercion=verify_coercion($1,$3);
+                int coercion=verify_coercion($1,e);
                 if (coercion) { //if coercion is invalid
                   return coercion;
                 } else { //attribute id type to attribution
@@ -319,6 +324,11 @@ commands:
               	}
               }
             }
+
+            comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
+            iks_ast_connect_nodes(atribuicao,$1);
+            iks_ast_connect_nodes(atribuicao,$3);
+            $$ = atribuicao;
         }
 	| idv '=' expr
         {
@@ -327,18 +337,42 @@ commands:
             id_child =  $1->children;
             comp_tree_t *id_tree;
             id_tree = id_child->next->item;
-            iks_ast_node_value_t *idn;
+            iks_ast_node_value_t *idn,*exprn;
             idn = (iks_ast_node_value_t*)id_tree->item;
-            comp_grammar_symbol_t *ids;
+            exprn = (iks_ast_node_value_t*)$expr->item;
+            comp_grammar_symbol_t *ids,*exprs;
             ids = idn->symbol;
+            exprs = exprn->symbol;
             if(!symbol_is_decl_type(ids,IKS_DECL_VECTOR)) {
               return iks_error(ids,IKS_ERROR_USE);
+            }
+
+            comp_tree_t *e;
+            e=$3;
+            if(exprn->type==IKS_AST_CHAMADA_DE_FUNCAO) {
+              comp_list_t *expr_child;
+              expr_child =  $3->children;
+              e = expr_child->next->item;
+              iks_ast_node_value_t *en;
+              en = (iks_ast_node_value_t*)e->item;
+              exprs = en->symbol;
+            }            
+            if (exprs) {
+              if(ids->iks_type!=exprs->iks_type) {
+                int coercion=verify_coercion(id_tree,e);
+                if (coercion) { //if coercion is invalid
+                  return coercion;
+                } else { //attribute id type to attribution
+          		  
+              	}
+              }
             }
 
             comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
             iks_ast_connect_nodes(atribuicao,$1);
             iks_ast_connect_nodes(atribuicao,$3);
             $$ = atribuicao;
+
         }
 	| TK_PR_OUTPUT output_list
         {

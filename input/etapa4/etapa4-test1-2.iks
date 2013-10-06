@@ -5,7 +5,7 @@ string: d;
 bool: e;
 int: vec[10];
 
-int: fn() {
+string: fn() {
   output "ok";
 }
 
@@ -19,18 +19,20 @@ int: main()
 {
   //a1 = 1;
   //b = 1.0 + b1;
+  //b = 1.0 + b;
   //c = fn1();
   //e1 = true;
-  fn();
+  //fn();
   //fn = 1;
-  a = 1;
-  vec[3] = 1;
+  //a = 1;
+  //vec[3] = 1;
   //fn[3] = 1;
-  b = 1.0 + b;
-  c = fn();
-  e = true;
+  //b = 1.0 + b;
+  //d = fn();
+  //vec[3]=fn();
+  //e = true;
   //e = vec;
-  e = vec[4];
+  //e = vec[4];
   //e = 1 + fn;
   e = 1 + fn();
   //e = a() + fn();

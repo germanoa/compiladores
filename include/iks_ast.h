@@ -48,6 +48,7 @@ struct iks_ast_node_value_t {
     int type;
     comp_grammar_symbol_t *symbol;
     int need_coercion;
+    int iks_type;
 };
 
 /**
