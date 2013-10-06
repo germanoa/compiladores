@@ -4,21 +4,25 @@ bool: c;
 char: d;
 string: e;
 
-int: soma(int:x, int:y) {
+string: soma(int:x, int:y) {
   output x+y;
 }
 
 int: main() {
-  output "ok";
-  output 1+soma(3,2);
-  //output a;
-  //output soma(4,5);
-  output a-soma(4,5);
-  soma(6,7);
-  input a;
-  input b;
-  input c;
-  input d;
-  input e;
-  //input 2;
+//  output "ok";
+//  output 1+soma(3,2);
+//  //output a;
+//  //output soma(4,5);
+//  output a-soma(4,5);
+//  soma(6,7);
+//  input a;
+//  input b;
+//  input c;
+//  input d;
+//  input e;
+//  //input 2;
+  //return 1;
+  //return 'c';
+  //return soma(2,3);
+  return b;
 }

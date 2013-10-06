@@ -96,3 +96,12 @@ int verify_function_args(comp_grammar_symbol_t *s, comp_list_t *args) {
   return ret;
 }
 
+int symbol_is_iks_type(comp_grammar_symbol_t *s,int iks_type) {
+  int ret=1;
+  //printf("%d vs %d\n",s->iks_type,iks_type);
+  if (!(s->iks_type==iks_type)) {
+    ret=0;
+  }
+  return ret;
+}
+

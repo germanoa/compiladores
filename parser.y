@@ -390,6 +390,44 @@ commands:
         }
     | TK_PR_RETURN expr 
         {
+	  		iks_ast_node_value_t *exprn;
+		    exprn = $2->item;
+		    comp_grammar_symbol_t *exprs;
+    		exprs = exprn->symbol;
+		   
+	  		iks_ast_node_value_t *fn;
+		    fn = ptr_function->item;
+		    comp_grammar_symbol_t *fs;
+    		fs = fn->symbol;
+ 
+            comp_tree_t *e;
+            comp_list_t *expr_child;
+            iks_ast_node_value_t *en;
+		    switch(exprn->type)
+		    {
+		    	case IKS_AST_LITERAL:
+		    	case IKS_AST_IDENTIFICADOR:
+		    		if(exprs) {
+              if(!symbol_is_iks_type(exprs,fs->iks_type)) {
+                return iks_error(exprs,IKS_ERROR_WRONG_PAR_RETURN);
+              }
+            }
+            break;
+		    	//case IKS_AST_CHAMADA_DE_FUNCAO:
+          //  expr_child =  $2->children;
+          //  e = expr_child->next->item;
+          //  en = (iks_ast_node_value_t*)e->item;
+          //  exprs = en->symbol;
+		    	//	if(exprs) {
+          //    printf("aqui\n");
+          //    if(!symbol_is_iks_type(exprs,fs->iks_type)) {
+          //      return iks_error(exprs,IKS_ERROR_WRONG_PAR_RETURN);
+          //    }
+          //  }
+          //  break;
+        }
+
+
             /* 3.A.9 */
             comp_tree_t *ret = iks_ast_new_node(IKS_AST_RETURN,NULL);
             iks_ast_connect_nodes(ret,$2);

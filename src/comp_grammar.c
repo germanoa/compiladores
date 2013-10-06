@@ -246,7 +246,10 @@ int iks_error(comp_grammar_symbol_t *s, int error_type) {
 
       }
       break;
+    case IKS_ERROR_WRONG_PAR_RETURN:
+        fprintf(stderr,"parametro nao e compativel com expressao de retorno.\n");
+        ret=IKS_ERROR_WRONG_PAR_RETURN;
+        break;
   }
   return ret;
-
 }
