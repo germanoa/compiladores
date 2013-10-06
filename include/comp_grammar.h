@@ -16,6 +16,8 @@
 #define RS_SUCESSO 0
 #define RS_ERRO 1
 
+#define MAX_PARAMS 256
+
 //comp_dict_t *symbol_table;
 
 /**
@@ -32,6 +34,25 @@ struct comp_grammar_symbol_t {
     comp_dict_t *symbol_table;
     //comp_tree_t *scope;
 };
+
+
+/**
+ *Structs to function params check
+*//
+typedef struct comp_function_symbol comp_function_symbol;
+struct comp_function_symbol{
+	int code_line_number;
+	char *identifier;
+	int params_type[MAX_PARAMS];
+	int params_number;
+}
+
+typedef struct comp_function_list comp_function_list;
+struct comp_function_list {
+	comp_function_symbol *function_symbol;
+	comp_function_list *prev;
+	comp_function_list *next;
+}
 
 /**
  * initialize grammar_symbol with prev,next with its same address
@@ -100,5 +121,23 @@ int symbol_is_decl_type(comp_grammar_symbol_t *s,int decl_type);
  */
 int iks_error(comp_grammar_symbol_t *s, int error_type);
 
+/**
+ * functions no management of params check functions
+*/
+comp_function_list *comp_function_list_create();
+
+comp_function_symbol *function_symbol_set(int token_type, int code_line_number, char *identifier);
+
+comp_function_list *function_symbol_insert(comp_function_list *function_list, comp_function_symbol *function_symbol);
+
+comp_function_list *function_symbol_search(comp_function_list *function_list, char *identifier);
+
+void function_param_insert(comp_function_list *function_list, char *identifier, int param_type);
+
+int function_param_check(comp_function_list *function_list, char *identifier, int param_type[]);
+
+/**
+  * end of params check functions
+*/
 
 #endif /* COMP_GRAMMAR_H */
