@@ -246,10 +246,19 @@ int iks_error(comp_grammar_symbol_t *s, int error_type) {
 
       }
       break;
+    
     case IKS_ERROR_WRONG_PAR_RETURN:
-        fprintf(stderr,"parametro nao e compativel com expressao de retorno.\n");
-        ret=IKS_ERROR_WRONG_PAR_RETURN;
-        break;
+      fprintf(stderr,"parametro nao e compativel com expressao de retorno.\n");
+      ret=IKS_ERROR_WRONG_PAR_RETURN;
+      break;
+    
+    case IKS_ERROR_WRONG_PAR_INPUT:
+    	if(s != NULL)
+    		fprintf(stderr,"line %d: '%s' deve ser identificador\n",s->code_line_number,s->value);
+  		else fprintf(stderr,"parâmetro para input deve ser identificador\n");
+  		
+  		ret = IKS_ERROR_WRONG_PAR_INPUT;
+  		break;
   }
   return ret;
 }
