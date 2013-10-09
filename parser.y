@@ -143,7 +143,7 @@ prog:
 			//symbol_table_print((comp_dict_t*)comp_stack_top(scope));
 			$$ = $2;
 		}
-	| /* empty */
+	| /* empty */ {}
 	;
 
 /* 2.1 */
@@ -211,7 +211,7 @@ func:
 			//symbol_table_print((comp_dict_t*)comp_stack_top(scope));
 		} command_block_f {
 			if ($command_block_f) {
-				ks_ast_connect_nodes(ptr_function,$command_block_f);
+				iks_ast_connect_nodes(ptr_function,$command_block_f);
 			}
 			scope = comp_stack_pop(scope);
 			$$ = ptr_function;
