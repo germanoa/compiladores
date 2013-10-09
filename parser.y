@@ -583,268 +583,263 @@ expr:
 			$$ = oo;
 		}
 	| expr '-' expr
-	{
-	/* 3.A.12 */
-	comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SUBTRACAO,NULL);
-	iks_ast_connect_nodes(oo,$1);
-	iks_ast_connect_nodes(oo,$3);
-	$$ = oo;
-	}
+		{
+			/* 3.A.12 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SUBTRACAO,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
 	| expr '*' expr
-	{
-	/* 3.A.12 */
-	comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_MULTIPLICACAO,NULL);
-	iks_ast_connect_nodes(oo,$1);
-	iks_ast_connect_nodes(oo,$3);
-	$$ = oo;
-	}
+		{
+			/* 3.A.12 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_MULTIPLICACAO,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
 	| expr '/' expr
-	{
-	/* 3.A.12 */
-	comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_DIVISAO,NULL);
-	iks_ast_connect_nodes(oo,$1);
-	iks_ast_connect_nodes(oo,$3);
-	$$ = oo;
-	}
+		{
+			/* 3.A.12 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_DIVISAO,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
 	| expr '<' expr
-	{
-	/* 3.A.14 */
-	comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_L,NULL);
-	iks_ast_connect_nodes(oo,$1);
-	iks_ast_connect_nodes(oo,$3);
-	$$ = oo;
-	}
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_L,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
 	| expr '>' expr
-	{
-	/* 3.A.14 */
-	comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_G,NULL);
-	iks_ast_connect_nodes(oo,$1);
-	iks_ast_connect_nodes(oo,$3);
-	$$ = oo;
-	}
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_G,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
 	| '!' expr
-	{
-	/* 3.A.15 */
-	comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_NEGACAO,NULL);
-	iks_ast_connect_nodes(oo,$2);
-	$$ = oo;
-	}
+		{
+			/* 3.A.15 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_NEGACAO,NULL);
+			iks_ast_connect_nodes(oo,$2);
+			$$ = oo;
+		}
 	| '-' expr %prec INVERSAO
-	{
-	/* 3.A.15 */
-	comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_INVERSAO,NULL);
-	iks_ast_connect_nodes(oo,$2);
-	$$ = oo;
-	}
+		{
+			/* 3.A.15 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_INVERSAO,NULL);
+			iks_ast_connect_nodes(oo,$2);
+			$$ = oo;
+		}
 	| expr TK_OC_LE expr
-	{
-	/* 3.A.14 */
-	comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_LE,NULL);
-	iks_ast_connect_nodes(oo,$1);
-	iks_ast_connect_nodes(oo,$3);
-	$$ = oo;
-	}
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_LE,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
 	| expr TK_OC_GE expr
-	{
-	/* 3.A.14 */
-	comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_GE,NULL);
-	iks_ast_connect_nodes(oo,$1);
-	iks_ast_connect_nodes(oo,$3);
-	$$ = oo;
-	}
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_GE,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
 	| expr TK_OC_EQ expr
-	{
-	/* 3.A.14 */
-	comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_IGUAL,NULL);
-	iks_ast_connect_nodes(oo,$1);
-	iks_ast_connect_nodes(oo,$3);
-	$$ = oo;
-	}
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_IGUAL,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
 	| expr TK_OC_NE expr
-	{
-	/* 3.A.14 */
-	comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_DIF,NULL);
-	iks_ast_connect_nodes(oo,$1);
-	iks_ast_connect_nodes(oo,$3);
-	$$ = oo;
-	}
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_DIF,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
 	| expr TK_OC_AND expr
-	{
-	/* 3.A.14 */
-	comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_E,NULL);
-	iks_ast_connect_nodes(oo,$1);
-	iks_ast_connect_nodes(oo,$3);
-	$$ = oo;
-	}
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_E,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
 	| expr TK_OC_OR expr
-	{
-	/* 3.A.14 */
-	comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_OU,NULL);
-	iks_ast_connect_nodes(oo,$1);
-	iks_ast_connect_nodes(oo,$3);
-	$$ = oo;
-	}
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_OU,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
 	| func_call
 	;
 
 func_call:
-id
-{
-iks_ast_node_value_t *n;
-n = $1->item; 
-comp_grammar_symbol_t *s;
-s = n->symbol;
-/* 3.A.17 */
-if(symbol_is_decl_type(s,IKS_DECL_FUNCTION)) {
-comp_tree_t *x = iks_ast_new_node(IKS_AST_CHAMADA_DE_FUNCAO,NULL);
-iks_ast_connect_nodes(x,$1);
-ptr_function=x;
-}
-else {
-return iks_error(s,IKS_ERROR_USE);
-}
-args = new_comp_list();
-function_with_param=s;
-}
-'(' func_param_list ')'
-{
-// not so good, better if analyze during parser?
-int arg_analyze = verify_function_args(function_with_param,args);
-function_with_param=NULL;
-if (arg_analyze==0) {
-if ($func_param_list) { //if no params, so NULL
-iks_ast_connect_nodes(ptr_function,$func_param_list);
-}
-$$ = ptr_function;
-}
-else {
-return arg_analyze; //arg error
-}
-//comp_list_delete(args);
-}
-;
+		id {
+			iks_ast_node_value_t *n;
+			n = $1->item; 
+			comp_grammar_symbol_t *s;
+			s = n->symbol;
+			/* 3.A.17 */
+			if(symbol_is_decl_type(s,IKS_DECL_FUNCTION)) {
+				comp_tree_t *x = iks_ast_new_node(IKS_AST_CHAMADA_DE_FUNCAO,NULL);
+				iks_ast_connect_nodes(x,$1);
+				ptr_function=x;
+			} else {
+				return iks_error(s,IKS_ERROR_USE);
+			}
+			args = new_comp_list();
+			function_with_param=s;
+		} '(' func_param_list ')' {
+			// not so good, better if analyze during parser?
+			int arg_analyze = verify_function_args(function_with_param,args);
+			function_with_param=NULL;
+			if (arg_analyze==0) {
+				if ($func_param_list) { //if no params, so NULL
+					iks_ast_connect_nodes(ptr_function,$func_param_list);
+				}
+				$$ = ptr_function;
+			} else {
+				return arg_analyze; //arg error
+			}
+			//comp_list_delete(args);
+		}
+	;
 
 terminal_value:
-/* 3.A.11 */
-TK_LIT_INT
-{
-$1->iks_type=IKS_INT;
-comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
-$$ = lit;
-}
-| TK_LIT_FLOAT
-{
-$1->iks_type=IKS_FLOAT;
-comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
-$$ = lit;
-}
-| TK_LIT_FALSE
-{
-$1->iks_type=IKS_BOOL;
-iks_ast_node_value_t *v1;
-v1 = new_iks_ast_node_value();
-iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
-comp_tree_t *lit;
-lit = new_comp_tree();
-comp_tree_set_item(lit,(void*)v1);
-gv_declare(IKS_AST_LITERAL,lit,"false");
-$$ = lit;
-}
-| TK_LIT_TRUE
-{
-$1->iks_type=IKS_BOOL;
-iks_ast_node_value_t *v1;
-v1 = new_iks_ast_node_value();
-iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
-comp_tree_t *lit;
-lit = new_comp_tree();
-comp_tree_set_item(lit,(void*)v1);
-gv_declare(IKS_AST_LITERAL,lit,"true");
-$$ = lit;
-}
-| TK_LIT_CHAR
-{
-$1->iks_type=IKS_CHAR;
-comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
-$$ = lit;
-}
-| TK_LIT_STRING
-{
-$1->iks_type=IKS_STRING;
-comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
-$$ = lit;
-}
-;
+	/* 3.A.11 */
+		TK_LIT_INT
+		{
+			$1->iks_type=IKS_INT;
+			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			$$ = lit;
+		}
+	| TK_LIT_FLOAT
+		{
+			$1->iks_type=IKS_FLOAT;
+			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			$$ = lit;
+		}
+	| TK_LIT_FALSE
+		{
+			$1->iks_type=IKS_BOOL;
+			iks_ast_node_value_t *v1;
+			v1 = new_iks_ast_node_value();
+			iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
+			comp_tree_t *lit;
+			lit = new_comp_tree();
+			comp_tree_set_item(lit,(void*)v1);
+			gv_declare(IKS_AST_LITERAL,lit,"false");
+			$$ = lit;
+		}
+	| TK_LIT_TRUE
+		{
+			$1->iks_type=IKS_BOOL;
+			iks_ast_node_value_t *v1;
+			v1 = new_iks_ast_node_value();
+			iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
+			comp_tree_t *lit;
+			lit = new_comp_tree();
+			comp_tree_set_item(lit,(void*)v1);
+			gv_declare(IKS_AST_LITERAL,lit,"true");
+			$$ = lit;
+		}
+	| TK_LIT_CHAR
+		{
+			$1->iks_type=IKS_CHAR;
+			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			$$ = lit;
+		}
+	| TK_LIT_STRING
+		{
+			$1->iks_type=IKS_STRING;
+			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			$$ = lit;
+		}
+	;
 
 func_param_list:
-param_list
-| { $$ = NULL; } /* empty */
-;
+		param_list
+	| { $$ = NULL; } /* empty */
+	;
 
 param_list:
-expr
-{
-iks_ast_node_value_t *n;
-n = $1->item; 
-comp_grammar_symbol_t *s;
-s = n->symbol;
-comp_list_t *l; 
-l = new_comp_list();
-comp_list_set_item(l,(void*)s);
-comp_list_insert(args,l);
-}
-| expr ',' param_list
-{    
-if ($3) { //because can command_seq <- command <- empty
-iks_ast_node_value_t *n;
-n = $1->item; 
-comp_grammar_symbol_t *s;
-s = n->symbol;
-comp_list_t *l; 
-l = new_comp_list();
-comp_list_set_item(l,(void*)s);     
-comp_list_insert(args,l);
-iks_ast_connect_nodes($1,$3);
-}
-}
-;
+		expr
+		{
+			iks_ast_node_value_t *n;
+			n = $1->item; 
+			comp_grammar_symbol_t *s;
+			s = n->symbol;
+			comp_list_t *l; 
+			l = new_comp_list();
+			comp_list_set_item(l,(void*)s);
+			comp_list_insert(args,l);
+		}
+	| expr ',' param_list
+		{
+			if ($3) { //because can command_seq <- command <- empty
+				iks_ast_node_value_t *n;
+				n = $1->item; 
+				comp_grammar_symbol_t *s;
+				s = n->symbol;
+				comp_list_t *l; 
+				l = new_comp_list();
+				comp_list_set_item(l,(void*)s);     
+				comp_list_insert(args,l);
+				iks_ast_connect_nodes($1,$3);
+			}
+		}
+	;
 
 /* 2.6 */
 ctrl_flow:
-TK_PR_IF '(' expr ')' TK_PR_THEN commands
-{
-/* 3.A.3 */
-comp_tree_t *if_else = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
-iks_ast_connect_nodes(if_else,$3);
-iks_ast_connect_nodes(if_else,$6);
-$$ = if_else;
-}
-| TK_PR_IF '(' expr ')' TK_PR_THEN commands TK_PR_ELSE commands
-{
-/* 3.A.3 */
-comp_tree_t *if_else = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
-iks_ast_connect_nodes(if_else,$3);
-iks_ast_connect_nodes(if_else,$6);
-iks_ast_connect_nodes(if_else,$8);
-$$ = if_else;
-}
-| TK_PR_WHILE '(' expr ')' TK_PR_DO commands
-{
-/* 3.A.5 */
-comp_tree_t *while_do = iks_ast_new_node(IKS_AST_WHILE_DO,NULL);
-iks_ast_connect_nodes(while_do,$3);
-iks_ast_connect_nodes(while_do,$6);
-$$ = while_do;
-}
-| TK_PR_DO commands TK_PR_WHILE '(' expr ')' 
-{
-/* 3.A.4 */
-comp_tree_t *do_while = iks_ast_new_node(IKS_AST_DO_WHILE,NULL);
-iks_ast_connect_nodes(do_while,$2);
-iks_ast_connect_nodes(do_while,$5);
-$$ = do_while;
-}
-;
+		TK_PR_IF '(' expr ')' TK_PR_THEN commands
+		{
+			/* 3.A.3 */
+			comp_tree_t *if_else = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
+			iks_ast_connect_nodes(if_else,$3);
+			iks_ast_connect_nodes(if_else,$6);
+			$$ = if_else;
+		}
+	| TK_PR_IF '(' expr ')' TK_PR_THEN commands TK_PR_ELSE commands
+		{
+			/* 3.A.3 */
+			comp_tree_t *if_else = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
+			iks_ast_connect_nodes(if_else,$3);
+			iks_ast_connect_nodes(if_else,$6);
+			iks_ast_connect_nodes(if_else,$8);
+			$$ = if_else;
+		}
+	| TK_PR_WHILE '(' expr ')' TK_PR_DO commands
+		{
+			/* 3.A.5 */
+			comp_tree_t *while_do = iks_ast_new_node(IKS_AST_WHILE_DO,NULL);
+			iks_ast_connect_nodes(while_do,$3);
+			iks_ast_connect_nodes(while_do,$6);
+			$$ = while_do;
+		}
+	| TK_PR_DO commands TK_PR_WHILE '(' expr ')' 
+		{
+			/* 3.A.4 */
+			comp_tree_t *do_while = iks_ast_new_node(IKS_AST_DO_WHILE,NULL);
+			iks_ast_connect_nodes(do_while,$2);
+			iks_ast_connect_nodes(do_while,$5);
+			$$ = do_while;
+		}
+	;
 
 %%
 
