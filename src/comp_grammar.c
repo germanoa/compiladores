@@ -165,6 +165,7 @@ int exist_symbol_local(comp_grammar_symbol_t *symbol, comp_dict_t *symbol_table)
 int decl_symbol(comp_grammar_symbol_t *s,int iks_type, int decl_type, void *symbol_table, comp_grammar_symbol_t *function_with_param) {
   int ret=1;
   s->iks_type = iks_type;
+  
   switch (iks_type) {
     case IKS_INT:
       s->iks_size=4;
@@ -182,8 +183,10 @@ int decl_symbol(comp_grammar_symbol_t *s,int iks_type, int decl_type, void *symb
       s->iks_size=1;
       break;
   }
+  
   s->decl_type = decl_type;
   s->symbol_table = (comp_dict_t*)symbol_table;
+  
   if (!exist_symbol_local(s,s->symbol_table)) {
     symbol_table_append(s->value,s,s->symbol_table);
     if (function_with_param) {
@@ -192,11 +195,11 @@ int decl_symbol(comp_grammar_symbol_t *s,int iks_type, int decl_type, void *symb
       comp_list_set_item(l,(void*)s);      
       comp_list_append(function_with_param->params,l);
     }
-  }
-  else {
+  } else {
     ret=0;
     fprintf(stderr,"line %d: identificador '%s' já declarado\n",s->code_line_number,s->value);
   }
+  
   return ret;
 }
 
