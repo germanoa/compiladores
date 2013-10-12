@@ -198,8 +198,10 @@ func:
 			if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,comp_stack_top(scope),function_with_param)) {
 				return(IKS_ERROR_DECLARED);
 			}
+			
 			comp_dict_t *symbol_table_local;
 			symbol_table_local = new_comp_dict();
+			
 			/* 3.A.2 */
 			comp_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3);
 			scope = comp_stack_push(scope,(void*)symbol_table_local);
@@ -213,6 +215,7 @@ func:
 			if ($command_block_f) {
 				iks_ast_connect_nodes(ptr_function,$command_block_f);
 			}
+			
 			scope = comp_stack_pop(scope);
 			$$ = ptr_function;
 		}
