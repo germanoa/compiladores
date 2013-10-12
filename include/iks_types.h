@@ -68,4 +68,9 @@ int verify_function_args(comp_grammar_symbol_t *s, comp_list_t *args);
 
 int symbol_is_iks_type(comp_grammar_symbol_t *s,int iks_type);
 
+/**
+ * return type inferred (only works with int, float and bool)
+ */
+int infer_type(int iks_type1, int iks_type2);
+
 #endif

@@ -321,6 +321,8 @@ commands:
 			}
 
 			comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
+			iks_ast_node_value_t *atrn = atribuicao->item;
+			atrn->iks_type = ids->iks_type;
 			iks_ast_connect_nodes(atribuicao,$1);
 			iks_ast_connect_nodes(atribuicao,$3);
 			$$ = atribuicao;
@@ -364,6 +366,8 @@ commands:
 			}
 
 			comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
+			iks_ast_node_value_t *atrn = atribuicao->item;
+			atrn->iks_type = ids->iks_type;
 			iks_ast_connect_nodes(atribuicao,$1);
 			iks_ast_connect_nodes(atribuicao,$3);
 			$$ = atribuicao;
@@ -565,13 +569,15 @@ expr:
 			s = n->symbol;
 			if(symbol_is_decl_type(s,IKS_DECL_VECTOR)) {
 				comp_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
+				iks_ast_node_value_t *vetsn = vets->item;
+				vetsn->iks_type = vets->iks_type;
 				iks_ast_connect_nodes(vets,$1);
 				iks_ast_connect_nodes(vets,$3);
 				$$ = vets;
 			} else {
 				return iks_error(s,IKS_ERROR_USE);
 			}
-		}
+		}\
 	| terminal_value
 	| '(' expr ')'
 		{

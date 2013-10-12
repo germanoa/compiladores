@@ -105,3 +105,12 @@ int symbol_is_iks_type(comp_grammar_symbol_t *s,int iks_type) {
   return ret;
 }
 
+int infer_type(int iks_type1, int iks_type2) {
+	if(iks_type1 == iks_type2)
+		return iks_type1;
+	if(iks_type1 == IKS_FLOAT || iks_type2 == IKS_FLOAT)
+		return IKS_FLOAT;
+	
+	return IKS_INT;
+}
+
