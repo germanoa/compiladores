@@ -11,7 +11,7 @@
 extern YYSTYPE yylval;
 
 int line_number = 1;
-const char *last_identifier;
+char *last_identifier;
 
 comp_grammar_symbol_t *push_to_symbol_table(int type) {
     char *identifier;
@@ -119,7 +119,7 @@ int yy_line_number_get() {
     return line_number;
 }
 
-const char* yy_last_token_identifier_get() {
+char* yy_last_token_identifier_get() {
     return last_identifier;
 }
 

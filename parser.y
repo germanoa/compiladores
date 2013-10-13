@@ -369,7 +369,8 @@ commands:
 
 			comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
 			iks_ast_node_value_t *atrn = atribuicao->item;
-			atrn->iks_type = ids->iks_type;
+			iks_ast_node_value_t *idvn = $1->item;
+			atrn->iks_type = idvn->iks_type;
 			iks_ast_connect_nodes(atribuicao,$1);
 			iks_ast_connect_nodes(atribuicao,$3);
 			$$ = atribuicao;
@@ -465,6 +466,9 @@ idv:
 		{
 			// []
 			comp_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
+			iks_ast_node_value_t *vetsn = vets->item;
+			iks_ast_node_value_t *idn = $1->item;
+			vetsn->iks_type = idn->iks_type;
 			iks_ast_connect_nodes(vets,$1);
 			iks_ast_connect_nodes(vets,$3);
 			$$ = vets;
@@ -779,12 +783,16 @@ terminal_value:
 		{
 			$1->iks_type=IKS_INT;
 			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_ast_node_value_t *litn = lit->item;
+			litn->iks_type = $1->iks_type;
 			$$ = lit;
 		}
 	| TK_LIT_FLOAT
 		{
 			$1->iks_type=IKS_FLOAT;
 			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_ast_node_value_t *litn = lit->item;
+			litn->iks_type = $1->iks_type;
 			$$ = lit;
 		}
 	| TK_LIT_FALSE
@@ -796,6 +804,8 @@ terminal_value:
 			comp_tree_t *lit;
 			lit = new_comp_tree();
 			comp_tree_set_item(lit,(void*)v1);
+			iks_ast_node_value_t *litn = lit->item;
+			litn->iks_type = $1->iks_type;
 			gv_declare(IKS_AST_LITERAL,lit,"false");
 			$$ = lit;
 		}
@@ -808,6 +818,8 @@ terminal_value:
 			comp_tree_t *lit;
 			lit = new_comp_tree();
 			comp_tree_set_item(lit,(void*)v1);
+			iks_ast_node_value_t *litn = lit->item;
+			litn->iks_type = $1->iks_type;
 			gv_declare(IKS_AST_LITERAL,lit,"true");
 			$$ = lit;
 		}
@@ -815,12 +827,16 @@ terminal_value:
 		{
 			$1->iks_type=IKS_CHAR;
 			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_ast_node_value_t *litn = lit->item;
+			litn->iks_type = $1->iks_type;
 			$$ = lit;
 		}
 	| TK_LIT_STRING
 		{
 			$1->iks_type=IKS_STRING;
 			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_ast_node_value_t *litn = lit->item;
+			litn->iks_type = $1->iks_type;
 			$$ = lit;
 		}
 	;

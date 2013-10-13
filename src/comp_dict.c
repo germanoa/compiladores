@@ -105,7 +105,7 @@ void comp_dict_print(comp_dict_t *dict) {
     temp = dict;
     int i=0;
     do {
-        printf("%s -> %X\n",comp_dict_item_key_get(temp->item),comp_dict_item_value_get(temp->item));
+        printf("%s -> %X\n",comp_dict_item_key_get(temp->item),(unsigned int)comp_dict_item_value_get(temp->item));
         temp = temp->next;    
     } while(temp != dict);
     printf("\n");
@@ -159,5 +159,5 @@ int comp_dict_item_set(comp_dict_item_t *dict_item, char key[], char value[]) {
 }
 
 void comp_dict_item_print(comp_dict_item_t *dict_item) {
-    printf("%s -> %s\n",dict_item->key,dict_item->value);
+    printf("%s -> %s\n",dict_item->key,(char*)dict_item->value);
 }
