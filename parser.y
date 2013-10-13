@@ -204,6 +204,8 @@ func:
 			
 			/* 3.A.2 */
 			comp_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3);
+			iks_ast_node_value_t *funcaon = funcao->item;
+			funcaon->iks_type = $1;
 			scope = comp_stack_push(scope,(void*)symbol_table_local);
 			ptr_function=funcao;
 			function_with_param=$3; //begin params decl
@@ -577,7 +579,7 @@ expr:
 			} else {
 				return iks_error(s,IKS_ERROR_USE);
 			}
-		}\
+		}
 	| terminal_value
 	| '(' expr ')'
 		{
@@ -589,7 +591,7 @@ expr:
 			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SOMA,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
-			iks_ast_node_value_t *n2 = $2->item;
+			iks_ast_node_value_t *n2 = $3->item;
 			oon->iks_type = infer_type(n1->iks_type, n2->iks_type);
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
@@ -601,7 +603,7 @@ expr:
 			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SUBTRACAO,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
-			iks_ast_node_value_t *n2 = $2->item;
+			iks_ast_node_value_t *n2 = $3->item;
 			oon->iks_type = infer_type(n1->iks_type, n2->iks_type);
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
@@ -613,7 +615,7 @@ expr:
 			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_MULTIPLICACAO,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
-			iks_ast_node_value_t *n2 = $2->item;
+			iks_ast_node_value_t *n2 = $3->item;
 			oon->iks_type = infer_type(n1->iks_type, n2->iks_type);
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
@@ -625,7 +627,7 @@ expr:
 			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_DIVISAO,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
-			iks_ast_node_value_t *n2 = $2->item;
+			iks_ast_node_value_t *n2 = $3->item;
 			oon->iks_type = infer_type(n1->iks_type, n2->iks_type);
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
@@ -637,7 +639,7 @@ expr:
 			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_L,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
-			iks_ast_node_value_t *n2 = $2->item;
+			iks_ast_node_value_t *n2 = $3->item;
 			oon->iks_type = infer_type(n1->iks_type, n2->iks_type);
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
@@ -649,7 +651,7 @@ expr:
 			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_G,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
-			iks_ast_node_value_t *n2 = $2->item;
+			iks_ast_node_value_t *n2 = $3->item;
 			oon->iks_type = infer_type(n1->iks_type, n2->iks_type);
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
@@ -746,6 +748,8 @@ func_call:
 			/* 3.A.17 */
 			if(symbol_is_decl_type(s,IKS_DECL_FUNCTION)) {
 				comp_tree_t *x = iks_ast_new_node(IKS_AST_CHAMADA_DE_FUNCAO,NULL);
+				iks_ast_node_value_t *xn = x->item;
+				xn->iks_type = n->iks_type;
 				iks_ast_connect_nodes(x,$1);
 				ptr_function=x;
 			} else {

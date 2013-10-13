@@ -119,7 +119,7 @@ int yy_line_number_get() {
     return line_number;
 }
 
-const char *yy_last_token_identifier_get() {
+const char* yy_last_token_identifier_get() {
     return last_identifier;
 }
 
