@@ -1,0 +1,5 @@
+/* IKS_ERROR_WRONG_PAR_RETURN */
+int:f()
+{
+  return "str";
+}

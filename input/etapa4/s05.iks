@@ -1,0 +1,6 @@
+/* IKS_ERROR_VARIABLE */
+int:f()
+int:x;
+{
+  x[10] = 1;
+}

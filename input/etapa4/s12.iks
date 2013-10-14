@@ -1,0 +1,6 @@
+/* IKS_ERROR_WRONG_TYPE_ARGS */
+int:g(int:x){}
+int:f()
+{
+  g('c');
+}

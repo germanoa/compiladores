@@ -1,0 +1,10 @@
+/* IKS_ERROR_UNDECLARED */
+int:f()
+int:x;
+{
+}
+
+int:g()
+{
+  x = 1;
+}

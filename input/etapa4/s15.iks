@@ -1,0 +1,5 @@
+/* IKS_ERROR_WRONG_PAR_OUTPUT */
+int:f()
+{
+  output 'c';
+}
