@@ -16,6 +16,7 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 	//#include "hash_table.h"
 
 	comp_tree_t *ptr_function;
+	comp_tree_t *ptr_function_call;
 	comp_grammar_symbol_t *function_with_param;
 	comp_list_t *args;
 	
@@ -112,6 +113,7 @@ http://www.gnu.org/software/bison/manual/bison.html#Rules
 p:
 		{
 			ptr_function=NULL;
+			ptr_function_call=NULL;
 			function_with_param=NULL;
 			comp_dict_t *symbol_table_global;
 			symbol_table_global = new_comp_dict();
@@ -220,6 +222,7 @@ func:
 			
 			scope = comp_stack_pop(scope);
 			$$ = ptr_function;
+			ptr_function = NULL; //evita aceitar um return fora de uma função
 		}
 	;
 
@@ -410,8 +413,16 @@ commands:
 			fn = ptr_function->item;
 			comp_grammar_symbol_t *fs;
 			fs = fn->symbol;
-
-			comp_tree_t *e;
+			
+			if(exprn->iks_type != fn->iks_type) {
+				int coercion = verify_coercion(ptr_function, $2);
+				if(coercion) {
+					fprintf(stderr, "%d should be %d\n", exprn->iks_type, fn->iks_type);
+					return iks_error(exprs,IKS_ERROR_WRONG_PAR_RETURN);
+				}
+			}
+			
+			/*comp_tree_t *e;
 			comp_list_t *expr_child;
 			iks_ast_node_value_t *en;
 			switch(exprn->type)
@@ -436,8 +447,7 @@ commands:
 				//    }
 				//  }
 				//  break;
-			}
-
+			}*/
 
 			/* 3.A.9 */
 			comp_tree_t *ret = iks_ast_new_node(IKS_AST_RETURN,NULL);
@@ -453,6 +463,8 @@ id:
 			s = search_symbol_global($1,scope);
 			if (s) {
 				comp_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,s);
+				iks_ast_node_value_t *idn = identificador->item;
+				idn->iks_type = s->iks_type;
 				$$ = identificador;
 			} else {
 				fprintf(stderr,"line %d: identificador '%s' não declarado\n",$1->code_line_number,$1->value);
@@ -755,7 +767,7 @@ func_call:
 				iks_ast_node_value_t *xn = x->item;
 				xn->iks_type = n->iks_type;
 				iks_ast_connect_nodes(x,$1);
-				ptr_function=x;
+				ptr_function_call=x;
 			} else {
 				return iks_error(s,IKS_ERROR_USE);
 			}
@@ -767,9 +779,9 @@ func_call:
 			function_with_param=NULL;
 			if (arg_analyze==0) {
 				if ($func_param_list) { //if no params, so NULL
-					iks_ast_connect_nodes(ptr_function,$func_param_list);
+					iks_ast_connect_nodes(ptr_function_call,$func_param_list);
 				}
-				$$ = ptr_function;
+				$$ = ptr_function_call;
 			} else {
 				return arg_analyze; //arg error
 			}
