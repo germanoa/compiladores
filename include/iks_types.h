@@ -71,6 +71,6 @@ int symbol_is_iks_type(comp_grammar_symbol_t *s,int iks_type);
 /**
  * return type inferred (only works with int, float and bool)
  */
-int infer_type(int iks_type1, int iks_type2);
+int infer_type(comp_tree_t *type1, comp_tree_t *type2);
 
 #endif

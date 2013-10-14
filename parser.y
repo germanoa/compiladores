@@ -417,37 +417,10 @@ commands:
 			if(exprn->iks_type != fn->iks_type) {
 				int coercion = verify_coercion(ptr_function, $2);
 				if(coercion) {
-					fprintf(stderr, "%d should be %d\n", exprn->iks_type, fn->iks_type);
+					fprintf(stderr, "return: tipo %d deveria ser %d\n", exprn->iks_type, fn->iks_type);
 					return iks_error(exprs,IKS_ERROR_WRONG_PAR_RETURN);
 				}
 			}
-			
-			/*comp_tree_t *e;
-			comp_list_t *expr_child;
-			iks_ast_node_value_t *en;
-			switch(exprn->type)
-			{
-				case IKS_AST_LITERAL:
-				case IKS_AST_IDENTIFICADOR:
-					if(exprs) {
-						if(!symbol_is_iks_type(exprs,fs->iks_type)) {
-							return iks_error(exprs,IKS_ERROR_WRONG_PAR_RETURN);
-						}
-					}
-					break;
-				//case IKS_AST_CHAMADA_DE_FUNCAO:
-				//  expr_child =  $2->children;
-				//  e = expr_child->next->item;
-				//  en = (iks_ast_node_value_t*)e->item;
-				//  exprs = en->symbol;
-				//	if(exprs) {
-				//    printf("aqui\n");
-				//    if(!symbol_is_iks_type(exprs,fs->iks_type)) {
-				//      return iks_error(exprs,IKS_ERROR_WRONG_PAR_RETURN);
-				//    }
-				//  }
-				//  break;
-			}*/
 
 			/* 3.A.9 */
 			comp_tree_t *ret = iks_ast_new_node(IKS_AST_RETURN,NULL);
@@ -478,6 +451,9 @@ idv:
 		{
 			// []
 			comp_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type;
 			iks_ast_node_value_t *vetsn = vets->item;
 			iks_ast_node_value_t *idn = $1->item;
 			vetsn->iks_type = idn->iks_type;
@@ -587,6 +563,9 @@ expr:
 			s = n->symbol;
 			if(symbol_is_decl_type(s,IKS_DECL_VECTOR)) {
 				comp_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
+				int type = infer_type($1, $3);
+				if(type > 5) //erro de coerção
+					return type;
 				iks_ast_node_value_t *vetsn = vets->item;
 				vetsn->iks_type = n->iks_type;
 				iks_ast_connect_nodes(vets,$1);
@@ -608,7 +587,10 @@ expr:
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
-			oon->iks_type = infer_type(n1->iks_type, n2->iks_type);
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type;
+			oon->iks_type = type;
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
@@ -620,7 +602,10 @@ expr:
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
-			oon->iks_type = infer_type(n1->iks_type, n2->iks_type);
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type;
+			oon->iks_type = type;
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
@@ -632,7 +617,10 @@ expr:
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
-			oon->iks_type = infer_type(n1->iks_type, n2->iks_type);
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type;
+			oon->iks_type = type;
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
@@ -644,7 +632,10 @@ expr:
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
-			oon->iks_type = infer_type(n1->iks_type, n2->iks_type);
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type;
+			oon->iks_type = type;
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
@@ -656,7 +647,10 @@ expr:
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
-			oon->iks_type = infer_type(n1->iks_type, n2->iks_type);
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type;
+			oon->iks_type = type;
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
@@ -668,7 +662,10 @@ expr:
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
-			oon->iks_type = infer_type(n1->iks_type, n2->iks_type);
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type;
+			oon->iks_type = type;
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;

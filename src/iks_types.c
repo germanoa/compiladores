@@ -14,33 +14,41 @@ int verify_coercion(comp_tree_t *id, comp_tree_t *expr) {
   ids = idn->symbol;
   exprs = exprn->symbol;
 	
-  if((idn->iks_type == IKS_INT)&&(exprn->iks_type == IKS_BOOL)) {
-    //printf("coercion int to bool\n");
-    idn->need_coercion=IKS_COERCION_INT_TO_BOOL;
-  } else if((idn->iks_type == IKS_INT)&&(exprn->iks_type == IKS_FLOAT)) {
-    //printf("coercion int to float\n");
-    idn->need_coercion=IKS_COERCION_INT_TO_FLOAT;
-  } else if((idn->iks_type == IKS_FLOAT)&&(exprn->iks_type == IKS_BOOL)) {
-    //printf("coercion float to bool\n");
-    idn->need_coercion=IKS_COERCION_FLOAT_TO_BOOL;
-  } else if((idn->iks_type == IKS_FLOAT)&&(exprn->iks_type == IKS_INT)) {
-    //printf("coercion float to int\n");
-    idn->need_coercion=IKS_COERCION_FLOAT_TO_INT;
-  } else if((idn->iks_type == IKS_BOOL)&&(exprn->iks_type == IKS_INT)) {
-    //printf("coercion bool to int\n");
-    idn->need_coercion=IKS_COERCION_BOOL_TO_INT;
-  } else if((idn->iks_type == IKS_BOOL)&&(exprn->iks_type == IKS_FLOAT)) {
-    //printf("coercion bool to float\n");
-    idn->need_coercion=IKS_COERCION_BOOL_TO_FLOAT;
-  } else if((exprn->iks_type == IKS_CHAR)) {
-    fprintf(stderr,"%d: identificador '%s' conversao impossivel do tipo char\n",exprs->code_line_number,exprs->value);
-    ret=IKS_ERROR_CHAR_TO_X;
-  } else if((idn->iks_type != IKS_STRING)&&(exprn->iks_type == IKS_STRING)) {
-    fprintf(stderr,"%d: identificador '%s' conversao impossivel do tipo string\n",exprs->code_line_number,exprs->value);
-    ret=IKS_ERROR_STRING_TO_X;
-	} else {
-	  fprintf(stderr,"identificador '%s' e '%s' de tipos incompativeis\n",ids->value,exprs->value);
-    ret=IKS_ERROR_WRONG_TYPE;
+	if(idn->iks_type != exprn->iks_type) {
+		if((idn->iks_type == IKS_INT)&&(exprn->iks_type == IKS_BOOL)) {
+		  //printf("coercion int to bool\n");
+		  idn->need_coercion=IKS_COERCION_INT_TO_BOOL;
+		} else if((idn->iks_type == IKS_INT)&&(exprn->iks_type == IKS_FLOAT)) {
+		  //printf("coercion int to float\n");
+		  idn->need_coercion=IKS_COERCION_INT_TO_FLOAT;
+		} else if((idn->iks_type == IKS_FLOAT)&&(exprn->iks_type == IKS_BOOL)) {
+		  //printf("coercion float to bool\n");
+		  idn->need_coercion=IKS_COERCION_FLOAT_TO_BOOL;
+		} else if((idn->iks_type == IKS_FLOAT)&&(exprn->iks_type == IKS_INT)) {
+		  //printf("coercion float to int\n");
+		  idn->need_coercion=IKS_COERCION_FLOAT_TO_INT;
+		} else if((idn->iks_type == IKS_BOOL)&&(exprn->iks_type == IKS_INT)) {
+		  //printf("coercion bool to int\n");
+		  idn->need_coercion=IKS_COERCION_BOOL_TO_INT;
+		} else if((idn->iks_type == IKS_BOOL)&&(exprn->iks_type == IKS_FLOAT)) {
+		  //printf("coercion bool to float\n");
+		  idn->need_coercion=IKS_COERCION_BOOL_TO_FLOAT;
+		} else if((exprn->iks_type == IKS_CHAR)) {
+			if(exprs)
+		  	fprintf(stderr,"%d: identificador '%s' conversao impossivel do tipo char\n",exprs->code_line_number,exprs->value);
+			else fprintf(stderr,"conversao impossivel do tipo char\n");
+		  ret=IKS_ERROR_CHAR_TO_X;
+		} else if((idn->iks_type != IKS_STRING)&&(exprn->iks_type == IKS_STRING)) {
+			if(exprs)
+		  	fprintf(stderr,"%d: identificador '%s' conversao impossivel do tipo string\n",exprs->code_line_number,exprs->value);
+			else fprintf(stderr,"conversao impossivel do tipo string\n");
+		  ret=IKS_ERROR_STRING_TO_X;
+		} else {
+			if(exprs && ids)
+				fprintf(stderr,"identificador '%s' e '%s' de tipos incompativeis\n",ids->value,exprs->value);
+			else fprintf(stderr,"identificadores de tipos incompativeis\n");
+		  ret=IKS_ERROR_WRONG_TYPE;
+		}
 	}
   
   return ret;
@@ -72,7 +80,7 @@ int verify_function_args(comp_grammar_symbol_t *s, comp_list_t *args) {
        s2 = l2->item;
        if (s1->iks_type!=s2->iks_type) {
         fprintf(stderr,"tipos incompativeis entre '%s' e '%s'\n",s1->value,s2->value);
-        ret=IKS_ERROR_EXCESS_ARGS;
+        ret=IKS_ERROR_WRONG_TYPE_ARGS;
         break;
        }
        l1 = l1->next;
@@ -91,12 +99,39 @@ int symbol_is_iks_type(comp_grammar_symbol_t *s,int iks_type) {
   return ret;
 }
 
-int infer_type(int iks_type1, int iks_type2) {
-	if(iks_type1 == iks_type2)
-		return iks_type1;
-	if(iks_type1 == IKS_FLOAT || iks_type2 == IKS_FLOAT)
-		return IKS_FLOAT;
+int infer_type(comp_tree_t *type1, comp_tree_t *type2) {
+	iks_ast_node_value_t *type1n = type1->item;
+	iks_ast_node_value_t *type2n = type2->item;
 	
-	return IKS_INT;
+	if(type1n->iks_type == type2n->iks_type)
+		return type1n->iks_type;
+		
+	if(type1n->iks_type == IKS_FLOAT) {
+		int coercion = verify_coercion(type1, type2);
+		if(coercion)
+			return coercion;
+		
+		return IKS_FLOAT;
+	} else if(type2n->iks_type == IKS_FLOAT) {
+		int coercion = verify_coercion(type2, type1);
+		if(coercion)
+			return coercion;
+		
+		return IKS_FLOAT;
+	}
+	
+	if(type1n->iks_type == IKS_INT) {
+		int coercion = verify_coercion(type1, type2);
+		if(coercion)
+			return coercion;
+		
+		return IKS_INT;
+	} else if(type2n->iks_type == IKS_INT) {
+		int coercion = verify_coercion(type2, type1);
+		if(coercion)
+			return coercion;
+		
+		return IKS_INT;
+	}
 }
 
