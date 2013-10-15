@@ -192,7 +192,6 @@ void open_scope() {
 
 void close_scope() {
   comp_dict_t *st = (comp_dict_t*) comp_stack_top(scope);
-  //comp_dict_delete(st);
   scope = comp_stack_pop(scope);
 }
 
