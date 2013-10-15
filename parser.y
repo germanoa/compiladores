@@ -220,6 +220,8 @@ func:
 				iks_ast_connect_nodes(ptr_function,$command_block_f);
 			}
 			
+      comp_dict_t *st = (comp_dict_t*) comp_stack_top(scope);
+      comp_dict_delete(st);
 			scope = comp_stack_pop(scope);
 			$$ = ptr_function;
 			ptr_function = NULL; //evita aceitar um return fora de uma função
@@ -432,7 +434,7 @@ commands:
 id:
 		TK_IDENTIFICADOR
 		{
-			comp_grammar_symbol_t *s = $1;
+			comp_grammar_symbol_t *s;
 			s = search_symbol_global($1,scope);
 			if (s) {
 				comp_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,s);
@@ -440,7 +442,7 @@ id:
 				idn->iks_type = s->iks_type;
 				$$ = identificador;
 			} else {
-				fprintf(stderr,"line %d: identificador '%s' não declarado\n",$1->code_line_number,$1->value);
+				fprintf(stderr,"identificador não declarado\n");
 				return(IKS_ERROR_UNDECLARED);
 			}
 		}

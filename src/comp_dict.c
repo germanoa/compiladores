@@ -5,6 +5,7 @@
 static inline void __comp_dict_init(comp_dict_t *dict) {
     dict->prev = dict;
     dict->next = dict;
+    dict->item = NULL;
 }
 
 inline int comp_dict_is_empty(comp_dict_t *dict) {
@@ -141,17 +142,13 @@ void *comp_dict_item_value_get(comp_dict_item_t *dict_item) {
     return dict_item->value;
 }
 
-int comp_dict_item_set(comp_dict_item_t *dict_item, char key[], char value[]) {
+int comp_dict_item_set(comp_dict_item_t *dict_item, char *key, char value[]) {
     int ret = 0;
     int key_s,value_s;
-    key_s = sizeof(key);
-    value_s = sizeof(value);
+    key_s = sizeof(*key);
+    value_s = sizeof(*value);
     if ( (key_s <= DICT_ITEM_MAX_KEY_SIZE) && (value_s <= DICT_ITEM_MAX_VALUE_SIZE) ) {
-        free(dict_item->key);
-        dict_item->key = malloc(key_s);
         dict_item->key = key;
-        free(dict_item->value);
-        dict_item->value = malloc(value_s);
         dict_item->value = value;
         ret = 1;
     }
