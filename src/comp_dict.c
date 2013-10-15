@@ -24,10 +24,16 @@ void comp_dict_delete(comp_dict_t *dict) {
         temp = dict->next;
         do {
             temp = temp->next;    
+						if (temp->prev->item) {
+							comp_dict_item_delete(temp->prev->item);
+						}
             free(temp->prev);
             temp->prev = NULL;
         } while(temp != dict);
     }
+		if (dict->item) {
+			comp_dict_item_delete(dict->item);
+		}
     free(dict);
     dict = NULL;
 }

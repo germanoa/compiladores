@@ -47,12 +47,13 @@ void iks_ast_init() {
     ast = new_comp_tree();
 }
 
-comp_tree_t *iks_ast_new_node(int type, comp_grammar_symbol_t *symbol) {
+comp_tree_t *iks_ast_new_node(int type, comp_grammar_symbol_t *symbol, comp_tree_t *t) {
   iks_ast_node_value_t *v;
   v = new_iks_ast_node_value();
   iks_ast_node_value_set(v,type,symbol);
-  comp_tree_t *t;
-  t = new_comp_tree();
+	if (!t) {
+  	t = new_comp_tree(); //any case != IKS_AST_PROGRAMA
+	}
   comp_tree_set_item(t,(void*)v);
   if (symbol) {
     gv_declare(type,t,symbol->value);

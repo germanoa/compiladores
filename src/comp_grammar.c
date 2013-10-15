@@ -26,9 +26,12 @@ comp_grammar_symbol_t *new_comp_grammar_symbol() {
 void comp_grammar_symbol_delete(comp_grammar_symbol_t *grammar_symbol) {
     free(grammar_symbol->value);
     grammar_symbol->value = NULL;
+		comp_list_delete(grammar_symbol->params);
     free(grammar_symbol);
     grammar_symbol = NULL;
 }
+
+
 
 void comp_grammar_symbol_set(comp_grammar_symbol_t *grammar_symbol, int token_type, int code_line_number, char *value) {
     grammar_symbol->token_type = token_type;
@@ -222,6 +225,7 @@ int symbol_is_decl_type(comp_grammar_symbol_t *s,int decl_type) {
   }
   return ret;
 }
+<<<<<<< Updated upstream
 
 
 int iks_error(comp_grammar_symbol_t *s, int error_type) {
@@ -253,3 +257,5 @@ int iks_error(comp_grammar_symbol_t *s, int error_type) {
   }
   return ret;
 }
+=======
+>>>>>>> Stashed changes

@@ -95,10 +95,4 @@ int update_decl_symbol(comp_grammar_symbol_t *s, int decl_type, comp_grammar_sym
  */
 int symbol_is_decl_type(comp_grammar_symbol_t *s,int decl_type);
 
-/**
- * handling errors
- */
-int iks_error(comp_grammar_symbol_t *s, int error_type);
-
-
 #endif /* COMP_GRAMMAR_H */

@@ -68,4 +68,21 @@ int verify_function_args(comp_grammar_symbol_t *s, comp_list_t *args);
 
 int symbol_is_iks_type(comp_grammar_symbol_t *s,int iks_type);
 
+<<<<<<< Updated upstream
+=======
+/**
+ * return type inferred (only works with int, float and bool)
+ */
+int infer_type(comp_tree_t *type1, comp_tree_t *type2);
+
+/**
+ * handling type errors
+ */
+int type_error(comp_grammar_symbol_t *s, int error_type);
+
+void create_scope();
+void delete_scope();
+void ast_set_type(comp_tree_t *ast, int type);
+
+>>>>>>> Stashed changes
 #endif

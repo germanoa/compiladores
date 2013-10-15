@@ -56,7 +56,7 @@ comp_stack_t *comp_stack_pop(comp_stack_t *stack) {
     //printf("stack pop sai: %X -> %X\n",stack,stack->item);
     stack = stack->below;
     //printf("stack pop novo top: %X -> %X\n",stack,stack->item);
-    free(temp);
+    //free(temp);
   }
   return stack;
 }

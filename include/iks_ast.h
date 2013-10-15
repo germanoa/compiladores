@@ -92,7 +92,7 @@ void iks_ast_init();
 /**
  * collection of procedures to make a ast node
  */
-comp_tree_t *iks_ast_new_node(int type, comp_grammar_symbol_t *symbol);
+comp_tree_t *iks_ast_new_node(int type, comp_grammar_symbol_t *symbol, comp_tree_t *t);
 
 /**
  * collection of procedures to connect two ast nodes

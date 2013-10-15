@@ -32,7 +32,7 @@ void comp_list_delete(comp_list_t *list) {
         } while(temp != list);
     }
     free(list);
-    list = NULL; /* http://stackoverflow.com/questions/1025589/setting-variable-to-null-after-free */
+    list = NULL; 
 }
 
 void comp_list_append(comp_list_t *list, comp_list_t *new_node) {

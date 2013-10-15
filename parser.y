@@ -4,6 +4,7 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 */
 
 %{
+<<<<<<< Updated upstream
 #include <stdio.h>
 #include <stdlib.h>
 #include "comp_grammar.h"
@@ -19,6 +20,47 @@ comp_tree_t *ptr_function;
 comp_grammar_symbol_t *function_with_param;
 comp_list_t *args;
 
+=======
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include "comp_grammar.h"
+	#include "comp_dict.h"
+	#include "comp_tree.h"
+	#include "comp_stack.h"
+	#include "iks_ast.h"
+	#include "iks_types.h"
+	#include "gv.h"
+	//#include "hash_table.h"
+
+	comp_tree_t *ptr_function;
+	comp_tree_t *ptr_function_call;
+	comp_grammar_symbol_t *function_with_param;
+	comp_list_t *args;
+
+	void parser_init() {
+		ptr_function=NULL;
+		ptr_function_call=NULL;
+		function_with_param=NULL;
+		comp_dict_t *symbol_table_global;
+		symbol_table_global = new_comp_dict();
+		scope = comp_stack_push(scope,(void*)symbol_table_global);
+	}
+
+	void memory_cleaner() {
+		printf("cleaning mem\n");
+		while(!comp_stack_is_empty(scope)) {
+			printf("dentro\n");
+      comp_dict_delete(scope->item);
+			scope->item=NULL;
+			scope = comp_stack_pop(scope);
+		}
+		comp_stack_delete(scope);
+	  printf("fora\n");
+		//comp_tree_delete(ast);		
+	}
+
+	
+>>>>>>> Stashed changes
 %}
 
 /*
@@ -81,6 +123,8 @@ DECLARATIONS
 %type<nt> id
 %type<nt> idv
 %type<nt> func_call
+%type<nt> aritm_expr
+%type<nt> logic_expr
 
 %type<type> type
 
@@ -106,9 +150,8 @@ GRAMMAR RULES
 http://www.gnu.org/software/bison/manual/bison.html#Rules
 */
 
-/* 2 */
-
 p:
+<<<<<<< Updated upstream
     {    
             //
             ptr_function=NULL;
@@ -145,6 +188,30 @@ prog:
             $$ = $2;
         }
 	| /* empty */
+=======
+		{
+			parser_init();
+			// just the first function is child of ast
+			iks_ast_new_node(IKS_AST_PROGRAMA,NULL,ast);
+		} prog
+	;
+
+prog:
+		prog global_decl
+	| prog func
+		{
+			/* 3.A.1 */
+			// just the first function is child of ast
+			if (comp_list_is_empty(ast->children)) {
+				iks_ast_connect_nodes(ast,$2);
+			}
+			else {
+				iks_ast_connect_nodes($1,$2);
+			}
+			$$ = $2;
+		}
+	| /* empty */ {}
+>>>>>>> Stashed changes
 	;
 
 /* 2.1 */
@@ -161,6 +228,7 @@ array_decl:
 	;
 
 decl:
+<<<<<<< Updated upstream
       type ':' TK_IDENTIFICADOR
         {
           if (!decl_symbol($3,$1,IKS_DECL_VAR,comp_stack_top(scope),function_with_param)) {
@@ -169,6 +237,16 @@ decl:
           $$ = $3;
         }  
     ;
+=======
+		type ':' TK_IDENTIFICADOR
+		{
+			if (!decl_symbol($3,$1,IKS_DECL_VAR,comp_stack_top(scope),function_with_param)) {
+				return type_error(NULL,IKS_ERROR_DECLARED);
+			}
+			$$ = $3;
+		}
+	;
+>>>>>>> Stashed changes
 
 type:
 	  TK_PR_INT
@@ -195,6 +273,7 @@ type:
 
 /* 2.2 */
 func:
+<<<<<<< Updated upstream
 	  type ':' TK_IDENTIFICADOR
         {
           if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,comp_stack_top(scope),function_with_param)) {
@@ -224,6 +303,35 @@ func:
             scope = comp_stack_pop(scope);
             $$ = ptr_function;
       }
+=======
+		type ':' TK_IDENTIFICADOR {
+			if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,comp_stack_top(scope),function_with_param)) {
+				return type_error(NULL,IKS_ERROR_DECLARED);
+			}
+			
+			open_scope();
+			
+			/* 3.A.2 */
+			comp_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3,NULL);
+			ast_set_type(funcao,$1);
+			ptr_function=funcao;
+
+			function_with_param=$3; //begin params decl
+		} '(' func_param_decl_list ')' {
+			function_with_param=NULL; // end params decl
+		} decl_list {
+			//symbol_table_print((comp_dict_t*)comp_stack_top(scope));
+		} command_block_f {
+			if ($command_block_f) {
+				iks_ast_connect_nodes(ptr_function,$command_block_f);
+			}
+			
+			close_scope();			
+
+			$$ = ptr_function;
+			ptr_function = NULL; //evita aceitar um return fora de uma função
+		}
+>>>>>>> Stashed changes
 	;
  	
 func_param_decl_list:
@@ -250,6 +358,7 @@ command_block_f://two command_block because cmd_blk from function isnt in ast
 	;
 
 command_block:
+<<<<<<< Updated upstream
 	  '{' command_seq '}'
         {
             comp_tree_t *bloco = iks_ast_new_node(IKS_AST_BLOCO,NULL);
@@ -258,6 +367,16 @@ command_block:
             }
             $$ = bloco;
         }
+=======
+		'{' command_seq '}'
+		{
+			comp_tree_t *bloco = iks_ast_new_node(IKS_AST_BLOCO,NULL,NULL);
+			if ($2) { //because can command_seq <- command <- empty
+				iks_ast_connect_nodes(bloco,$2);
+			}
+			$$ = bloco;
+		}
+>>>>>>> Stashed changes
 	;
 
 command_seq:
@@ -286,6 +405,7 @@ commands:
 	| command_block
     | ctrl_flow
 	| id '=' expr
+<<<<<<< Updated upstream
         {
             /* 3.A.8 */
             iks_ast_node_value_t *idn,*exprn;
@@ -460,6 +580,182 @@ idv:
             $$ = vets;
     }
     ;
+=======
+		{
+			/* 3.A.8 */
+			iks_ast_node_value_t *idn,*exprn;
+			idn = $1->item;
+			exprn = $3->item;
+
+			comp_grammar_symbol_t *ids,*exprs;
+			ids = idn->symbol;
+			exprs = exprn->symbol;
+
+			if(!symbol_is_decl_type(ids,IKS_DECL_VAR)) {
+				return type_error(ids,IKS_ERROR_USE);
+			}
+
+			if(ids->iks_type == IKS_STRING) { //strings set size dinamically
+				update_decl_symbol(ids,IKS_STRING,exprs);
+			}
+
+			comp_tree_t *e;
+			e=$3;
+			if(exprn->type==IKS_AST_CHAMADA_DE_FUNCAO) {
+				comp_list_t *expr_child;
+				expr_child =  $3->children;
+				e = expr_child->next->item;
+				iks_ast_node_value_t *en;
+				en = (iks_ast_node_value_t*)e->item;
+				exprs = en->symbol;
+			}            
+			if (exprs) {
+				if(ids->iks_type!=exprs->iks_type) {
+					int coercion=verify_coercion($1,e);
+					if (coercion) { //if coercion is invalid
+						return coercion;
+					} else { //attribute id type to attribution
+						
+					}
+				}
+			}
+
+			comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL,NULL);
+			ast_set_type(atribuicao,ids->iks_type);
+			iks_ast_connect_nodes(atribuicao,$1);
+			iks_ast_connect_nodes(atribuicao,$3);
+			$$ = atribuicao;
+		}
+	| idv '=' expr
+		{
+			/* 3.A.8 */
+			comp_list_t *id_child;
+			id_child =  $1->children;
+			comp_tree_t *id_tree;
+			id_tree = id_child->next->item;
+			iks_ast_node_value_t *idn,*exprn;
+			idn = (iks_ast_node_value_t*)id_tree->item;
+			exprn = (iks_ast_node_value_t*)$expr->item;
+			comp_grammar_symbol_t *ids,*exprs;
+			ids = idn->symbol;
+			exprs = exprn->symbol;
+			if(!symbol_is_decl_type(ids,IKS_DECL_VECTOR)) {
+				return type_error(ids,IKS_ERROR_USE);
+			}
+
+			comp_tree_t *e;
+			e=$3;
+			if(exprn->type==IKS_AST_CHAMADA_DE_FUNCAO) {
+				comp_list_t *expr_child;
+				expr_child =  $3->children;
+				e = expr_child->next->item;
+				iks_ast_node_value_t *en;
+				en = (iks_ast_node_value_t*)e->item;
+				exprs = en->symbol;
+			}
+			if (exprs) {
+				if(ids->iks_type!=exprs->iks_type) {
+					int coercion=verify_coercion(id_tree,e);
+					if (coercion) { //if coercion is invalid
+						return coercion;
+					} else { //attribute id type to attribution
+						
+					}
+				}
+			}
+
+			comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL,NULL);
+			iks_ast_node_value_t *idvn = $1->item;
+			ast_set_type(atribuicao,idvn->iks_type);
+
+			iks_ast_connect_nodes(atribuicao,$1);
+			iks_ast_connect_nodes(atribuicao,$3);
+			$$ = atribuicao;
+
+		}
+	| TK_PR_OUTPUT output_list
+		{
+			/* 3.A.7 */
+			comp_tree_t *output = iks_ast_new_node(IKS_AST_OUTPUT,NULL,NULL);
+			iks_ast_connect_nodes(output,$2);
+			$$ = output;
+		}
+	| TK_PR_INPUT expr
+		{
+			/* 3.A.6 */
+			iks_ast_node_value_t *exprn;
+			exprn = $2->item;
+			comp_grammar_symbol_t *exprs;
+			exprs = exprn->symbol;
+
+			if(exprn->type != IKS_AST_IDENTIFICADOR) {
+				return type_error(exprs,IKS_ERROR_WRONG_PAR_INPUT);
+			} else {
+				comp_tree_t *input = iks_ast_new_node(IKS_AST_INPUT,NULL,NULL);
+				iks_ast_connect_nodes(input,$2);
+				$$ = input;
+			}
+		}
+	| TK_PR_RETURN expr 
+		{
+			iks_ast_node_value_t *exprn;
+			exprn = $2->item;
+			comp_grammar_symbol_t *exprs;
+			exprs = exprn->symbol;
+
+			iks_ast_node_value_t *fn;
+			fn = ptr_function->item;
+			comp_grammar_symbol_t *fs;
+			fs = fn->symbol;
+			
+			if(exprn->iks_type != fn->iks_type) {
+				int coercion = verify_coercion(ptr_function, $2);
+				if(coercion) {
+					fprintf(stderr, "return: tipo %d deveria ser %d\n", exprn->iks_type, fn->iks_type);
+					return type_error(exprs,IKS_ERROR_WRONG_PAR_RETURN);
+				}
+			}
+
+			/* 3.A.9 */
+			comp_tree_t *ret = iks_ast_new_node(IKS_AST_RETURN,NULL,NULL);
+			iks_ast_connect_nodes(ret,$2);
+			$$ = ret;
+		}
+	;
+
+id:
+		TK_IDENTIFICADOR
+		{
+			comp_grammar_symbol_t *s;
+			s = search_symbol_global($1,scope);
+			if (s) {
+				comp_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,s,NULL);
+				ast_set_type(identificador,s->iks_type);
+				$$ = identificador;
+			} else {
+				fprintf(stderr,"identificador não declarado\n");
+				return type_error(NULL,IKS_ERROR_UNDECLARED);
+			}
+		}
+	;
+
+idv:
+		id '[' expr ']'
+		{
+			// []
+			comp_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL,NULL);
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type;
+			iks_ast_node_value_t *idn = $1->item;
+			ast_set_type(vets,idn->iks_type);
+
+			iks_ast_connect_nodes(vets,$1);
+			iks_ast_connect_nodes(vets,$3);
+			$$ = vets;
+		}
+	;
+>>>>>>> Stashed changes
 
 output_list:
 	  expr
@@ -543,6 +839,7 @@ output_list:
 
 /* 2.5 */
 expr:
+<<<<<<< Updated upstream
 	  id
       	{
             iks_ast_node_value_t *n;
@@ -739,6 +1036,276 @@ terminal_value:
             comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
             $$ = lit;
         }
+=======
+		id
+		{
+			iks_ast_node_value_t *n;
+			n = $1->item; 
+			comp_grammar_symbol_t *s;
+			s = n->symbol;
+			if(!symbol_is_decl_type(s,IKS_DECL_VAR)) {
+				return type_error(s,IKS_ERROR_USE);
+			}
+		}
+	| id '[' expr ']'
+		{
+			// []
+			iks_ast_node_value_t *n;
+			n = $1->item; 
+			comp_grammar_symbol_t *s;
+			s = n->symbol;
+			if(symbol_is_decl_type(s,IKS_DECL_VECTOR)) {
+				comp_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL,NULL);
+				int type = infer_type($1, $3);
+				if(type > 5) //erro de coerção
+					return type;
+				ast_set_type(vets,n->iks_type);
+
+				iks_ast_connect_nodes(vets,$1);
+				iks_ast_connect_nodes(vets,$3);
+				$$ = vets;
+			} else {
+				return type_error(s,IKS_ERROR_USE);
+			}
+		}
+	| terminal_value
+	| '(' expr ')'
+		{
+			$$ = $2;
+		}
+	| aritm_expr
+	| logic_expr
+	| func_call
+;
+
+aritm_expr:
+/* 3.A.12 */
+	expr '+' expr
+		{
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SOMA,NULL,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type;
+			ast_set_type(oo,type);
+
+			$$ = oo;
+		}
+	| expr '-' expr
+		{
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SUBTRACAO,NULL,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type;
+			ast_set_type(oo,type);
+
+			$$ = oo;
+		}
+	| expr '*' expr
+		{
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_MULTIPLICACAO,NULL,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type;
+			ast_set_type(oo,type);
+
+			$$ = oo;
+		}
+	| expr '/' expr
+		{
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_MULTIPLICACAO,NULL,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type_error(NULL,type);
+			ast_set_type(oo,type);
+
+			$$ = oo;
+		}
+	| '-' expr %prec INVERSAO
+		{
+			/* 3.A.15 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_INVERSAO,NULL,NULL);
+			iks_ast_connect_nodes(oo,$2);
+
+			iks_ast_node_value_t *exprn = $2->item;
+			ast_set_type(oo,exprn->iks_type);
+
+			$$ = oo;
+		}
+;
+
+logic_expr:
+	expr '<' expr
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_L,NULL,NULL);
+			iks_ast_node_value_t *oon = oo->item;
+			iks_ast_node_value_t *n1 = $1->item;
+			iks_ast_node_value_t *n2 = $3->item;
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type;
+			oon->iks_type = type;
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
+	| expr '>' expr
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_G,NULL,NULL);
+			iks_ast_node_value_t *oon = oo->item;
+			iks_ast_node_value_t *n1 = $1->item;
+			iks_ast_node_value_t *n2 = $3->item;
+			int type = infer_type($1, $3);
+			if(type > 5) //erro de coerção
+				return type;
+			oon->iks_type = type;
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
+	| '!' expr
+		{
+			/* 3.A.15 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_NEGACAO,NULL,NULL);
+			iks_ast_connect_nodes(oo,$2);
+
+			ast_set_type(oo,IKS_BOOL);
+
+			$$ = oo;
+		}
+	| expr TK_OC_LE expr
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_LE,NULL,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+
+			ast_set_type(oo,IKS_BOOL);
+
+			$$ = oo;
+		}
+	| expr TK_OC_GE expr
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_GE,NULL,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+
+			ast_set_type(oo,IKS_BOOL);
+
+			$$ = oo;
+		}
+	| expr TK_OC_EQ expr
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_IGUAL,NULL,NULL);
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+
+			ast_set_type(oo,IKS_BOOL);
+			iks_ast_node_value_t *oon = oo->item;
+			oon->iks_type = IKS_BOOL;
+
+			$$ = oo;
+		}
+	| expr TK_OC_NE expr
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_DIF,NULL,NULL);
+			iks_ast_node_value_t *oon = oo->item;
+			oon->iks_type = IKS_BOOL;
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
+	| expr TK_OC_AND expr
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_E,NULL,NULL);
+			iks_ast_node_value_t *oon = oo->item;
+			oon->iks_type = IKS_BOOL;
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
+	| expr TK_OC_OR expr
+		{
+			/* 3.A.14 */
+			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_OU,NULL,NULL);
+			iks_ast_node_value_t *oon = oo->item;
+			oon->iks_type = IKS_BOOL;
+			iks_ast_connect_nodes(oo,$1);
+			iks_ast_connect_nodes(oo,$3);
+			$$ = oo;
+		}
+	;
+
+func_call:
+		id {
+			iks_ast_node_value_t *n;
+			n = $1->item; 
+			comp_grammar_symbol_t *s;
+			s = n->symbol;
+			/* 3.A.17 */
+			if(symbol_is_decl_type(s,IKS_DECL_FUNCTION)) {
+				comp_tree_t *x = iks_ast_new_node(IKS_AST_CHAMADA_DE_FUNCAO,NULL,NULL);
+				iks_ast_node_value_t *xn = x->item;
+				xn->iks_type = n->iks_type;
+				iks_ast_connect_nodes(x,$1);
+				ptr_function_call=x;
+			} else {
+				return type_error(s,IKS_ERROR_USE);
+			}
+			args = new_comp_list();
+			function_with_param=s;
+		} '(' func_param_list ')' {
+			// not so good, better if analyze during parser?
+			int arg_analyze = verify_function_args(function_with_param,args);
+			function_with_param=NULL;
+			if (arg_analyze==0) {
+				if ($func_param_list) { //if no params, so NULL
+					iks_ast_connect_nodes(ptr_function_call,$func_param_list);
+				}
+				$$ = ptr_function_call;
+			} else {
+				return arg_analyze; //arg error
+			}
+			//comp_list_delete(args);
+		}
+	;
+
+terminal_value:
+	/* 3.A.11 */
+		TK_LIT_INT
+		{
+			$1->iks_type=IKS_INT;
+			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1,NULL);
+			iks_ast_node_value_t *litn = lit->item;
+			litn->iks_type = $1->iks_type;
+			$$ = lit;
+		}
+	| TK_LIT_FLOAT
+		{
+			$1->iks_type=IKS_FLOAT;
+			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1,NULL);
+			iks_ast_node_value_t *litn = lit->item;
+			litn->iks_type = $1->iks_type;
+			$$ = lit;
+		}
+>>>>>>> Stashed changes
 	| TK_LIT_FALSE
         {
             $1->iks_type=IKS_BOOL;
@@ -764,6 +1331,7 @@ terminal_value:
             $$ = lit;
         }
 	| TK_LIT_CHAR
+<<<<<<< Updated upstream
         {
             $1->iks_type=IKS_CHAR;
             comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
@@ -775,6 +1343,23 @@ terminal_value:
             comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
             $$ = lit;
         }
+=======
+		{
+			$1->iks_type=IKS_CHAR;
+			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1,NULL);
+			iks_ast_node_value_t *litn = lit->item;
+			litn->iks_type = $1->iks_type;
+			$$ = lit;
+		}
+	| TK_LIT_STRING
+		{
+			$1->iks_type=IKS_STRING;
+			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1,NULL);
+			iks_ast_node_value_t *litn = lit->item;
+			litn->iks_type = $1->iks_type;
+			$$ = lit;
+		}
+>>>>>>> Stashed changes
 	;
 	
 func_param_list:
@@ -812,6 +1397,7 @@ param_list:
 
 /* 2.6 */
 ctrl_flow:
+<<<<<<< Updated upstream
       TK_PR_IF '(' expr ')' TK_PR_THEN commands
         {
             /* 3.A.3 */
@@ -845,6 +1431,41 @@ ctrl_flow:
             iks_ast_connect_nodes(do_while,$5);
             $$ = do_while;
         }
+=======
+		TK_PR_IF '(' expr ')' TK_PR_THEN commands
+		{
+			/* 3.A.3 */
+			comp_tree_t *if_else = iks_ast_new_node(IKS_AST_IF_ELSE,NULL,NULL);
+			iks_ast_connect_nodes(if_else,$3);
+			iks_ast_connect_nodes(if_else,$6);
+			$$ = if_else;
+		}
+	| TK_PR_IF '(' expr ')' TK_PR_THEN commands TK_PR_ELSE commands
+		{
+			/* 3.A.3 */
+			comp_tree_t *if_else = iks_ast_new_node(IKS_AST_IF_ELSE,NULL,NULL);
+			iks_ast_connect_nodes(if_else,$3);
+			iks_ast_connect_nodes(if_else,$6);
+			iks_ast_connect_nodes(if_else,$8);
+			$$ = if_else;
+		}
+	| TK_PR_WHILE '(' expr ')' TK_PR_DO commands
+		{
+			/* 3.A.5 */
+			comp_tree_t *while_do = iks_ast_new_node(IKS_AST_WHILE_DO,NULL,NULL);
+			iks_ast_connect_nodes(while_do,$3);
+			iks_ast_connect_nodes(while_do,$6);
+			$$ = while_do;
+		}
+	| TK_PR_DO commands TK_PR_WHILE '(' expr ')' 
+		{
+			/* 3.A.4 */
+			comp_tree_t *do_while = iks_ast_new_node(IKS_AST_DO_WHILE,NULL,NULL);
+			iks_ast_connect_nodes(do_while,$2);
+			iks_ast_connect_nodes(do_while,$5);
+			$$ = do_while;
+		}
+>>>>>>> Stashed changes
 	;
 
 %%

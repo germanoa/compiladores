@@ -4,6 +4,7 @@
 #include "comp_tree.h"
 #include "iks_ast.h"
 #include "iks_types.h"
+#include "parser.h"
 
 int verify_coercion(comp_tree_t *id, comp_tree_t *expr) {
   int ret=0;
@@ -105,3 +106,108 @@ int symbol_is_iks_type(comp_grammar_symbol_t *s,int iks_type) {
   return ret;
 }
 
+<<<<<<< Updated upstream
+=======
+int infer_type(comp_tree_t *type1, comp_tree_t *type2) {
+	iks_ast_node_value_t *type1n = type1->item;
+	iks_ast_node_value_t *type2n = type2->item;
+	
+	if(type1n->iks_type == type2n->iks_type)
+		return type1n->iks_type;
+		
+	if(type1n->iks_type == IKS_FLOAT) {
+		int coercion = verify_coercion(type1, type2);
+		if(coercion)
+			return coercion;
+		
+		return IKS_FLOAT;
+	} else if(type2n->iks_type == IKS_FLOAT) {
+		int coercion = verify_coercion(type2, type1);
+		if(coercion)
+			return coercion;
+		
+		return IKS_FLOAT;
+	}
+	
+	if(type1n->iks_type == IKS_INT) {
+		int coercion = verify_coercion(type1, type2);
+		if(coercion)
+			return coercion;
+		
+		return IKS_INT;
+	} else if(type2n->iks_type == IKS_INT) {
+		int coercion = verify_coercion(type2, type1);
+		if(coercion)
+			return coercion;
+		
+		return IKS_INT;
+	}
+}
+
+int type_error(comp_grammar_symbol_t *s, int error_type) {
+  int ret=0;
+  switch(error_type) {
+    case IKS_ERROR_USE:
+      if (s->decl_type==IKS_DECL_VAR) {
+        fprintf(stderr,"line %d: identificador '%s' deve ser usado como variavel\n",s->code_line_number,s->value);    
+        ret=IKS_ERROR_VARIABLE;
+      }   
+      else if (s->decl_type==IKS_DECL_VECTOR) {
+        fprintf(stderr,"line %d: identificador '%s' deve ser usado como vetor\n",s->code_line_number,s->value);    
+        ret=IKS_ERROR_VECTOR;
+      }   
+      else if (s->decl_type==IKS_DECL_FUNCTION) {
+        fprintf(stderr,"line %d: identificador '%s' deve ser usado como funcao\n",s->code_line_number,s->value);    
+        ret=IKS_ERROR_FUNCTION;
+      }   
+      else {
+        fprintf(stderr,"line %d: identificador '%s' ???????????\n",s->code_line_number,s->value);    
+        ret=99999;
+
+      }   
+      break;
+    
+    case IKS_ERROR_WRONG_PAR_RETURN:
+      fprintf(stderr,"parametro nao e compativel com expressao de retorno.\n");
+      ret=IKS_ERROR_WRONG_PAR_RETURN;
+      break;
+    
+    case IKS_ERROR_WRONG_PAR_INPUT:
+      if(s != NULL)
+        fprintf(stderr,"line %d: '%s' deve ser identificador\n",s->code_line_number,s->value);
+      else fprintf(stderr,"parâmetro para input deve ser identificador\n");
+      ret = IKS_ERROR_WRONG_PAR_INPUT;
+      break;
+
+		case IKS_ERROR_DECLARED:
+			ret = IKS_ERROR_DECLARED;
+			break;
+
+		case IKS_ERROR_UNDECLARED:
+			ret = IKS_ERROR_UNDECLARED;
+			break;
+  }
+
+	//memory_cleaner();
+
+  return ret;
+}
+
+void open_scope() {
+  comp_dict_t *symbol_table_local;
+  symbol_table_local = new_comp_dict();
+  scope = comp_stack_push(scope,(void*)symbol_table_local);
+}
+
+void close_scope() {
+  comp_dict_t *st = (comp_dict_t*) comp_stack_top(scope);
+  //comp_dict_delete(st);
+  scope = comp_stack_pop(scope);
+}
+
+void ast_set_type(comp_tree_t *ast, int type) {
+  iks_ast_node_value_t *astn = ast->item;
+  astn->iks_type = type;
+}
+
+>>>>>>> Stashed changes
