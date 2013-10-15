@@ -4,6 +4,7 @@
 #include "comp_grammar.h"
 #include "comp_dict.h"
 #include "iks_types.h"
+#include "iks_ast.h"
 
 static inline void __comp_grammar_symbol_init(comp_grammar_symbol_t *grammar_symbol) {
     grammar_symbol->token_type = IKS_SIMBOLO_INDEFINIDO;
@@ -72,6 +73,29 @@ void symbol_table_init() {
     //symbol_table->item = new_comp_dict_item();
     //comp_dict_item_set(symbol_table->item,"empty",(void *)symbol);
 }
+
+void symbol_table_delete(comp_dict_t *dict) {
+    if (!comp_dict_is_empty(dict)) {
+        comp_dict_t *temp;
+        temp = dict->next;
+        do {
+            temp = temp->next;
+            if (temp->prev->item) {
+              printf("apaga!!!!!!!!!!!!!!\n");
+              comp_grammar_symbol_delete((comp_grammar_symbol_t*)temp->prev->item);
+            }
+            free(temp->prev);
+            temp->prev = NULL;
+        } while(temp != dict);
+    }
+    if (dict->item) {
+      iks_ast_node_value_delete((iks_ast_node_value_t*)dict->item);
+    }
+    free(dict);
+    dict = NULL;
+}
+
+
 
 void symbol_table_print(comp_dict_t *symbol_table) {
     //printf("imprimindo: %X\n",symbol_table);
@@ -225,37 +249,3 @@ int symbol_is_decl_type(comp_grammar_symbol_t *s,int decl_type) {
   }
   return ret;
 }
-<<<<<<< Updated upstream
-
-
-int iks_error(comp_grammar_symbol_t *s, int error_type) {
-  int ret=0;
-  switch(error_type) {
-    case IKS_ERROR_USE:
-      if (s->decl_type==IKS_DECL_VAR) {
-        fprintf(stderr,"line %d: identificador '%s' deve ser usado como variavel\n",s->code_line_number,s->value);      
-        ret=IKS_ERROR_VARIABLE;
-      }
-      else if (s->decl_type==IKS_DECL_VECTOR) {
-        fprintf(stderr,"line %d: identificador '%s' deve ser usado como vetor\n",s->code_line_number,s->value);      
-        ret=IKS_ERROR_VECTOR;
-      }
-      else if (s->decl_type==IKS_DECL_FUNCTION) {
-        fprintf(stderr,"line %d: identificador '%s' deve ser usado como funcao\n",s->code_line_number,s->value);      
-        ret=IKS_ERROR_FUNCTION;
-      }
-      else {
-        fprintf(stderr,"line %d: identificador '%s' ???????????\n",s->code_line_number,s->value);      
-        ret=99999;
-
-      }
-      break;
-    case IKS_ERROR_WRONG_PAR_RETURN:
-        fprintf(stderr,"parametro nao e compativel com expressao de retorno.\n");
-        ret=IKS_ERROR_WRONG_PAR_RETURN;
-        break;
-  }
-  return ret;
-}
-=======
->>>>>>> Stashed changes
