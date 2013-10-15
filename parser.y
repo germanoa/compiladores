@@ -220,8 +220,9 @@ func:
 				iks_ast_connect_nodes(ptr_function,$command_block_f);
 			}
 			
-      comp_dict_t *st = (comp_dict_t*) comp_stack_top(scope);
-      comp_dict_delete(st);
+      //comp_dict_t *st = (comp_dict_t*) comp_stack_top(scope);
+      //comp_dict_delete(st);
+			symbol_table_delete(scope->item);
 			scope = comp_stack_pop(scope);
 			$$ = ptr_function;
 			ptr_function = NULL; //evita aceitar um return fora de uma função

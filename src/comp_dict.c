@@ -20,7 +20,7 @@ comp_dict_t *new_comp_dict() {
 }
 
 void comp_dict_delete(comp_dict_t *dict) {
-    if (!comp_dict_is_empty) {
+    if (!comp_dict_is_empty(dict)) {
         comp_dict_t *temp;
         temp = dict->next;
         do {

@@ -68,6 +68,11 @@ void symbol_table_append(char *identifier, comp_grammar_symbol_t *symbol, comp_d
 void symbol_table_init();
 
 /**
+ * initialize the symbol_table
+ */
+void symbol_table_delete(comp_dict_t *dict);
+
+/**
  * print the symbol_table
  */
 void symbol_table_print();

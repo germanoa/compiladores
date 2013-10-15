@@ -22,7 +22,7 @@ comp_list_t *new_comp_list() {
 }
 
 void comp_list_delete(comp_list_t *list) {
-    if (!comp_list_is_empty) {
+    if (!comp_list_is_empty(list)) {
         comp_list_t *temp;
         temp = list->next;
         do {

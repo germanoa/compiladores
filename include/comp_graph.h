@@ -33,7 +33,7 @@ static inline void __comp_graph_init(comp_graph_t *graph);
 /**
  * Return 1 if graph is empty
  */
-static inline int __comp_graph_is_empty(comp_graph_t *graph);
+inline int comp_graph_is_empty(comp_graph_t *graph);
 /**
  * Create a graph, alloc mem and return address
  */

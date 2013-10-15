@@ -9,7 +9,7 @@ static inline void __comp_graph_init(comp_graph_t *graph) {
     graph->next = graph;
 }
 
-static inline int __comp_graph_is_empty(comp_graph_t *graph) {
+inline int comp_graph_is_empty(comp_graph_t *graph) {
 	if(graph == NULL)
 		return 1;
     else return graph == graph->next;
@@ -23,7 +23,7 @@ comp_graph_t *new_comp_graph() {
 }
 
 void comp_graph_delete(comp_graph_t *graph) {
-    if (!__comp_graph_is_empty) {
+    if (!comp_graph_is_empty(graph)) {
         comp_graph_t *temp;
         temp = graph->next;
         do {
