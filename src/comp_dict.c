@@ -20,7 +20,7 @@ comp_dict_t *new_comp_dict() {
 }
 
 void comp_dict_delete(comp_dict_t *dict) {
-    if (!comp_dict_is_empty) {
+    if (!comp_dict_is_empty(dict)) {
         comp_dict_t *temp;
         temp = dict->next;
         do {
@@ -132,10 +132,14 @@ comp_dict_item_t *new_comp_dict_item() {
     
 }
 void comp_dict_item_delete(comp_dict_item_t *dict_item) {
-    free(dict_item->key);
-    dict_item->key = NULL;
-    free(dict_item->value);
-    dict_item->value = NULL;
+//    if (dict_item->key) {
+//      free(dict_item->key);
+//      dict_item->key = NULL;
+//    }
+//    if (dict_item->value) {
+//      free(dict_item->value);
+//      dict_item->value = NULL;
+//    }
     free(dict_item);
     dict_item = NULL;
 }
@@ -148,7 +152,7 @@ void *comp_dict_item_value_get(comp_dict_item_t *dict_item) {
     return dict_item->value;
 }
 
-int comp_dict_item_set(comp_dict_item_t *dict_item, char key[], char value[]) {
+int comp_dict_item_set(comp_dict_item_t *dict_item, char *key, char *value) {
     int ret = 0;
     int key_s,value_s;
     key_s = sizeof(*key);

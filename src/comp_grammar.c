@@ -6,6 +6,13 @@
 #include "iks_types.h"
 #include "iks_ast.h"
 
+void yyerror(char* str)
+{
+    fflush(stderr);
+    fprintf(stderr, "ERRO: \"%s\"\t Linha: %d token: %s\n", \
+            str, yy_line_number_get(), yy_last_token_identifier_get());
+}
+
 static inline void __comp_grammar_symbol_init(comp_grammar_symbol_t *grammar_symbol) {
     grammar_symbol->token_type = IKS_SIMBOLO_INDEFINIDO;
     grammar_symbol->code_line_number = 0;
@@ -24,12 +31,22 @@ comp_grammar_symbol_t *new_comp_grammar_symbol() {
     return grammar_symbol;
 }
 
-void comp_grammar_symbol_delete(comp_grammar_symbol_t *grammar_symbol) {
-    free(grammar_symbol->value);
-    grammar_symbol->value = NULL;
-		comp_list_delete(grammar_symbol->params);
-    free(grammar_symbol);
-    grammar_symbol = NULL;
+void comp_grammar_symbol_delete(comp_grammar_symbol_t **grammar_symbol) {
+    //printf("serah q entra? %X %X %X\n",**grammar_symbol,*grammar_symbol,grammar_symbol);
+   if(grammar_symbol) {
+    //printf("entrou? %X %X %X\n",**grammar_symbol,*grammar_symbol,grammar_symbol);
+    if ((*grammar_symbol)->value) {
+      //printf("symbol deleted: %X %s\n",*grammar_symbol,(*grammar_symbol)->value);
+      free((*grammar_symbol)->value);
+      (*grammar_symbol)->value = NULL;
+    }
+    if ((*grammar_symbol)->params) {
+		  comp_list_delete((*grammar_symbol)->params);
+      (*grammar_symbol)->params=NULL;
+    }
+    free(*grammar_symbol);
+    *grammar_symbol = NULL;
+  }
 }
 
 
@@ -75,21 +92,27 @@ void symbol_table_init() {
 }
 
 void symbol_table_delete(comp_dict_t *dict) {
+    //printf("symbol table delete\n");
     if (!comp_dict_is_empty(dict)) {
         comp_dict_t *temp;
         temp = dict->next;
         do {
             temp = temp->next;
             if (temp->prev->item) {
-              printf("apaga!!!!!!!!!!!!!!\n");
-              comp_grammar_symbol_delete((comp_grammar_symbol_t*)temp->prev->item);
+              comp_dict_item_t *i = temp->prev->item;
+              comp_grammar_symbol_t *s = i->value;
+              comp_grammar_symbol_delete(&s);
+              comp_dict_item_delete(i);
             }
             free(temp->prev);
             temp->prev = NULL;
         } while(temp != dict);
     }
-    if (dict->item) {
-      iks_ast_node_value_delete((iks_ast_node_value_t*)dict->item);
+    if (dict->item!=NULL) {
+      comp_dict_item_t *i = dict->item;
+      comp_grammar_symbol_t *s = i->value;
+      comp_grammar_symbol_delete(&s);
+      comp_dict_item_delete(i);
     }
     free(dict);
     dict = NULL;
@@ -136,6 +159,7 @@ comp_grammar_symbol_t *search_symbol_global(comp_grammar_symbol_t *symbol, comp_
     if (ret==NULL) { //look at global
       ret = search_symbol_local(symbol,comp_stack_top(it_scope)); 
     }
+    comp_grammar_symbol_delete(&symbol);
     return ret;
 }
 

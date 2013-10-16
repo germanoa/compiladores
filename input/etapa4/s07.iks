@@ -1,0 +1,6 @@
+/* IKS_ERROR_FUNCTION */
+int:x(){}
+int:f()
+{
+  x = 1;
+}

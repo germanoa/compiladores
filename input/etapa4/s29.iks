@@ -1,0 +1,10 @@
+/* IKS_ERROR_CHAR_TO_X */
+char:g()
+{
+   return 'c';
+}
+int:f()
+int:x;
+{
+   x = 10 + 3.4 * g() + 2.3;
+}

@@ -15,13 +15,6 @@
 #include "gv.h"
 #include "main.h"
 
-void yyerror(char* str)
-{
-    fflush(stderr);
-    fprintf(stderr, "ERRO: \"%s\"\t Linha: %d token: %s\n", \
-            str, yy_line_number_get(), yy_last_token_identifier_get());
-}
-
 void iks_init() {
 //  symbol_table_init();
   iks_ast_init();

@@ -11,6 +11,9 @@ typedef struct comp_tree_t_struct {
 // initialize tree with item and children as NULL
 static inline __comp_tree_init(comp_tree_t *tree);
 
+// verify is tree is empty
+inline int comp_tree_is_empty(comp_tree_t *tree);
+
 // create a tree, alloc mem and return address
 comp_tree_t *new_comp_tree();
 

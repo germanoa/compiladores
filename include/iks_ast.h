@@ -80,6 +80,11 @@ void iks_ast_node_value_print(iks_ast_node_value_t *iks_ast_node_value);
 void iks_ast_append(comp_tree_t *parent, comp_tree_t *child);
 
 /**
+ * delete ast 
+ */
+void iks_ast_delete(comp_tree_t *ast);
+
+/**
  * append a ast_node_value as child(create one) to another ast_node
  */
 void iks_ast_append_value(comp_tree_t *parent, iks_ast_node_value_t *child_value);

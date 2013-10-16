@@ -8,8 +8,17 @@
 
 static inline __comp_tree_init(comp_tree_t *tree) {
 	tree->item = NULL;
-	tree->children = NULL;
+	tree->children = new_comp_list();
 }
+
+inline int comp_tree_is_empty(comp_tree_t *tree) {
+  int ret=0;
+  if (tree->item==NULL && comp_list_is_empty(tree->children)) {
+    ret=1;
+  }
+  return ret;
+}
+
 
 comp_tree_t *new_comp_tree() {
     comp_tree_t *tree = NULL;
@@ -20,12 +29,7 @@ comp_tree_t *new_comp_tree() {
     	return NULL;
     }
 
-
     __comp_tree_init(tree);
-
-    comp_list_t *l;
-    l = new_comp_list();
-    tree->children = l;
 
     return tree;
 }

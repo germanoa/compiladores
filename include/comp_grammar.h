@@ -44,7 +44,7 @@ comp_grammar_symbol_t *new_comp_grammar_symbol();
 /**
  * free address memory used by grammar_symbol
  */
-void comp_grammar_symbol_delete(comp_grammar_symbol_t *grammar_symbol);
+void comp_grammar_symbol_delete(comp_grammar_symbol_t **grammar_symbol);
 
 /**
  * set grammar_symbol

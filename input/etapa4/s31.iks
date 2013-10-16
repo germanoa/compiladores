@@ -1,0 +1,11 @@
+/* IKS_SUCCESS */
+int:f()
+{
+  return 10.3;
+}
+
+int:g()
+float:x;
+{
+  return x + f();
+}

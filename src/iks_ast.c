@@ -3,6 +3,7 @@
 #include "comp_grammar.h"
 #include "comp_tree.h"
 #include "iks_ast.h"
+#include "iks_types.h"
 #include "gv.h"
 
 static inline void __iks_ast_node_value_init(iks_ast_node_value_t *iks_ast_node_value) {
@@ -19,8 +20,12 @@ iks_ast_node_value_t *new_iks_ast_node_value() {
 }
 
 void iks_ast_node_value_delete(iks_ast_node_value_t *iks_ast_node_value) {
-    free(iks_ast_node_value->symbol);
-    iks_ast_node_value->symbol = NULL;
+   // CONTINUAR DAQUI
+   // if(iks_ast_node_value->symbol) {
+   //   comp_grammar_symbol_t *s = iks_ast_node_value->symbol;
+   //   //printf("deleting symbol at ast: %X %X %X\n",*s,s,&s);
+   //   comp_grammar_symbol_delete(&s);
+   // }
     free(iks_ast_node_value);
     iks_ast_node_value = NULL;
 }
@@ -38,6 +43,26 @@ void iks_ast_append(comp_tree_t *parent, comp_tree_t *child) {
     comp_tree_append(parent,child);
     //gv_connect(parent,child);
 }
+
+void iks_ast_delete(comp_tree_t *ast) {
+  //printf ("deleting ast\n");
+  if(ast) {
+    if(ast->item) {
+      iks_ast_node_value_delete(ast->item);
+    }
+    if(ast->children) {
+      comp_list_t *childList = ast->children;
+      do { // runs through every child
+        childList = childList->next;
+        iks_ast_delete(childList->item);
+      } while(childList != ast->children);
+    }
+    comp_list_delete(ast->children);
+    free(ast);
+    ast = NULL;
+  }
+}
+
 
 void iks_ast_append_value(comp_tree_t *parent, iks_ast_node_value_t *child_value) {
     comp_tree_create_child_with_item(parent,(void*)child_value);

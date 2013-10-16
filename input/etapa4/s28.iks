@@ -1,0 +1,10 @@
+/* IKS_ERROR_STRING_TO_X */
+string:g()
+{
+   return "str";
+}
+int:f()
+int:x;
+{
+   x = 10 + 3.4 * g() + 2.3;
+}

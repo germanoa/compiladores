@@ -13,7 +13,7 @@ extern YYSTYPE yylval;
 int line_number = 1;
 char *last_identifier;
 
-comp_grammar_symbol_t *push_to_symbol_table(int type) {
+comp_grammar_symbol_t *push_to_symbol_table(int type, int now) {
     char *identifier;
     int deslocamento=0;
     int d2=0;
@@ -31,8 +31,10 @@ comp_grammar_symbol_t *push_to_symbol_table(int type) {
     comp_grammar_symbol_t *symbol;
     symbol = new_comp_grammar_symbol();
     comp_grammar_symbol_set(symbol,type,line_number,identifier);
-
-    /* symbol_table_append(identifier,symbol); - migrated to parser.y:decl*/
+    
+    if (now) {
+      symbol_table_append(identifier,symbol,(comp_dict_t*)scope->item);
+    }
     return symbol;
 }
 
@@ -65,13 +67,13 @@ output { return TK_PR_OUTPUT; }
 return { return TK_PR_RETURN; }
 
 [0-9]+ {
-    yylval.symbol = push_to_symbol_table(TK_LIT_INT);
+    yylval.symbol = push_to_symbol_table(TK_LIT_INT,1);
     yylval.symbol->token_type = TK_LIT_INT;
     return TK_LIT_INT;
 }
 
 ([0-9]+|-[0-9]+)\.[0-9]+ {
-    yylval.symbol = push_to_symbol_table(TK_LIT_FLOAT);
+    yylval.symbol = push_to_symbol_table(TK_LIT_FLOAT,1);
     yylval.symbol->token_type = TK_LIT_FLOAT;
     return TK_LIT_FLOAT;
 }
@@ -81,20 +83,20 @@ true { return TK_LIT_TRUE; }
 false { return TK_LIT_FALSE; }
 
 '[^']' {
-    yylval.symbol = push_to_symbol_table(TK_LIT_CHAR);
+    yylval.symbol = push_to_symbol_table(TK_LIT_CHAR,1);
     yylval.symbol->token_type = TK_LIT_CHAR;
     return TK_LIT_CHAR;
 }
 
 \"[^\"\n\r]*\" {
-    yylval.symbol = push_to_symbol_table(TK_LIT_STRING);
+    yylval.symbol = push_to_symbol_table(TK_LIT_STRING,1);
     yylval.symbol->token_type = TK_LIT_STRING;
     return TK_LIT_STRING;
 }
 
 
 ([a-z]|[A-Z]|_)+([a-z]|[A-Z]|_|[0-9])* {
-    yylval.symbol = push_to_symbol_table(TK_IDENTIFICADOR);
+    yylval.symbol = push_to_symbol_table(TK_IDENTIFICADOR,0);
     yylval.symbol->token_type = TK_IDENTIFICADOR;
     return TK_IDENTIFICADOR;
 }

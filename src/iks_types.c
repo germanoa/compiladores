@@ -179,7 +179,10 @@ int type_error(comp_grammar_symbol_t *s, int error_type) {
 			break;
   }
 
-	//memory_cleaner();
+  //if (s) {
+  //  comp_grammar_symbol_delete(&s);
+  //}
+	memory_cleaner();
 
   return ret;
 }

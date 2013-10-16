@@ -30,16 +30,16 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 	}
 
 	void memory_cleaner() {
-		printf("cleaning mem\n");
+		//printf("cleaning mem\n");
 		while(!comp_stack_is_empty(scope)) {
-			printf("dentro\n");
-      comp_dict_delete(scope->item);
+			//printf("scope\n");
+      symbol_table_delete(scope->item);
 			scope->item=NULL;
 			scope = comp_stack_pop(scope);
 		}
 		comp_stack_delete(scope);
-	  printf("fora\n");
-		//comp_tree_delete(ast);		
+    //CONTINUAR DAQUI
+    //iks_ast_delete(ast);
 	}
 
 %}
@@ -173,7 +173,7 @@ decl:
 		type ':' TK_IDENTIFICADOR
 		{
 			if (!decl_symbol($3,$1,IKS_DECL_VAR,comp_stack_top(scope),function_with_param)) {
-				return type_error(NULL,IKS_ERROR_DECLARED);
+				return type_error($3,IKS_ERROR_DECLARED);
 			}
 			$$ = $3;
 		}
@@ -206,7 +206,7 @@ type:
 func:
 		type ':' TK_IDENTIFICADOR {
 			if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,comp_stack_top(scope),function_with_param)) {
-				return type_error(NULL,IKS_ERROR_DECLARED);
+				return type_error($3,IKS_ERROR_DECLARED);
 			}
 			
 			open_scope();
@@ -446,7 +446,7 @@ id:
 				$$ = identificador;
 			} else {
 				fprintf(stderr,"identificador não declarado\n");
-				return type_error(NULL,IKS_ERROR_UNDECLARED);
+				return type_error(s,IKS_ERROR_UNDECLARED);
 			}
 		}
 	;

@@ -22,16 +22,18 @@ ADD_EXECUTABLE(main
   src/iks_types.c
 )
 TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})
-#ADD_EXECUTABLE(test
-#  ${FLEX_scanner_OUTPUTS}
-#  ${BISON_parser_OUTPUTS}
-#  src/tests/test.c
-#  src/comp_dict.c
-#  src/comp_list.c
-#  src/comp_tree.c
-#  src/comp_graph.c
-#  src/comp_grammar.c
-#  src/iks_ast.c
-#  src/iks_types.c
-#)
-#TARGET_LINK_LIBRARIES(test ${FLEX_LIBRARIES})
+ADD_EXECUTABLE(test
+  ${FLEX_scanner_OUTPUTS}
+  ${BISON_parser_OUTPUTS}
+  src/tests/test.c
+  src/gv.c
+  src/comp_dict.c
+  src/comp_list.c
+  src/comp_tree.c
+  src/comp_graph.c
+  src/comp_stack.c
+  src/comp_grammar.c
+  src/iks_ast.c
+  src/iks_types.c
+)
+TARGET_LINK_LIBRARIES(test ${FLEX_LIBRARIES})
