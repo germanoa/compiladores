@@ -117,7 +117,7 @@ p:
 			function_with_param=NULL;
 			comp_dict_t *symbol_table_global;
 			symbol_table_global = new_comp_dict();
-			scope = comp_stack_push(scope,(void*)symbol_table_global);
+			scope->st = comp_stack_push(scope->st,(void*)symbol_table_global);
 			// just the first function is child of ast
 			iks_ast_node_value_t *v;
 			v = new_iks_ast_node_value();
@@ -130,7 +130,7 @@ p:
 prog:
 		prog global_decl
 		{
-		//symbol_table_print((comp_dict_t*)comp_stack_top(scope));
+		//symbol_table_print((comp_dict_t*)comp_stack_top(scope->st));
 		}
 	| prog func
 		{
@@ -142,7 +142,7 @@ prog:
 			else {
 				iks_ast_connect_nodes($1,$2);
 			}
-			//symbol_table_print((comp_dict_t*)comp_stack_top(scope));
+			//symbol_table_print((comp_dict_t*)comp_stack_top(scope->st));
 			$$ = $2;
 		}
 	| /* empty */ {}
@@ -164,7 +164,7 @@ array_decl:
 decl:
 		type ':' TK_IDENTIFICADOR
 		{
-			if (!decl_symbol($3,$1,IKS_DECL_VAR,comp_stack_top(scope),function_with_param)) {
+			if (!decl_symbol($3,$1,IKS_DECL_VAR,comp_stack_top(scope->st),function_with_param)) {
 				return(IKS_ERROR_DECLARED);
 			}
 			$$ = $3;
@@ -197,7 +197,7 @@ type:
 /* 2.2 */
 func:
 		type ':' TK_IDENTIFICADOR {
-			if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,comp_stack_top(scope),function_with_param)) {
+			if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,comp_stack_top(scope->st),function_with_param)) {
 				return(IKS_ERROR_DECLARED);
 			}
 			
@@ -208,22 +208,22 @@ func:
 			comp_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3);
 			iks_ast_node_value_t *funcaon = funcao->item;
 			funcaon->iks_type = $1;
-			scope = comp_stack_push(scope,(void*)symbol_table_local);
+			scope->st = comp_stack_push(scope->st,(void*)symbol_table_local);
 			ptr_function=funcao;
 			function_with_param=$3; //begin params decl
 		} '(' func_param_decl_list ')' {
 			function_with_param=NULL; // end params decl
 		} decl_list {
-			//symbol_table_print((comp_dict_t*)comp_stack_top(scope));
+			//symbol_table_print((comp_dict_t*)comp_stack_top(scope->st));
 		} command_block_f {
 			if ($command_block_f) {
 				iks_ast_connect_nodes(ptr_function,$command_block_f);
 			}
 			
-      //comp_dict_t *st = (comp_dict_t*) comp_stack_top(scope);
+      //comp_dict_t *st = (comp_dict_t*) comp_stack_top(scope->st);
       //comp_dict_delete(st);
-			symbol_table_delete(scope->item);
-			scope = comp_stack_pop(scope);
+			symbol_table_delete(scope->st->item);
+			scope->st = comp_stack_pop(scope->st);
 			$$ = ptr_function;
 			ptr_function = NULL; //evita aceitar um return fora de uma função
 		}
@@ -436,7 +436,7 @@ id:
 		TK_IDENTIFICADOR
 		{
 			comp_grammar_symbol_t *s;
-			s = search_symbol_global($1,scope);
+			s = search_symbol_global($1,scope->st);
 			if (s) {
 				comp_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,s);
 				iks_ast_node_value_t *idn = identificador->item;

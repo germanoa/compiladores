@@ -2,8 +2,21 @@
 #include <stdlib.h>
 #include "comp_grammar.h"
 #include "comp_tree.h"
+#include "comp_stack.h"
 #include "iks_ast.h"
 #include "iks_types.h"
+
+static inline void __scope_init(scope_t *scope) {
+	scope->st = new_comp_stack();
+	scope->base_addr=0;
+}
+
+scope_t *new_scope() {
+	scope_t *scope;
+	scope = malloc(sizeof(scope_t));
+  __scope_init(scope);
+	return scope;
+}
 
 int verify_coercion(comp_tree_t *id, comp_tree_t *expr) {
   int ret=0;

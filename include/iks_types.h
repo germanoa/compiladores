@@ -60,7 +60,15 @@
 #define IKS_COERCION_BOOL_TO_FLOAT 	6
 
 /* stack of symbol_tables(scope) */
-comp_stack_t *scope; 
+//comp_stack_t *scope; 
+typedef struct scope_t scope_t;
+struct scope_t {
+	comp_stack_t *st; //symbol tables 
+	int base_addr;	
+};
+scope_t *scope;
+
+scope_t *new_scope();
 
 int verify_coercion(comp_tree_t *id, comp_tree_t *expr);
 

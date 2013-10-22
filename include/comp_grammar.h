@@ -31,6 +31,7 @@ struct comp_grammar_symbol_t {
     int iks_size;
     comp_dict_t *symbol_table;
     comp_list_t *params; //used only with functions
+		int addr_offset; //offset of base addr from scope
 };
 
 /**
