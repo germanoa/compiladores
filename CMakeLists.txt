@@ -20,6 +20,7 @@ ADD_EXECUTABLE(main
   src/comp_grammar.c
   src/iks_ast.c
   src/iks_types.c
+  src/iks_iloc.c
 )
 TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})
 #ADD_EXECUTABLE(test
