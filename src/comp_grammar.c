@@ -15,6 +15,11 @@ static inline void __comp_grammar_symbol_init(comp_grammar_symbol_t *grammar_sym
     grammar_symbol->iks_size = 0;
     grammar_symbol->symbol_table = NULL;
     grammar_symbol->params = new_comp_list();
+    grammar_symbol->addr_offset = 0;
+    grammar_symbol->base = 0;
+    grammar_symbol->num_dimen = 0;
+    grammar_symbol->dimens = new_comp_list();
+    
 }
 
 comp_grammar_symbol_t *new_comp_grammar_symbol() {
@@ -226,18 +231,26 @@ int decl_symbol(comp_grammar_symbol_t *s,int iks_type, int decl_type, void *symb
   return ret;
 }
 
-int update_decl_symbol(comp_grammar_symbol_t *s,int any_type,comp_grammar_symbol_t *lit) {
-  switch(any_type) {
-    case IKS_DECL_VECTOR:
-      s->decl_type=any_type;
-      s->iks_size = s->iks_size * atoi(lit->value);
-      break;
-    case IKS_STRING:
-      if (lit) {
-        s->iks_size = strlen(lit->value);
-      }
-      break;
+int update_vector_symbol(comp_grammar_symbol_t *s,unsigned int dimen_counter,comp_list_t *dimens) {
+  //s->iks_size = s->iks_size * atoi(lit->value);
+  
+  if(s != NULL && dimens != NULL) {
+  	s->decl_type = IKS_DECL_VECTOR;
+		s->num_dimen = dimen_counter;
+		s->dimens = dimen;
+		
+		comp_list_t *d = dimens;
+		int *size = NULL;
+		do {
+			size = d->item;
+			if(*size < 0)
+				return iks_error(s, IKS_ERROR_DECL);
+		
+			d = d->next;
+		} while(d != dimens);
   }
+  else fprintf(stderr,"erro interno: parâmetros inválidos para update_vector_symbol.\n");
+  
   return 0;
 }
 
@@ -269,7 +282,6 @@ int iks_error(comp_grammar_symbol_t *s, int error_type) {
       else {
         fprintf(stderr,"line %d: identificador '%s' ???????????\n",s->code_line_number,s->value);      
         ret=99999;
-
       }
       break;
     
@@ -285,6 +297,21 @@ int iks_error(comp_grammar_symbol_t *s, int error_type) {
   		
   		ret = IKS_ERROR_WRONG_PAR_INPUT;
   		break;
+		
+		case IKS_ERROR_DECL:
+			if(s != NULL) {
+				if(s->decl_type == IKS_DECL_VECTOR)
+					fprintf(stderr,"line %d: declaração de vetor %s inválida. dimensões negativas?\n", s->code_line_number,s->value);
+				else fprintf(stderr,"line %d: declaração de %s inválida.\n", s->code_line_number,s->value);
+			}
+			else fprintf(stderr,"declaração inválida.\n");
+			
+			ret = IKS_ERROR_DECL;
+			break;
+		
+		default:
+			fprintf(stderr,"código de erro %d indesperado.\n", error_type);
+			break;
   }
   return ret;
 }

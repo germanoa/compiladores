@@ -32,6 +32,9 @@ struct comp_grammar_symbol_t {
     comp_dict_t *symbol_table;
     comp_list_t *params; //used only with functions
 		int addr_offset; //offset of base addr from scope
+		int base;
+		unsigned int num_dimen; //number of dimensions the vector has
+		comp_list_t *dimens; //list of dimension sizes
 };
 
 /**
@@ -92,9 +95,9 @@ int exist_symbol_local(comp_grammar_symbol_t *symbol, comp_dict_t *symbol_table)
 int decl_symbol(comp_grammar_symbol_t *s, int iks_type, int decl_type, void *symbol_table, comp_grammar_symbol_t *function_with_param);
 
 /**
- * update a symbol at symbol_table
+ * update a vector symbol at symbol_table
  */
-int update_decl_symbol(comp_grammar_symbol_t *s, int decl_type, comp_grammar_symbol_t *lit);
+int update_vector_symbol(comp_grammar_symbol_t *s,unsigned int dimen_counter,comp_list_t *dimens);
 
 /**
  * verify if symbol is of decl_type

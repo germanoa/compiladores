@@ -19,6 +19,7 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 	comp_tree_t *ptr_function_call;
 	comp_grammar_symbol_t *function_with_param;
 	comp_list_t *args;
+	unsigned int dimen_counter;
 	
 %}
 
@@ -52,6 +53,7 @@ DECLARATIONS
 	int type;
 	comp_grammar_symbol_t *symbol;
 	comp_tree_t *nt;
+	comp_list_t *list;
 }
 
 %token<symbol> TK_LIT_INT		280
@@ -67,6 +69,7 @@ DECLARATIONS
 %start p
 
 %type<symbol> decl
+%type<list> array_dimen
 %type<nt> prog
 %type<nt> func
 %type<nt> command_block 
@@ -124,6 +127,7 @@ p:
 			iks_ast_node_value_set(v,IKS_AST_PROGRAMA,NULL);
 			comp_tree_set_item(ast,(void*)v);
 			gv_declare(IKS_AST_PROGRAMA,ast,NULL);
+			dimen_counter = 0;
 		} prog
 	;
 
@@ -155,9 +159,36 @@ global_decl:
 	;
 
 array_decl:
-	decl '[' TK_LIT_INT ']'
+		decl {
+			dimen_counter = 0;
+		} array_dimen {
+			update_vector_symbol($1,dimen_counter,$2);
+		}
+	;
+
+array_dimen:
+		array_dimen '[' TK_LIT_INT ']'
 		{
-			update_decl_symbol($1,IKS_DECL_VECTOR,$3);
+			comp_list_t *list = $1;
+			comp_grammar_symbol_t *lit = $3;
+			int size = atoi(lit->value);
+			comp_list_t *dimen = new_comp_list();
+			comp_list_set_item(dimen,(void*)&size);
+			
+			comp_list_append(list, dimen);
+			
+			dimen_counter++;
+			$$ = list;
+		}
+	| '[' TK_LIT_INT ']'
+		{
+			comp_grammar_symbol_t *lit = $2;
+			int size = atoi(lit->value);
+			comp_list_t *dimen = new_comp_list();
+			comp_list_set_item(dimen,(void*)&size);
+			
+			dimen_counter++;
+			$$ = dimen;
 		}
 	;
 
@@ -304,7 +335,8 @@ commands:
 			}
 
 			if(ids->iks_type == IKS_STRING) { //strings set size dinamically
-				update_decl_symbol(ids,IKS_STRING,exprs);
+				// CHECAR SE O VETOR DE CHAR TEM SÓ 1 DIMENSÃO
+				//update_vector_symbol(...);
 			}
 
 			comp_tree_t *e;
@@ -932,4 +964,4 @@ fflush(stderr);
 fprintf(stderr, "ERRO: \"%s\"\t Linha: %d token: %s\n", str, yy_line_number_get(), yy_last_token_identifier_get());
 exit(RS_ERRO);
 }
-*/	
+*/
