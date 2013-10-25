@@ -112,7 +112,7 @@ int symbol_is_iks_type(iks_grammar_symbol_t *s,int iks_type) {
   return ret;
 }
 
-int infer_type(comp_tree_t *tree1, comp_tree_t *tree2) {
+int infer_type(iks_tree_t *tree1, iks_tree_t *tree2) {
 	iks_ast_node_value_t *tree1n = tree1->item;
 	iks_ast_node_value_t *tree2n = tree2->item;
 	

@@ -486,13 +486,13 @@ idv:
 		{
 			iks_ast_node_value_t *idn;
 			idn = $id->item; 
-			comp_grammar_symbol_t *ids;
+			iks_grammar_symbol_t *ids;
 			ids = idn->symbol;
 			
 			if(symbol_is_decl_type(ids,IKS_DECL_VECTOR)) {
-				comp_tree_t *vet = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
+				iks_tree_t *vet = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
 				
-				comp_tree_t *int_tree = iks_ast_new_node(IKS_AST_INDEFINIDO,NULL); //temporary tree so infer_type can infer between IKS_INT and expr
+				iks_tree_t *int_tree = iks_ast_new_node(IKS_AST_INDEFINIDO,NULL); //temporary tree so infer_type can infer between IKS_INT and expr
 				iks_ast_node_value_t *int_treen = int_tree->item;
 				int_treen->iks_type = IKS_INT; //index of vector should be an integer
 				
@@ -503,7 +503,7 @@ idv:
 				vetn->iks_type = idn->iks_type; //type of this ast node is that of the id
 				
 				iks_ast_node_value_delete(int_treen); //removing temporary tree
-				comp_tree_delete(int_tree);
+				iks_tree_delete(int_tree);
 				
 				iks_ast_connect_nodes(vet,$id);
 				iks_ast_connect_nodes(vet,$expr);
