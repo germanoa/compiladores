@@ -237,7 +237,7 @@ int update_vector_symbol(comp_grammar_symbol_t *s,unsigned int dimen_counter,com
   if(s != NULL && dimens != NULL) {
   	s->decl_type = IKS_DECL_VECTOR;
 		s->num_dimen = dimen_counter;
-		s->dimens = dimen;
+		s->dimens = dimens;
 		
 		comp_list_t *d = dimens;
 		int *size = NULL;

@@ -162,7 +162,7 @@ array_decl:
 		decl {
 			dimen_counter = 0;
 		} array_dimen {
-			update_vector_symbol($1,dimen_counter,$2);
+			update_vector_symbol($decl,dimen_counter,$array_dimen);
 		}
 	;
 
