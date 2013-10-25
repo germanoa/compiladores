@@ -1,11 +1,11 @@
 /*
   iks_types.h
 */
-#ifndef __IKS_TYPES_H
-#define __IKS_TYPES_H
+#ifndef __IKS_TYPES_H__
+#define __IKS_TYPES_H__
 
-#include "comp_stack.h"
-#include "comp_tree.h"
+#include "iks_stack.h"
+#include "iks_tree.h"
 
 /* Códigos de tipos de dados linguagem */
 #define IKS_NOTYPE 	0 
@@ -60,25 +60,25 @@
 #define IKS_COERCION_BOOL_TO_FLOAT 	6
 
 /* stack of symbol_tables(scope) */
-//comp_stack_t *scope; 
+//iks_stack_t *scope; 
 typedef struct scope_t scope_t;
 struct scope_t {
-	comp_stack_t *st; //symbol tables 
+	iks_stack_t *st; //symbol tables 
 	int base_addr;	
 };
 scope_t *scope;
 
 scope_t *new_scope();
 
-int verify_coercion(comp_tree_t *id, comp_tree_t *expr);
+int verify_coercion(iks_tree_t *id, iks_tree_t *expr);
 
-int verify_function_args(comp_grammar_symbol_t *s, comp_list_t *args);
+int verify_function_args(iks_grammar_symbol_t *s, iks_list_t *args);
 
-int symbol_is_iks_type(comp_grammar_symbol_t *s,int iks_type);
+int symbol_is_iks_type(iks_grammar_symbol_t *s,int iks_type);
 
 /**
  * return type inferred (only works with int, float and bool)
  */
-int infer_type(comp_tree_t *type1, comp_tree_t *type2);
+int infer_type(iks_tree_t *type1, iks_tree_t *type2);
 
-#endif
+#endif /* __IKS_TYPES_H__ */

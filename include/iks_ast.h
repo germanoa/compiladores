@@ -1,10 +1,13 @@
 /*
-  iks_ast.h
-
-  Este arquivo contém as constantes para os tipos dos nós da AST.
+ * iks_ast.h
+ *
+ * Este arquivo contém as constantes para os tipos dos nós da AST.
+ *
 */
-#ifndef __IKS_AST_H
-#define __IKS_AST_H
+
+#ifndef __IKS_AST_H__
+#define __IKS_AST_H__
+
 #define IKS_AST_PROGRAMA             0
 #define IKS_AST_FUNCAO               1
 #define IKS_AST_IF_ELSE              2
@@ -35,10 +38,10 @@
 #define IKS_AST_CHAMADA_DE_FUNCAO   27
 #define IKS_AST_INDEFINIDO          -1
 
-#include "comp_tree.h"
-#include "comp_grammar.h"
+#include "iks_tree.h"
+#include "iks_grammar.h"
 
-comp_tree_t *ast;
+iks_tree_t *ast;
 
 /**
  * AST node struct
@@ -46,7 +49,7 @@ comp_tree_t *ast;
 typedef struct iks_ast_node_value_t iks_ast_node_value_t;
 struct iks_ast_node_value_t {
     int type;
-    comp_grammar_symbol_t *symbol;
+    iks_grammar_symbol_t *symbol;
     int need_coercion;
     int iks_type;
 };
@@ -67,7 +70,7 @@ void iks_ast_node_value_delete(iks_ast_node_value_t *iks_ast_node_value);
 /**
  * set iks_ast_node_value
  */
-void iks_ast_node_value_set(iks_ast_node_value_t *iks_ast_node_value, int type, comp_grammar_symbol_t *symbol);
+void iks_ast_node_value_set(iks_ast_node_value_t *iks_ast_node_value, int type, iks_grammar_symbol_t *symbol);
 
 /**
  * print iks_ast_node_value
@@ -77,12 +80,12 @@ void iks_ast_node_value_print(iks_ast_node_value_t *iks_ast_node_value);
 /**
  * append a ast_node to another ast_node
  */
-void iks_ast_append(comp_tree_t *parent, comp_tree_t *child);
+void iks_ast_append(iks_tree_t *parent, iks_tree_t *child);
 
 /**
  * append a ast_node_value as child(create one) to another ast_node
  */
-void iks_ast_append_value(comp_tree_t *parent, iks_ast_node_value_t *child_value);
+void iks_ast_append_value(iks_tree_t *parent, iks_ast_node_value_t *child_value);
 
 /**
  * initialize the ast
@@ -92,11 +95,11 @@ void iks_ast_init();
 /**
  * collection of procedures to make a ast node
  */
-comp_tree_t *iks_ast_new_node(int type, comp_grammar_symbol_t *symbol);
+iks_tree_t *iks_ast_new_node(int type, iks_grammar_symbol_t *symbol);
 
 /**
  * collection of procedures to connect two ast nodes
  */
-void iks_ast_connect_nodes(comp_tree_t *parent, comp_tree_t *child);
+void iks_ast_connect_nodes(iks_tree_t *parent, iks_tree_t *child);
 
-#endif
+#endif /* __IKS_AST_H__  */
