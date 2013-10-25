@@ -6,19 +6,19 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 %{
 	#include <stdio.h>
 	#include <stdlib.h>
-	#include "comp_grammar.h"
-	#include "comp_dict.h"
-	#include "comp_tree.h"
-	#include "comp_stack.h"
+	#include "iks_grammar.h"
+	#include "iks_dict.h"
+	#include "iks_tree.h"
+	#include "iks_stack.h"
 	#include "iks_ast.h"
 	#include "iks_types.h"
-	#include "gv.h"
-	//#include "hash_table.h"
+	#include "iks_gv.h"
+	//#include "iks_hash.h"
 
-	comp_tree_t *ptr_function;
-	comp_tree_t *ptr_function_call;
-	comp_grammar_symbol_t *function_with_param;
-	comp_list_t *args;
+	iks_tree_t *ptr_function;
+	iks_tree_t *ptr_function_call;
+	iks_grammar_symbol_t *function_with_param;
+	iks_list_t *args;
 	unsigned int dimen_counter;
 	
 %}
@@ -51,9 +51,9 @@ DECLARATIONS
 
 %union {
 	int type;
-	comp_grammar_symbol_t *symbol;
-	comp_tree_t *nt;
-	comp_list_t *list;
+	iks_grammar_symbol_t *symbol;
+	iks_tree_t *nt;
+	iks_list_t *list;
 }
 
 %token<symbol> TK_LIT_INT		280
@@ -118,14 +118,14 @@ p:
 			ptr_function=NULL;
 			ptr_function_call=NULL;
 			function_with_param=NULL;
-			comp_dict_t *symbol_table_global;
-			symbol_table_global = new_comp_dict();
-			scope->st = comp_stack_push(scope->st,(void*)symbol_table_global);
+			iks_dict_t *symbol_table_global;
+			symbol_table_global = new_iks_dict();
+			scope->st = iks_stack_push(scope->st,(void*)symbol_table_global);
 			// just the first function is child of ast
 			iks_ast_node_value_t *v;
 			v = new_iks_ast_node_value();
 			iks_ast_node_value_set(v,IKS_AST_PROGRAMA,NULL);
-			comp_tree_set_item(ast,(void*)v);
+			iks_tree_set_item(ast,(void*)v);
 			gv_declare(IKS_AST_PROGRAMA,ast,NULL);
 			dimen_counter = 0;
 		} prog
@@ -134,19 +134,19 @@ p:
 prog:
 		prog global_decl
 		{
-		//symbol_table_print((comp_dict_t*)comp_stack_top(scope->st));
+		//symbol_table_print((iks_dict_t*)iks_stack_top(scope->st));
 		}
 	| prog func
 		{
 			/* 3.A.1 */
 			// just the first function is child of ast
-			if (comp_list_is_empty(ast->children)) {
+			if (iks_list_is_empty(ast->children)) {
 				iks_ast_connect_nodes(ast,$2);
 			}
 			else {
 				iks_ast_connect_nodes($1,$2);
 			}
-			//symbol_table_print((comp_dict_t*)comp_stack_top(scope->st));
+			//symbol_table_print((iks_dict_t*)iks_stack_top(scope->st));
 			$$ = $2;
 		}
 	| /* empty */ {}
@@ -169,23 +169,23 @@ array_decl:
 array_dimen:
 		array_dimen '[' TK_LIT_INT ']'
 		{
-			comp_list_t *list = $1;
-			comp_grammar_symbol_t *lit = $3;
+			iks_list_t *list = $1;
+			iks_grammar_symbol_t *lit = $3;
 			int size = atoi(lit->value);
-			comp_list_t *dimen = new_comp_list();
-			comp_list_set_item(dimen,(void*)&size);
+			iks_list_t *dimen = new_iks_list();
+			iks_list_set_item(dimen,(void*)&size);
 			
-			comp_list_append(list, dimen);
+			iks_list_append(list, dimen);
 			
 			dimen_counter++;
 			$$ = list;
 		}
 	| '[' TK_LIT_INT ']'
 		{
-			comp_grammar_symbol_t *lit = $2;
+			iks_grammar_symbol_t *lit = $2;
 			int size = atoi(lit->value);
-			comp_list_t *dimen = new_comp_list();
-			comp_list_set_item(dimen,(void*)&size);
+			iks_list_t *dimen = new_iks_list();
+			iks_list_set_item(dimen,(void*)&size);
 			
 			dimen_counter++;
 			$$ = dimen;
@@ -195,7 +195,7 @@ array_dimen:
 decl:
 		type ':' TK_IDENTIFICADOR
 		{
-			if (!decl_symbol($3,$1,IKS_DECL_VAR,comp_stack_top(scope->st),function_with_param)) {
+			if (!decl_symbol($3,$1,IKS_DECL_VAR,iks_stack_top(scope->st),function_with_param)) {
 				return(IKS_ERROR_DECLARED);
 			}
 			$$ = $3;
@@ -228,33 +228,33 @@ type:
 /* 2.2 */
 func:
 		type ':' TK_IDENTIFICADOR {
-			if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,comp_stack_top(scope->st),function_with_param)) {
+			if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,iks_stack_top(scope->st),function_with_param)) {
 				return(IKS_ERROR_DECLARED);
 			}
 			
-			comp_dict_t *symbol_table_local;
-			symbol_table_local = new_comp_dict();
+			iks_dict_t *symbol_table_local;
+			symbol_table_local = new_iks_dict();
 			
 			/* 3.A.2 */
-			comp_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3);
+			iks_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3);
 			iks_ast_node_value_t *funcaon = funcao->item;
 			funcaon->iks_type = $1;
-			scope->st = comp_stack_push(scope->st,(void*)symbol_table_local);
+			scope->st = iks_stack_push(scope->st,(void*)symbol_table_local);
 			ptr_function=funcao;
 			function_with_param=$3; //begin params decl
 		} '(' func_param_decl_list ')' {
 			function_with_param=NULL; // end params decl
 		} decl_list {
-			//symbol_table_print((comp_dict_t*)comp_stack_top(scope->st));
+			//symbol_table_print((iks_dict_t*)iks_stack_top(scope->st));
 		} command_block_f {
 			if ($command_block_f) {
 				iks_ast_connect_nodes(ptr_function,$command_block_f);
 			}
 			
-      //comp_dict_t *st = (comp_dict_t*) comp_stack_top(scope->st);
-      //comp_dict_delete(st);
+      //iks_dict_t *st = (iks_dict_t*) iks_stack_top(scope->st);
+      //iks_dict_delete(st);
 			symbol_table_delete(scope->st->item);
-			scope->st = comp_stack_pop(scope->st);
+			scope->st = iks_stack_pop(scope->st);
 			$$ = ptr_function;
 			ptr_function = NULL; //evita aceitar um return fora de uma função
 		}
@@ -286,7 +286,7 @@ command_block_f://two command_block because cmd_blk from function isnt in ast
 command_block:
 		'{' command_seq '}'
 		{
-			comp_tree_t *bloco = iks_ast_new_node(IKS_AST_BLOCO,NULL);
+			iks_tree_t *bloco = iks_ast_new_node(IKS_AST_BLOCO,NULL);
 			if ($2) { //because can command_seq <- command <- empty
 				iks_ast_connect_nodes(bloco,$2);
 			}
@@ -326,7 +326,7 @@ commands:
 			idn = $1->item;
 			exprn = $3->item;
 
-			comp_grammar_symbol_t *ids,*exprs;
+			iks_grammar_symbol_t *ids,*exprs;
 			ids = idn->symbol;
 			exprs = exprn->symbol;
 
@@ -339,10 +339,10 @@ commands:
 				//update_vector_symbol(...);
 			}
 
-			comp_tree_t *e;
+			iks_tree_t *e;
 			e=$3;
 			if(exprn->type==IKS_AST_CHAMADA_DE_FUNCAO) {
-				comp_list_t *expr_child;
+				iks_list_t *expr_child;
 				expr_child =  $3->children;
 				e = expr_child->next->item;
 				iks_ast_node_value_t *en;
@@ -360,7 +360,7 @@ commands:
 				}
 			}
 
-			comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
+			iks_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
 			iks_ast_node_value_t *atrn = atribuicao->item;
 			atrn->iks_type = ids->iks_type;
 			iks_ast_connect_nodes(atribuicao,$1);
@@ -370,24 +370,24 @@ commands:
 	| idv '=' expr
 		{
 			/* 3.A.8 */
-			comp_list_t *id_child;
+			iks_list_t *id_child;
 			id_child =  $1->children;
-			comp_tree_t *id_tree;
+			iks_tree_t *id_tree;
 			id_tree = id_child->next->item;
 			iks_ast_node_value_t *idn,*exprn;
 			idn = (iks_ast_node_value_t*)id_tree->item;
 			exprn = (iks_ast_node_value_t*)$expr->item;
-			comp_grammar_symbol_t *ids,*exprs;
+			iks_grammar_symbol_t *ids,*exprs;
 			ids = idn->symbol;
 			exprs = exprn->symbol;
 			if(!symbol_is_decl_type(ids,IKS_DECL_VECTOR)) {
 				return iks_error(ids,IKS_ERROR_USE);
 			}
 
-			comp_tree_t *e;
+			iks_tree_t *e;
 			e=$3;
 			if(exprn->type==IKS_AST_CHAMADA_DE_FUNCAO) {
-				comp_list_t *expr_child;
+				iks_list_t *expr_child;
 				expr_child =  $3->children;
 				e = expr_child->next->item;
 				iks_ast_node_value_t *en;
@@ -405,7 +405,7 @@ commands:
 				}
 			}
 
-			comp_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
+			iks_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
 			iks_ast_node_value_t *atrn = atribuicao->item;
 			iks_ast_node_value_t *idvn = $1->item;
 			atrn->iks_type = idvn->iks_type;
@@ -417,7 +417,7 @@ commands:
 	| TK_PR_OUTPUT output_list
 		{
 			/* 3.A.7 */
-			comp_tree_t *output = iks_ast_new_node(IKS_AST_OUTPUT,NULL);
+			iks_tree_t *output = iks_ast_new_node(IKS_AST_OUTPUT,NULL);
 			iks_ast_connect_nodes(output,$2);
 			$$ = output;
 		}
@@ -426,13 +426,13 @@ commands:
 			/* 3.A.6 */
 			iks_ast_node_value_t *exprn;
 			exprn = $2->item;
-			comp_grammar_symbol_t *exprs;
+			iks_grammar_symbol_t *exprs;
 			exprs = exprn->symbol;
 
 			if(exprn->type != IKS_AST_IDENTIFICADOR) {
 				return iks_error(exprs,IKS_ERROR_WRONG_PAR_INPUT);
 			} else {
-				comp_tree_t *input = iks_ast_new_node(IKS_AST_INPUT,NULL);
+				iks_tree_t *input = iks_ast_new_node(IKS_AST_INPUT,NULL);
 				iks_ast_connect_nodes(input,$2);
 				$$ = input;
 			}
@@ -441,12 +441,12 @@ commands:
 		{
 			iks_ast_node_value_t *exprn;
 			exprn = $2->item;
-			comp_grammar_symbol_t *exprs;
+			iks_grammar_symbol_t *exprs;
 			exprs = exprn->symbol;
 
 			iks_ast_node_value_t *fn;
 			fn = ptr_function->item;
-			comp_grammar_symbol_t *fs;
+			iks_grammar_symbol_t *fs;
 			fs = fn->symbol;
 			
 			if(exprn->iks_type != fn->iks_type) {
@@ -458,7 +458,7 @@ commands:
 			}
 
 			/* 3.A.9 */
-			comp_tree_t *ret = iks_ast_new_node(IKS_AST_RETURN,NULL);
+			iks_tree_t *ret = iks_ast_new_node(IKS_AST_RETURN,NULL);
 			iks_ast_connect_nodes(ret,$2);
 			$$ = ret;
 		}
@@ -467,10 +467,10 @@ commands:
 id:
 		TK_IDENTIFICADOR
 		{
-			comp_grammar_symbol_t *s;
+			iks_grammar_symbol_t *s;
 			s = search_symbol_global($1,scope->st);
 			if (s) {
-				comp_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,s);
+				iks_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,s);
 				iks_ast_node_value_t *idn = identificador->item;
 				idn->iks_type = s->iks_type;
 				$$ = identificador;
@@ -485,7 +485,7 @@ idv:
 		id '[' expr ']'
 		{
 			// []
-			comp_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
+			iks_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
 			int type = infer_type($1, $3);
 			if(type > 5) //erro de coerção
 				return type;
@@ -503,7 +503,7 @@ output_list:
 		{
 			iks_ast_node_value_t *exprn;
 			exprn = $1->item;
-			comp_grammar_symbol_t *exprs;
+			iks_grammar_symbol_t *exprs;
 			exprs = exprn->symbol;
 
 			switch(exprn->type)
@@ -540,7 +540,7 @@ output_list:
 		{
 			iks_ast_node_value_t *exprn;
 			exprn = $1->item;
-			comp_grammar_symbol_t *exprs;
+			iks_grammar_symbol_t *exprs;
 			exprs = exprn->symbol;
 
 			switch(exprn->type)
@@ -583,7 +583,7 @@ expr:
 		{
 			iks_ast_node_value_t *n;
 			n = $1->item; 
-			comp_grammar_symbol_t *s;
+			iks_grammar_symbol_t *s;
 			s = n->symbol;
 			if(!symbol_is_decl_type(s,IKS_DECL_VAR)) {
 				return iks_error(s,IKS_ERROR_USE);
@@ -594,10 +594,10 @@ expr:
 			// []
 			iks_ast_node_value_t *n;
 			n = $1->item; 
-			comp_grammar_symbol_t *s;
+			iks_grammar_symbol_t *s;
 			s = n->symbol;
 			if(symbol_is_decl_type(s,IKS_DECL_VECTOR)) {
-				comp_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
+				iks_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
 				int type = infer_type($1, $3);
 				if(type > 5) //erro de coerção
 					return type;
@@ -618,7 +618,7 @@ expr:
 	| expr '+' expr
 		{
 			/* 3.A.12 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SOMA,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SOMA,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
@@ -633,7 +633,7 @@ expr:
 	| expr '-' expr
 		{
 			/* 3.A.12 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SUBTRACAO,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SUBTRACAO,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
@@ -648,7 +648,7 @@ expr:
 	| expr '*' expr
 		{
 			/* 3.A.12 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_MULTIPLICACAO,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_MULTIPLICACAO,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
@@ -663,7 +663,7 @@ expr:
 	| expr '/' expr
 		{
 			/* 3.A.12 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_DIVISAO,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_DIVISAO,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
@@ -678,7 +678,7 @@ expr:
 	| expr '<' expr
 		{
 			/* 3.A.14 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_L,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_L,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
@@ -693,7 +693,7 @@ expr:
 	| expr '>' expr
 		{
 			/* 3.A.14 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_G,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_G,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
@@ -708,7 +708,7 @@ expr:
 	| '!' expr
 		{
 			/* 3.A.15 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_NEGACAO,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_NEGACAO,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			oon->iks_type = IKS_BOOL;
 			iks_ast_connect_nodes(oo,$2);
@@ -717,7 +717,7 @@ expr:
 	| '-' expr %prec INVERSAO
 		{
 			/* 3.A.15 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_INVERSAO,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_INVERSAO,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *exprn = $2->item;
 			oon->iks_type = exprn->iks_type;
@@ -727,7 +727,7 @@ expr:
 	| expr TK_OC_LE expr
 		{
 			/* 3.A.14 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_LE,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_LE,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			oon->iks_type = IKS_BOOL;
 			iks_ast_connect_nodes(oo,$1);
@@ -737,7 +737,7 @@ expr:
 	| expr TK_OC_GE expr
 		{
 			/* 3.A.14 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_GE,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_GE,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			oon->iks_type = IKS_BOOL;
 			iks_ast_connect_nodes(oo,$1);
@@ -747,7 +747,7 @@ expr:
 	| expr TK_OC_EQ expr
 		{
 			/* 3.A.14 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_IGUAL,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_IGUAL,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			oon->iks_type = IKS_BOOL;
 			iks_ast_connect_nodes(oo,$1);
@@ -757,7 +757,7 @@ expr:
 	| expr TK_OC_NE expr
 		{
 			/* 3.A.14 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_DIF,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_DIF,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			oon->iks_type = IKS_BOOL;
 			iks_ast_connect_nodes(oo,$1);
@@ -767,7 +767,7 @@ expr:
 	| expr TK_OC_AND expr
 		{
 			/* 3.A.14 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_E,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_E,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			oon->iks_type = IKS_BOOL;
 			iks_ast_connect_nodes(oo,$1);
@@ -777,7 +777,7 @@ expr:
 	| expr TK_OC_OR expr
 		{
 			/* 3.A.14 */
-			comp_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_OU,NULL);
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_OU,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			oon->iks_type = IKS_BOOL;
 			iks_ast_connect_nodes(oo,$1);
@@ -791,11 +791,11 @@ func_call:
 		id {
 			iks_ast_node_value_t *n;
 			n = $1->item; 
-			comp_grammar_symbol_t *s;
+			iks_grammar_symbol_t *s;
 			s = n->symbol;
 			/* 3.A.17 */
 			if(symbol_is_decl_type(s,IKS_DECL_FUNCTION)) {
-				comp_tree_t *x = iks_ast_new_node(IKS_AST_CHAMADA_DE_FUNCAO,NULL);
+				iks_tree_t *x = iks_ast_new_node(IKS_AST_CHAMADA_DE_FUNCAO,NULL);
 				iks_ast_node_value_t *xn = x->item;
 				xn->iks_type = n->iks_type;
 				iks_ast_connect_nodes(x,$1);
@@ -803,7 +803,7 @@ func_call:
 			} else {
 				return iks_error(s,IKS_ERROR_USE);
 			}
-			args = new_comp_list();
+			args = new_iks_list();
 			function_with_param=s;
 		} '(' func_param_list ')' {
 			// not so good, better if analyze during parser?
@@ -817,7 +817,7 @@ func_call:
 			} else {
 				return arg_analyze; //arg error
 			}
-			//comp_list_delete(args);
+			//iks_list_delete(args);
 		}
 	;
 
@@ -826,7 +826,7 @@ terminal_value:
 		TK_LIT_INT
 		{
 			$1->iks_type=IKS_INT;
-			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
 			iks_ast_node_value_t *litn = lit->item;
 			litn->iks_type = $1->iks_type;
 			$$ = lit;
@@ -834,7 +834,7 @@ terminal_value:
 	| TK_LIT_FLOAT
 		{
 			$1->iks_type=IKS_FLOAT;
-			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
 			iks_ast_node_value_t *litn = lit->item;
 			litn->iks_type = $1->iks_type;
 			$$ = lit;
@@ -845,9 +845,9 @@ terminal_value:
 			iks_ast_node_value_t *v1;
 			v1 = new_iks_ast_node_value();
 			iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
-			comp_tree_t *lit;
-			lit = new_comp_tree();
-			comp_tree_set_item(lit,(void*)v1);
+			iks_tree_t *lit;
+			lit = new_iks_tree();
+			iks_tree_set_item(lit,(void*)v1);
 			iks_ast_node_value_t *litn = lit->item;
 			litn->iks_type = $1->iks_type;
 			gv_declare(IKS_AST_LITERAL,lit,"false");
@@ -859,9 +859,9 @@ terminal_value:
 			iks_ast_node_value_t *v1;
 			v1 = new_iks_ast_node_value();
 			iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
-			comp_tree_t *lit;
-			lit = new_comp_tree();
-			comp_tree_set_item(lit,(void*)v1);
+			iks_tree_t *lit;
+			lit = new_iks_tree();
+			iks_tree_set_item(lit,(void*)v1);
 			iks_ast_node_value_t *litn = lit->item;
 			litn->iks_type = $1->iks_type;
 			gv_declare(IKS_AST_LITERAL,lit,"true");
@@ -870,7 +870,7 @@ terminal_value:
 	| TK_LIT_CHAR
 		{
 			$1->iks_type=IKS_CHAR;
-			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
 			iks_ast_node_value_t *litn = lit->item;
 			litn->iks_type = $1->iks_type;
 			$$ = lit;
@@ -878,7 +878,7 @@ terminal_value:
 	| TK_LIT_STRING
 		{
 			$1->iks_type=IKS_STRING;
-			comp_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
 			iks_ast_node_value_t *litn = lit->item;
 			litn->iks_type = $1->iks_type;
 			$$ = lit;
@@ -895,24 +895,24 @@ param_list:
 		{
 			iks_ast_node_value_t *n;
 			n = $1->item; 
-			comp_grammar_symbol_t *s;
+			iks_grammar_symbol_t *s;
 			s = n->symbol;
-			comp_list_t *l; 
-			l = new_comp_list();
-			comp_list_set_item(l,(void*)s);
-			comp_list_insert(args,l);
+			iks_list_t *l; 
+			l = new_iks_list();
+			iks_list_set_item(l,(void*)s);
+			iks_list_insert(args,l);
 		}
 	| expr ',' param_list
 		{
 			if ($3) { //because can command_seq <- command <- empty
 				iks_ast_node_value_t *n;
 				n = $1->item; 
-				comp_grammar_symbol_t *s;
+				iks_grammar_symbol_t *s;
 				s = n->symbol;
-				comp_list_t *l; 
-				l = new_comp_list();
-				comp_list_set_item(l,(void*)s);     
-				comp_list_insert(args,l);
+				iks_list_t *l; 
+				l = new_iks_list();
+				iks_list_set_item(l,(void*)s);     
+				iks_list_insert(args,l);
 				iks_ast_connect_nodes($1,$3);
 			}
 		}
@@ -923,7 +923,7 @@ ctrl_flow:
 		TK_PR_IF '(' expr ')' TK_PR_THEN commands
 		{
 			/* 3.A.3 */
-			comp_tree_t *if_else = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
+			iks_tree_t *if_else = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
 			iks_ast_connect_nodes(if_else,$3);
 			iks_ast_connect_nodes(if_else,$6);
 			$$ = if_else;
@@ -931,7 +931,7 @@ ctrl_flow:
 	| TK_PR_IF '(' expr ')' TK_PR_THEN commands TK_PR_ELSE commands
 		{
 			/* 3.A.3 */
-			comp_tree_t *if_else = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
+			iks_tree_t *if_else = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
 			iks_ast_connect_nodes(if_else,$3);
 			iks_ast_connect_nodes(if_else,$6);
 			iks_ast_connect_nodes(if_else,$8);
@@ -940,7 +940,7 @@ ctrl_flow:
 	| TK_PR_WHILE '(' expr ')' TK_PR_DO commands
 		{
 			/* 3.A.5 */
-			comp_tree_t *while_do = iks_ast_new_node(IKS_AST_WHILE_DO,NULL);
+			iks_tree_t *while_do = iks_ast_new_node(IKS_AST_WHILE_DO,NULL);
 			iks_ast_connect_nodes(while_do,$3);
 			iks_ast_connect_nodes(while_do,$6);
 			$$ = while_do;
@@ -948,7 +948,7 @@ ctrl_flow:
 	| TK_PR_DO commands TK_PR_WHILE '(' expr ')' 
 		{
 			/* 3.A.4 */
-			comp_tree_t *do_while = iks_ast_new_node(IKS_AST_DO_WHILE,NULL);
+			iks_tree_t *do_while = iks_ast_new_node(IKS_AST_DO_WHILE,NULL);
 			iks_ast_connect_nodes(do_while,$2);
 			iks_ast_connect_nodes(do_while,$5);
 			$$ = do_while;

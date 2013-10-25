@@ -11,13 +11,13 @@ ADD_EXECUTABLE(main
   ${FLEX_scanner_OUTPUTS}
   ${BISON_parser_OUTPUTS}
   src/main.c
-  src/gv.c
-  src/comp_dict.c
-  src/comp_list.c
-  src/comp_tree.c
-  src/comp_graph.c
-  src/comp_stack.c
-  src/comp_grammar.c
+  src/iks_gv.c
+  src/iks_dict.c
+  src/iks_list.c
+  src/iks_tree.c
+  src/iks_graph.c
+  src/iks_stack.c
+  src/iks_grammar.c
   src/iks_ast.c
   src/iks_types.c
   src/iks_iloc.c
@@ -26,13 +26,16 @@ TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})
 #ADD_EXECUTABLE(test
 #  ${FLEX_scanner_OUTPUTS}
 #  ${BISON_parser_OUTPUTS}
-#  src/tests/test.c
-#  src/comp_dict.c
-#  src/comp_list.c
-#  src/comp_tree.c
-#  src/comp_graph.c
-#  src/comp_grammar.c
+#  src/main.c
+#  src/iks_gv.c
+#  src/iks_dict.c
+#  src/iks_list.c
+#  src/iks_tree.c
+#  src/iks_graph.c
+#  src/iks_stack.c
+#  src/iks_grammar.c
 #  src/iks_ast.c
 #  src/iks_types.c
+#  src/iks_iloc.c
 #)
 #TARGET_LINK_LIBRARIES(test ${FLEX_LIBRARIES})

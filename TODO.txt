@@ -8,11 +8,11 @@ Last Update: 16-set-2013
 	current status: in Process
 ---------------------------------------------------------------------
 2. refatorar código e alterar nomenclatura de arquivos e funções
-	assigned to:
-	current status:
+	assigned to: Pedro
+	current status: done
 ---------------------------------------------------------------------
 3. etapa 5.1.1 - suporte para arranjos multidimensionais em IKS
-	assigned to: Arthur
+	assigned to: Artur
 	current status: in progress
 ---------------------------------------------------------------------
 4. etapa 5.1.2 - implementação de um estrutura de dados para ILOC
@@ -26,3 +26,4 @@ Last Update: 16-set-2013
 6. code generator
 	assigned to:
 	current status
+--------------------------------------------------------------------
