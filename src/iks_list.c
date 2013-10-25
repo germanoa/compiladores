@@ -1,29 +1,29 @@
-#include "comp_list.h"
+#include "iks_list.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-static inline void __comp_list_init(comp_list_t *list) {
+static inline void __iks_list_init(iks_list_t *list) {
 	list->item = NULL; 
     list->prev = list;
     list->next = list;
 }
 
-int comp_list_is_empty(comp_list_t *list) {
+int iks_list_is_empty(iks_list_t *list) {
 	if(list == NULL)
 		return 1;
     else return list == list->next;
 }
 
-comp_list_t *new_comp_list() {
-    comp_list_t *list;
-    list = malloc(sizeof(comp_list_t));
-    __comp_list_init(list);
+iks_list_t *new_iks_list() {
+    iks_list_t *list;
+    list = malloc(sizeof(iks_list_t));
+    __iks_list_init(list);
     return list;
 }
 
-void comp_list_delete(comp_list_t *list) {
-    if (!comp_list_is_empty(list)) {
-        comp_list_t *temp;
+void iks_list_delete(iks_list_t *list) {
+    if (!iks_list_is_empty(list)) {
+        iks_list_t *temp;
         temp = list->next;
         do {
             temp = temp->next;    
@@ -35,11 +35,11 @@ void comp_list_delete(comp_list_t *list) {
     list = NULL; /* http://stackoverflow.com/questions/1025589/setting-variable-to-null-after-free */
 }
 
-void comp_list_append(comp_list_t *list, comp_list_t *new_node) {
-    comp_list_t *node_to_append;
+void iks_list_append(iks_list_t *list, iks_list_t *new_node) {
+    iks_list_t *node_to_append;
     /* to append the same list any times we need a new one, but
        when active this, we cant find the list by reference, just by item value */
-    //node_to_append = new_comp_list();
+    //node_to_append = new_iks_list();
     //node_to_append->item = new_node->item;
 
     node_to_append = new_node;
@@ -50,10 +50,10 @@ void comp_list_append(comp_list_t *list, comp_list_t *new_node) {
     list->prev = node_to_append;
 }
 
-void comp_list_insert(comp_list_t *list, comp_list_t *new_node) {
-    comp_list_t *node_to_insert;
+void iks_list_insert(iks_list_t *list, iks_list_t *new_node) {
+    iks_list_t *node_to_insert;
     /* same as append */
-    //node_to_insert = new_comp_list();
+    //node_to_insert = new_iks_list();
     //node_to_insert->item = new_node->item;
 
     node_to_insert = new_node;
@@ -64,8 +64,8 @@ void comp_list_insert(comp_list_t *list, comp_list_t *new_node) {
     list->next = node_to_insert;
 }
 
-void comp_list_remove(comp_list_t *list, comp_list_t *node_to_remove) {
-    comp_list_t *temp;
+void iks_list_remove(iks_list_t *list, iks_list_t *node_to_remove) {
+    iks_list_t *temp;
     temp = list->next;
     while(temp != list) {
         if (temp == node_to_remove) {
@@ -77,22 +77,22 @@ void comp_list_remove(comp_list_t *list, comp_list_t *node_to_remove) {
     }
 }
 
-void comp_list_concat(comp_list_t *list1, comp_list_t *list2) {
+void iks_list_concat(iks_list_t *list1, iks_list_t *list2) {
     list1->prev->next = list2;
     list2->prev->next = list1;
-    comp_list_t *temp_list1_prev;
+    iks_list_t *temp_list1_prev;
     temp_list1_prev = list1->prev;
     list1->prev = list2->prev;
     list2->prev = temp_list1_prev;
 }
 
-void comp_list_set_item(comp_list_t *list, void *item) {
+void iks_list_set_item(iks_list_t *list, void *item) {
     //malloc not here because we dont know item size (void)
     list->item = item;
 }
 
-void comp_list_print(comp_list_t *list) {
-    comp_list_t *temp;
+void iks_list_print(iks_list_t *list) {
+    iks_list_t *temp;
     temp = list;
     do {
         printf("%d,",(int)temp->item);
@@ -101,9 +101,9 @@ void comp_list_print(comp_list_t *list) {
     printf("\n");
 }
 
-int comp_list_size(comp_list_t *list) {
+int iks_list_size(iks_list_t *list) {
   int ret=-1;
-  comp_list_t *temp;
+  iks_list_t *temp;
   temp = list;
   do {
       ret+=1;

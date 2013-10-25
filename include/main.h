@@ -6,12 +6,12 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 #include <stdio.h>
-#include "comp_dict.h"
-#include "comp_list.h"
-#include "comp_tree.h"
-#include "comp_graph.h"
+#include "iks_dict.h"
+#include "iks_list.h"
+#include "iks_tree.h"
+#include "iks_graph.h"
 #include "iks_ast.h"
-#include "gv.h"
+#include "iks_gv.h"
 
 /*
   Constantes a serem utilizadas como valor de retorno no caso de

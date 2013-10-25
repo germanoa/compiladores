@@ -1,5 +1,5 @@
 /**
-  gv.c
+  iks_gv.c
 
   As funções deste arquivo, se corretamente utilizadas, permitem a
   geração de um grafo no formato dot (graphviz). Ele imprime na saída
@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "iks_ast.h"
-#include "gv.h"
+#include "iks_gv.h"
 
 static FILE *fp = NULL;
 

@@ -1,9 +1,9 @@
 %{
 #include <string.h>
 #include <stdio.h>
-#include "comp_dict.h"
-#include "comp_tree.h"
-#include "comp_grammar.h"
+#include "iks_dict.h"
+#include "iks_tree.h"
+#include "iks_grammar.h"
 #include "parser.h"
 #include "iks_types.h"
 
@@ -13,7 +13,7 @@ extern YYSTYPE yylval;
 int line_number = 1;
 char *last_identifier;
 
-comp_grammar_symbol_t *push_to_symbol_table(int type) {
+iks_grammar_symbol_t *push_to_symbol_table(int type) {
     char *identifier;
     int deslocamento=0;
     int d2=0;
@@ -28,9 +28,9 @@ comp_grammar_symbol_t *push_to_symbol_table(int type) {
     identifier[yyleng-deslocamento-d2]=0; //string terminal
     last_identifier=identifier;
     
-    comp_grammar_symbol_t *symbol;
-    symbol = new_comp_grammar_symbol();
-    comp_grammar_symbol_set(symbol,type,line_number,identifier);
+    iks_grammar_symbol_t *symbol;
+    symbol = new_iks_grammar_symbol();
+    iks_grammar_symbol_set(symbol,type,line_number,identifier);
 
     /* symbol_table_append(identifier,symbol); - migrated to parser.y:decl*/
     return symbol;

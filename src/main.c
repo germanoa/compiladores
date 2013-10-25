@@ -5,14 +5,14 @@
 */
 
 #include <stdio.h>
-#include "comp_dict.h"
-#include "comp_list.h"
-#include "comp_tree.h"
-#include "comp_graph.h"
-#include "comp_grammar.h"
+#include "iks_dict.h"
+#include "iks_list.h"
+#include "iks_tree.h"
+#include "iks_graph.h"
+#include "iks_grammar.h"
 #include "iks_ast.h"
 #include "iks_types.h"
-#include "gv.h"
+#include "iks_gv.h"
 #include "main.h"
 
 void yyerror(char* str)
@@ -41,7 +41,7 @@ int main (int argc, char **argv)
   
   gv_close();
 
-  //symbol_table_print((comp_dict_t*)comp_stack_top(scope));
+  //symbol_table_print((iks_dict_t*)iks_stack_top(scope));
 
   return resultado;
 }

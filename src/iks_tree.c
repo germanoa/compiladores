@@ -1,36 +1,36 @@
-#include "comp_tree.h"
-#include "comp_list.h"
+#include "iks_tree.h"
+#include "iks_list.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "gv.h"
+#include "iks_gv.h"
 #include "iks_ast.h"
 
-static inline __comp_tree_init(comp_tree_t *tree) {
+static inline __iks_tree_init(iks_tree_t *tree) {
 	tree->item = NULL;
 	tree->children = NULL;
 }
 
-comp_tree_t *new_comp_tree() {
-    comp_tree_t *tree = NULL;
+iks_tree_t *new_iks_tree() {
+    iks_tree_t *tree = NULL;
     
-    tree = malloc(sizeof(comp_tree_t));
+    tree = malloc(sizeof(iks_tree_t));
     if(tree == NULL) {
     	fprintf(stderr, "ERROR: Allocation of new tree failed.\n");
     	return NULL;
     }
 
 
-    __comp_tree_init(tree);
+    __iks_tree_init(tree);
 
-    comp_list_t *l;
-    l = new_comp_list();
+    iks_list_t *l;
+    l = new_iks_list();
     tree->children = l;
 
     return tree;
 }
 
-void comp_tree_set_item(comp_tree_t *tree, void *item) {
+void iks_tree_set_item(iks_tree_t *tree, void *item) {
 	if(tree == NULL) {
 		fprintf(stderr, "ERROR: Cannot set item for null tree.\n");
 		return;
@@ -40,7 +40,7 @@ void comp_tree_set_item(comp_tree_t *tree, void *item) {
     x=tree->item;
 }
 
-void comp_tree_set_string(comp_tree_t *tree, const char *string) {
+void iks_tree_set_string(iks_tree_t *tree, const char *string) {
 	if(tree == NULL) {
 		fprintf(stderr, "ERROR: Cannot set string for null tree.\n");
 		return;
@@ -51,98 +51,98 @@ void comp_tree_set_string(comp_tree_t *tree, const char *string) {
 	tree->item = _string;
 }
 
-void comp_tree_depth_print_string(comp_tree_t *tree) {
+void iks_tree_depth_print_string(iks_tree_t *tree) {
 	// uses auxiliary function to print entire tree in a single line
 	// using recursion, but still printing a newline at the end
-	void __aux_comp_tree_depth_print_string(comp_tree_t *_tree) {
+	void __aux_iks_tree_depth_print_string(iks_tree_t *_tree) {
 		if(_tree == NULL)
 			return;
 			
 		printf("%s ", (char*)_tree->item);
 		
 		if(_tree->children != NULL) { // has children to print
-			comp_list_t *childList = _tree->children;
-			comp_tree_t *child = NULL;
+			iks_list_t *childList = _tree->children;
+			iks_tree_t *child = NULL;
 			
 			do { // runs through every child and calls recursion
 				child = childList->item;
 				
 				if(child == NULL)
 					fprintf(stderr, "WARNING: Tried to print child with no content. ");
-				else __aux_comp_tree_depth_print_string(child);
+				else __aux_iks_tree_depth_print_string(child);
 				
 				childList = childList->next;
 			} while(childList != _tree->children);
 		}
 	}
 	
-	__aux_comp_tree_depth_print_string(tree);
+	__aux_iks_tree_depth_print_string(tree);
 	printf("\n");
 }	
 
-void comp_tree_append(comp_tree_t *parent, comp_tree_t *child) {
-    comp_list_t *t;
-    t = new_comp_list();
-    comp_list_set_item(t, (void*) child);
-    comp_list_append(parent->children,t);
+void iks_tree_append(iks_tree_t *parent, iks_tree_t *child) {
+    iks_list_t *t;
+    t = new_iks_list();
+    iks_list_set_item(t, (void*) child);
+    iks_list_append(parent->children,t);
 }
 
-void comp_tree_insert(comp_tree_t *parent, comp_tree_t *child) {
-    comp_list_t *t;
-    t = new_comp_list();
-    comp_list_set_item(t, (void*) child);
-    comp_list_insert(parent->children,t);
+void iks_tree_insert(iks_tree_t *parent, iks_tree_t *child) {
+    iks_list_t *t;
+    t = new_iks_list();
+    iks_list_set_item(t, (void*) child);
+    iks_list_insert(parent->children,t);
 }
 
-int comp_tree_create_child(comp_tree_t *tree) {
+int iks_tree_create_child(iks_tree_t *tree) {
 	if(tree == NULL) {
 		fprintf(stderr, "ERROR: Cannot create child for null tree.\n");
 		return 0;
 	}
 	
 	if(tree->children == NULL) {
-		tree->children = new_comp_list();
+		tree->children = new_iks_list();
 		if(tree->children == NULL) {
 			fprintf(stderr, "ERROR: Error creating list entry for child.\n");
 			return 0;
 		}
 		
-		tree->children->item = new_comp_tree();
+		tree->children->item = new_iks_tree();
 		if(tree->children->item == NULL) {
 			fprintf(stderr, "ERROR: Error creating child.\n");
 			return 0;
 		}
 	}
 	else { // tree already has children
-		comp_list_t *child = new_comp_list();
+		iks_list_t *child = new_iks_list();
 		if(child == NULL) {
 			fprintf(stderr, "ERROR: Error creating list entry for child.\n");
 			return 0;
 		}
 		
-		child->item = new_comp_tree();
+		child->item = new_iks_tree();
 		if(child->item == NULL) {
 			fprintf(stderr, "ERROR: Error creating child.\n");
 			return 0;
 		}
 		
-		comp_list_append(tree->children, child);
+		iks_list_append(tree->children, child);
 	}
 	
 	return 1;
 }
 
-void comp_tree_create_child_with_item(comp_tree_t *tree, void *item) {
-	if(comp_tree_create_child(tree))
-		comp_tree_set_item(tree->children->prev->item, item);
+void iks_tree_create_child_with_item(iks_tree_t *tree, void *item) {
+	if(iks_tree_create_child(tree))
+		iks_tree_set_item(tree->children->prev->item, item);
 }
 
-void comp_tree_create_child_with_string(comp_tree_t *tree, const char *string) {
-	if(comp_tree_create_child(tree))
-		comp_tree_set_string(tree->children->prev->item, string);
+void iks_tree_create_child_with_string(iks_tree_t *tree, const char *string) {
+	if(iks_tree_create_child(tree))
+		iks_tree_set_string(tree->children->prev->item, string);
 }
 
-int comp_tree_remove(comp_tree_t *tree, comp_tree_t *child) {
+int iks_tree_remove(iks_tree_t *tree, iks_tree_t *child) {
 	if(tree == NULL)
 		return 0;
 	
@@ -154,7 +154,7 @@ int comp_tree_remove(comp_tree_t *tree, comp_tree_t *child) {
 	if(tree->children == NULL)
 		return 0;
 	
-	comp_list_t *childList = tree->children;
+	iks_list_t *childList = tree->children;
 	
 	do { // checks if tree is father
 		childList = childList->next;
@@ -166,7 +166,7 @@ int comp_tree_remove(comp_tree_t *tree, comp_tree_t *child) {
 		
 		do { // tries to find father in tree's children
 			childList = childList->next;
-			found = comp_tree_remove(childList->item, child);
+			found = iks_tree_remove(childList->item, child);
 		} while(!found && childList != tree->children);
 		
 		if(!found) {
@@ -176,8 +176,8 @@ int comp_tree_remove(comp_tree_t *tree, comp_tree_t *child) {
 		else return 1;
 	}
 	else { // found father
-		comp_list_concat(tree->children, child->children);
-		comp_list_remove(tree->children, childList);
+		iks_list_concat(tree->children, child->children);
+		iks_list_remove(tree->children, childList);
 		
 		free(child);
 		child == NULL;
@@ -185,17 +185,17 @@ int comp_tree_remove(comp_tree_t *tree, comp_tree_t *child) {
 }
 	
 
-void comp_tree_delete(comp_tree_t *tree) {
+void iks_tree_delete(iks_tree_t *tree) {
 	if(tree->children != NULL) {
-		comp_list_t *childList = tree->children;
+		iks_list_t *childList = tree->children;
 	
 		do { // runs through every child
 			childList = childList->next;
-			comp_tree_delete(childList->item);
+			iks_tree_delete(childList->item);
 		} while(childList != tree->children);
 	}
 	
-	comp_list_delete(tree->children);
+	iks_list_delete(tree->children);
 	
     free(tree);
     tree = NULL;

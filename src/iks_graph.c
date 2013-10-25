@@ -1,30 +1,30 @@
-#include "comp_graph.h"
+#include "iks_graph.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-static inline void __comp_graph_init(comp_graph_t *graph) {
+static inline void __iks_graph_init(iks_graph_t *graph) {
 	graph->value = NULL; 
-	graph->edges = new_comp_list(); 
+	graph->edges = new_iks_list(); 
     graph->prev = graph;
     graph->next = graph;
 }
 
-inline int comp_graph_is_empty(comp_graph_t *graph) {
+inline int iks_graph_is_empty(iks_graph_t *graph) {
 	if(graph == NULL)
 		return 1;
     else return graph == graph->next;
 }
 
-comp_graph_t *new_comp_graph() {
-    comp_graph_t *graph;
-    graph = malloc(sizeof(comp_graph_t));
-    __comp_graph_init(graph);
+iks_graph_t *new_iks_graph() {
+    iks_graph_t *graph;
+    graph = malloc(sizeof(iks_graph_t));
+    __iks_graph_init(graph);
     return graph;
 }
 
-void comp_graph_delete(comp_graph_t *graph) {
-    if (!comp_graph_is_empty(graph)) {
-        comp_graph_t *temp;
+void iks_graph_delete(iks_graph_t *graph) {
+    if (!iks_graph_is_empty(graph)) {
+        iks_graph_t *temp;
         temp = graph->next;
         do {
             temp = temp->next;    
@@ -36,11 +36,11 @@ void comp_graph_delete(comp_graph_t *graph) {
     graph = NULL; /* http://stackoverflow.com/questions/1025589/setting-variable-to-null-after-free */
 }
 
-void comp_graph_append(comp_graph_t *graph, comp_graph_t *new_vertex) {
-    comp_graph_t *vertex_to_append;
+void iks_graph_append(iks_graph_t *graph, iks_graph_t *new_vertex) {
+    iks_graph_t *vertex_to_append;
     /* to append the same graph any times we need a new one, but
        when active this, we cant find the graph by reference, just by value value */
-    //vertex_to_append = new_comp_graph();
+    //vertex_to_append = new_iks_graph();
     //vertex_to_append->value = new_vertex->value;
 
     vertex_to_append = new_vertex;
@@ -51,10 +51,10 @@ void comp_graph_append(comp_graph_t *graph, comp_graph_t *new_vertex) {
     graph->prev = vertex_to_append;
 }
 
-void comp_graph_insert(comp_graph_t *graph, comp_graph_t *new_vertex) {
-    comp_graph_t *vertex_to_insert;
+void iks_graph_insert(iks_graph_t *graph, iks_graph_t *new_vertex) {
+    iks_graph_t *vertex_to_insert;
     /* same as append */
-    //vertex_to_insert = new_comp_graph();
+    //vertex_to_insert = new_iks_graph();
     //vertex_to_insert->value = new_vertex->value;
 
     vertex_to_insert = new_vertex;
@@ -65,8 +65,8 @@ void comp_graph_insert(comp_graph_t *graph, comp_graph_t *new_vertex) {
     graph->next = vertex_to_insert;
 }
 
-void comp_graph_remove(comp_graph_t *graph, comp_graph_t *vertex_to_remove) {
-    comp_graph_t *temp;
+void iks_graph_remove(iks_graph_t *graph, iks_graph_t *vertex_to_remove) {
+    iks_graph_t *temp;
     temp = graph->next;
     while(temp != graph) {
         if (temp == vertex_to_remove) {
@@ -78,17 +78,17 @@ void comp_graph_remove(comp_graph_t *graph, comp_graph_t *vertex_to_remove) {
     }
 }
 
-void comp_graph_concat(comp_graph_t *graph1, comp_graph_t *graph2) {
+void iks_graph_concat(iks_graph_t *graph1, iks_graph_t *graph2) {
     graph1->prev->next = graph2;
     graph2->prev->next = graph1;
-    comp_graph_t *temp_graph1_prev;
+    iks_graph_t *temp_graph1_prev;
     temp_graph1_prev = graph1->prev;
     graph1->prev = graph2->prev;
     graph2->prev = temp_graph1_prev;
 }
 
-void comp_graph_print(comp_graph_t *graph) {
-    comp_graph_t *temp;
+void iks_graph_print(iks_graph_t *graph) {
+    iks_graph_t *temp;
     temp = graph;
     do {
         printf("%d,",(int)temp->value);
@@ -97,19 +97,19 @@ void comp_graph_print(comp_graph_t *graph) {
     printf("\n");
 }
 
-static inline void __comp_graph_edge_init(comp_graph_edge_t *graph_edge) {
+static inline void __iks_graph_edge_init(iks_graph_edge_t *graph_edge) {
     graph_edge->src_vertex = NULL;
     graph_edge->dst_vertex = NULL;
 }
 
-comp_graph_edge_t *new_comp_graph_edge() {
-    comp_graph_edge_t *graph_edge;
-    graph_edge = malloc(sizeof(comp_graph_edge_t));
-    __comp_graph_edge_init(graph_edge);
+iks_graph_edge_t *new_iks_graph_edge() {
+    iks_graph_edge_t *graph_edge;
+    graph_edge = malloc(sizeof(iks_graph_edge_t));
+    __iks_graph_edge_init(graph_edge);
     return graph_edge;
 }
 
-void comp_graph_edge_delete(comp_graph_edge_t *graph_edge) {
+void iks_graph_edge_delete(iks_graph_edge_t *graph_edge) {
     /*
     * disable because we defined that deleting a edge we dont delete respective vertex's.
     free(graph_edge->src_vertex);
@@ -121,29 +121,29 @@ void comp_graph_edge_delete(comp_graph_edge_t *graph_edge) {
     graph_edge = NULL;
 }
 
-comp_graph_t *graph_edge_src_vertex_get(comp_graph_edge_t *graph_edge) {
+iks_graph_t *graph_edge_src_vertex_get(iks_graph_edge_t *graph_edge) {
     return graph_edge->src_vertex;
 }
 
-comp_graph_t *graph_edge_dst_vertex_get(comp_graph_edge_t *graph_edge) {
+iks_graph_t *graph_edge_dst_vertex_get(iks_graph_edge_t *graph_edge) {
     return graph_edge->dst_vertex;
 }
 
-int comp_graph_edge_set(comp_graph_edge_t *graph_edge, comp_graph_t *src_vertex, comp_graph_t *dst_vertex) {
+int iks_graph_edge_set(iks_graph_edge_t *graph_edge, iks_graph_t *src_vertex, iks_graph_t *dst_vertex) {
     int ret = 1;
-    graph_edge->src_vertex = malloc(sizeof(comp_graph_edge_t));
+    graph_edge->src_vertex = malloc(sizeof(iks_graph_edge_t));
     graph_edge->src_vertex = src_vertex;
-    graph_edge->dst_vertex = malloc(sizeof(comp_graph_edge_t));
+    graph_edge->dst_vertex = malloc(sizeof(iks_graph_edge_t));
     graph_edge->dst_vertex = dst_vertex;
-    comp_list_t *e;
-    e = new_comp_list();
-    comp_list_set_item(e, (void *)graph_edge);
-    comp_list_append(src_vertex->edges,e);
-    comp_list_append(dst_vertex->edges,e);
+    iks_list_t *e;
+    e = new_iks_list();
+    iks_list_set_item(e, (void *)graph_edge);
+    iks_list_append(src_vertex->edges,e);
+    iks_list_append(dst_vertex->edges,e);
     return ret;
 }
 
-void comp_graph_edge_print(comp_graph_edge_t *graph_edge) {
+void iks_graph_edge_print(iks_graph_edge_t *graph_edge) {
     printf("%X -> %X\n",graph_edge->src_vertex,graph_edge->dst_vertex);
 }
 
