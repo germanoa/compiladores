@@ -69,7 +69,7 @@ DECLARATIONS
 %start p
 
 %type<symbol> decl
-%type<list> array_dimen
+%type<list> array_decl_dimen
 %type<nt> prog
 %type<nt> func
 %type<nt> command_block 
@@ -161,13 +161,13 @@ global_decl:
 array_decl:
 		decl {
 			dimen_counter = 0;
-		} array_dimen {
-			update_vector_symbol($decl,dimen_counter,$array_dimen);
+		} array_decl_dimen {
+			update_vector_symbol($decl,dimen_counter,$array_decl_dimen);
 		}
 	;
 
-array_dimen:
-		array_dimen '[' TK_LIT_INT ']'
+array_decl_dimen:
+		array_decl_dimen '[' TK_LIT_INT ']'
 		{
 			comp_list_t *list = $1;
 			comp_grammar_symbol_t *lit = $3;
@@ -399,8 +399,6 @@ commands:
 					int coercion=verify_coercion(id_tree,e);
 					if (coercion) { //if coercion is invalid
 						return coercion;
-					} else { //attribute id type to attribution
-						
 					}
 				}
 			}
@@ -484,17 +482,33 @@ id:
 idv:
 		id '[' expr ']'
 		{
-			// []
-			comp_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
-			int type = infer_type($1, $3);
-			if(type > 5) //erro de coerção
-				return type;
-			iks_ast_node_value_t *vetsn = vets->item;
-			iks_ast_node_value_t *idn = $1->item;
-			vetsn->iks_type = idn->iks_type;
-			iks_ast_connect_nodes(vets,$1);
-			iks_ast_connect_nodes(vets,$3);
-			$$ = vets;
+			iks_ast_node_value_t *idn;
+			idn = $id->item; 
+			comp_grammar_symbol_t *ids;
+			ids = idn->symbol;
+			
+			if(symbol_is_decl_type(ids,IKS_DECL_VECTOR)) {
+				comp_tree_t *vet = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
+				
+				comp_tree_t *int_tree = iks_ast_new_node(IKS_AST_INDEFINIDO,NULL); //temporary tree so infer_type can infer between IKS_INT and expr
+				iks_ast_node_value_t *int_treen = int_tree->item;
+				int_treen->iks_type = IKS_INT; //index of vector should be an integer
+				
+				int type = infer_type(int_tree, $expr); //checks if the type of expr can be inferred to int
+				if(type > 5) //coercion error
+					return type;
+				iks_ast_node_value_t *vetn = vet->item;
+				vetn->iks_type = idn->iks_type; //type of this ast node is that of the id
+				
+				iks_ast_node_value_delete(int_treen); //removing temporary tree
+				comp_tree_delete(int_tree);
+				
+				iks_ast_connect_nodes(vet,$id);
+				iks_ast_connect_nodes(vet,$expr);
+				$$ = vet;
+			} else { //using wrong identificador. id is not a vector
+				return iks_error(ids,IKS_ERROR_USE);
+			}
 		}
 	;
 
@@ -589,26 +603,9 @@ expr:
 				return iks_error(s,IKS_ERROR_USE);
 			}
 		}
-	| id '[' expr ']'
+	| idv
 		{
-			// []
-			iks_ast_node_value_t *n;
-			n = $1->item; 
-			comp_grammar_symbol_t *s;
-			s = n->symbol;
-			if(symbol_is_decl_type(s,IKS_DECL_VECTOR)) {
-				comp_tree_t *vets = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
-				int type = infer_type($1, $3);
-				if(type > 5) //erro de coerção
-					return type;
-				iks_ast_node_value_t *vetsn = vets->item;
-				vetsn->iks_type = n->iks_type;
-				iks_ast_connect_nodes(vets,$1);
-				iks_ast_connect_nodes(vets,$3);
-				$$ = vets;
-			} else {
-				return iks_error(s,IKS_ERROR_USE);
-			}
+			$$ = $idv;
 		}
 	| terminal_value
 	| '(' expr ')'

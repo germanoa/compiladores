@@ -112,35 +112,35 @@ int symbol_is_iks_type(comp_grammar_symbol_t *s,int iks_type) {
   return ret;
 }
 
-int infer_type(comp_tree_t *type1, comp_tree_t *type2) {
-	iks_ast_node_value_t *type1n = type1->item;
-	iks_ast_node_value_t *type2n = type2->item;
+int infer_type(comp_tree_t *tree1, comp_tree_t *tree2) {
+	iks_ast_node_value_t *tree1n = tree1->item;
+	iks_ast_node_value_t *tree2n = tree2->item;
 	
-	if(type1n->iks_type == type2n->iks_type)
-		return type1n->iks_type;
+	if(tree1n->iks_type == tree2n->iks_type)
+		return tree1n->iks_type;
 		
-	if(type1n->iks_type == IKS_FLOAT) {
-		int coercion = verify_coercion(type1, type2);
+	if(tree1n->iks_type == IKS_FLOAT) {
+		int coercion = verify_coercion(tree1, tree2);
 		if(coercion)
 			return coercion;
 		
 		return IKS_FLOAT;
-	} else if(type2n->iks_type == IKS_FLOAT) {
-		int coercion = verify_coercion(type2, type1);
+	} else if(tree2n->iks_type == IKS_FLOAT) {
+		int coercion = verify_coercion(tree2, tree1);
 		if(coercion)
 			return coercion;
 		
 		return IKS_FLOAT;
 	}
 	
-	if(type1n->iks_type == IKS_INT) {
-		int coercion = verify_coercion(type1, type2);
+	if(tree1n->iks_type == IKS_INT) {
+		int coercion = verify_coercion(tree1, tree2);
 		if(coercion)
 			return coercion;
 		
 		return IKS_INT;
-	} else if(type2n->iks_type == IKS_INT) {
-		int coercion = verify_coercion(type2, type1);
+	} else if(tree2n->iks_type == IKS_INT) {
+		int coercion = verify_coercion(tree2, tree1);
 		if(coercion)
 			return coercion;
 		
