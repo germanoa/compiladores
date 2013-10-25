@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "gv.h"
+#include "iks_gv.h"
 #include "iks_ast.h"
 
 static inline __iks_tree_init(iks_tree_t *tree) {
