@@ -30,15 +30,15 @@ Last Update: oct-25-2013
 
 6. code generator - Expressões aritméticas, lógicas e unárias
 	assigned to: Pedro
-	current status: not started
+	current status: 
 --------------------------------------------------------------------
 
 7. code generator - condicionais
 	assigned to: Germano
-	current status: not started
+	current status:
 --------------------------------------------------------------------
 
-8. code generator - condicionais
+8. code generator -
 	assigned to: Artur
-	current status: not started
+	current status:
 --------------------------------------------------------------------
