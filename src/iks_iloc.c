@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include "iks_iloc.h"
 #include "iks_ast.h"
-#include "comp_tree.h"
+#include "iks_tree.h"
 
 
-void code_generator(comp_tree_t *ast) {
+void code_generator(iks_tree_t *ast) {
 	iks_ast_node_value_t *n;
 	n = ast->item;
 	switch(n->type) {
