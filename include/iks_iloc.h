@@ -7,6 +7,7 @@
 #include "iks_list.h"
 #include "iks_tree.h"
 
+
 iks_list_t *program_iloc; //list->item: iloc_t
 
 typedef struct iloc_t iloc_t;
@@ -43,12 +44,73 @@ struct iloc_oper_t {
 	iks_list_t *dst_opers; //list->item: operands
 };
 
-/**
+
+/* 
+ * Register struct management
+ */
+typedef struct iloc_reg iloc_reg_t;
+struct iloc_reg{
+	char *id;
+	void *content;
+};
+
+typedef struct iloc_reg_node iloc_reg_node_t;
+struct iloc_reg_node{
+	iloc_reg_t reg;
+	iloc_reg_node *left;
+	iloc_reg_node *right;
+};
+
+typedef struct iloc_reg_tree iloc_reg_tree_t;
+struct iloc_reg_tree{
+	iloc_reg_node_t *root;
+	int reg_ctrl;
+};
+
+/* 
+ * Label struct management 
+ */
+typedef struct iloc_label iloc_label_t;
+struct iloc_label{
+	char *id;
+	void *content;
+	int call_ctrl;
+};
+
+typedef struct iloc_label_node iloc_label_node_t;
+struct iloc_label_node{
+	iloc_label_t label;
+	iloc_label_node *left;
+	iloc_label_node *right;
+};
+
+typedef struct iloc_label_node iloc_label_tree_t;
+struct iloc_tree_label{
+	iloc_label_node_t *root;
+};
+
+
+/*
+ * generate a new label
+ */
+char* label_generator();
+
+/*
+ * generate a new register
+ */
+char* register_generator();
+
+/*
  * verify if label is valid
  */
 int label_is_valid(char *label);
 
-/**
+/*
+ * verify if register is valid
+ */
+int register_is_valid(char *label);
+
+/*
  * iloc code generator
  */
 void code_generator(iks_tree_t *ast);
