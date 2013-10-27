@@ -9,6 +9,7 @@
 
 #define LABEL_WIDTH 32
 #define REGISTER_WIDTH 32
+
 int register_ctrl = 0;
 int label_ctrl = 0;
 
@@ -46,51 +47,6 @@ struct iloc_oper_t {
 	opcode_t opcode;
 	iks_list_t *src_opers; //list->item: operands
 	iks_list_t *dst_opers; //list->item: operands
-};
-
-
-/* 
- * Register struct management
- */
-typedef struct iloc_reg_t iloc_reg_t;
-struct iloc_reg_t{
-	char *id;
-	void *content;
-};
-
-typedef struct iloc_reg_node_t iloc_reg_node_t;
-struct iloc_reg_node_t{
-	iloc_reg_t reg;
-	iloc_reg_node_t *left;
-	iloc_reg_node_t *right;
-};
-
-typedef struct iloc_reg_tree_t iloc_reg_tree_t;
-struct iloc_reg_tree_t{
-	iloc_reg_node_t *root;
-	int reg_ctrl;
-};
-
-/* 
- * Label struct management 
- */
-typedef struct iloc_label_t iloc_label_t;
-struct iloc_label_t{
-	char *id;
-	void *content;
-	int call_ctrl;
-};
-
-typedef struct iloc_label_node_t iloc_label_node_t;
-struct iloc_label_node_t{
-	iloc_label_t label;
-	iloc_label_node_t *left;
-	iloc_label_node_t *right;
-};
-
-typedef struct iloc_label_node_t iloc_label_tree_t;
-struct iloc_tree_label_t{
-	iloc_label_node_t *root;
 };
 
 
