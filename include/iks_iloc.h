@@ -9,7 +9,7 @@
 
 #define LABEL_WIDTH 32
 #define REGISTER_WIDTH 32
-int reg_ctrl = 0;
+int register_ctrl = 0;
 int label_ctrl = 0;
 
 iks_list_t *program_iloc; //list->item: iloc_t
