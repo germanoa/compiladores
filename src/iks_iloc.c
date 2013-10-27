@@ -69,9 +69,38 @@ void code_generator(iks_tree_t **ast) {
 	}
 }
 
-char *label_generator() {
-	char *teste;
-	teste = malloc(2);
-	teste = "l0";
-	return teste;
+char *label_generator(){
+  char temp_label[LABEL_WIDTH];
+  char *prefix, *new_label;
+  
+  prefix = malloc (sizeof (char) * LABEL_WIDTH);
+  new_label = malloc (sizeof (char) * LABEL_WIDTH);
+
+  strcpy (prefix, "l");
+  sprintf(temp_label, "%d", label_ctrl); 
+  label_ctrl++;
+  
+  strcpy (new_label, temp_label);
+
+  new_label = strcat(prefix, new_label);
+
+  return new_label;
+}
+
+char *register_generator(){
+  char temp_register[REGISTER_WIDTH];
+  char *prefix, *new_register;
+  
+  prefix = malloc (sizeof (char) * REGISTER_WIDTH);
+  new_register = malloc (sizeof (char) * REGISTER_WIDTH);
+
+  strcpy (prefix, "r");
+  sprintf(temp_register, "%d", reg_ctrl); 
+  reg_ctrl++;
+
+  strcpy (new_register, temp_register);
+
+  new_register = strcat(prefix, new_register);
+
+  return new_register;
 }
