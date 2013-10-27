@@ -48,21 +48,21 @@ struct iloc_oper_t {
 /* 
  * Register struct management
  */
-typedef struct iloc_reg iloc_reg_t;
-struct iloc_reg{
+typedef struct iloc_reg_t iloc_reg_t;
+struct iloc_reg_t{
 	char *id;
 	void *content;
 };
 
-typedef struct iloc_reg_node iloc_reg_node_t;
-struct iloc_reg_node{
+typedef struct iloc_reg_node_t iloc_reg_node_t;
+struct iloc_reg_node_t{
 	iloc_reg_t reg;
-	iloc_reg_node *left;
-	iloc_reg_node *right;
+	iloc_reg_node_t *left;
+	iloc_reg_node_t *right;
 };
 
-typedef struct iloc_reg_tree iloc_reg_tree_t;
-struct iloc_reg_tree{
+typedef struct iloc_reg_tree_t iloc_reg_tree_t;
+struct iloc_reg_tree_t{
 	iloc_reg_node_t *root;
 	int reg_ctrl;
 };
@@ -70,22 +70,22 @@ struct iloc_reg_tree{
 /* 
  * Label struct management 
  */
-typedef struct iloc_label iloc_label_t;
-struct iloc_label{
+typedef struct iloc_label_t iloc_label_t;
+struct iloc_label_t{
 	char *id;
 	void *content;
 	int call_ctrl;
 };
 
-typedef struct iloc_label_node iloc_label_node_t;
-struct iloc_label_node{
+typedef struct iloc_label_node_t iloc_label_node_t;
+struct iloc_label_node_t{
 	iloc_label_t label;
-	iloc_label_node *left;
-	iloc_label_node *right;
+	iloc_label_node_t *left;
+	iloc_label_node_t *right;
 };
 
-typedef struct iloc_label_node iloc_label_tree_t;
-struct iloc_tree_label{
+typedef struct iloc_label_node_t iloc_label_tree_t;
+struct iloc_tree_label_t{
 	iloc_label_node_t *root;
 };
 
@@ -113,6 +113,6 @@ int register_is_valid(char *label);
 /*
  * iloc code generator
  */
-void code_generator(iks_tree_t *ast);
+void code_generator(iks_tree_t **ast);
 
 #endif /* __IKS_ILOC_H__ */

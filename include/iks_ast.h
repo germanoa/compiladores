@@ -43,6 +43,18 @@
 
 iks_tree_t *ast;
 
+typedef struct logic_reg logic_reg;
+struct logic_reg {
+	char *t; //label
+	char *f; //label
+};
+
+union reg_or_label {
+	char *name; //reg
+	char *next; //label
+	logic_reg b; //label
+};
+
 /**
  * AST node struct
  */
@@ -52,6 +64,8 @@ struct iks_ast_node_value_t {
     iks_grammar_symbol_t *symbol;
     int need_coercion;
     int iks_type;
+		union reg_or_label temp;
+		iks_list_t *code; //iloc
 };
 
 /**

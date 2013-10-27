@@ -13,6 +13,7 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 	#include "iks_ast.h"
 	#include "iks_types.h"
 	#include "iks_gv.h"
+	#include "iks_iloc.h"
 	//#include "iks_hash.h"
 
 	iks_tree_t *ptr_function;
@@ -80,6 +81,8 @@ DECLARATIONS
 %type<nt> ctrl_flow 
 %type<nt> output_list 
 %type<nt> expr 
+%type<nt> arim_expr 
+%type<nt> logic_expr 
 %type<nt> func_param_list
 %type<nt> param_list 
 %type<nt> terminal_value
@@ -614,7 +617,13 @@ expr:
 		{
 			$$ = $2;
 		}
-	| expr '+' expr
+	| func_call
+	| arim_expr
+	| logic_expr
+ ;
+
+arim_expr: 	
+	expr '+' expr
 		{
 			/* 3.A.12 */
 			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SOMA,NULL);
@@ -674,7 +683,20 @@ expr:
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
 		}
-	| expr '<' expr
+	| '-' expr %prec INVERSAO
+		{
+			/* 3.A.15 */
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_INVERSAO,NULL);
+			iks_ast_node_value_t *oon = oo->item;
+			iks_ast_node_value_t *exprn = $2->item;
+			oon->iks_type = exprn->iks_type;
+			iks_ast_connect_nodes(oo,$2);
+			$$ = oo;
+		}
+  ;
+
+logic_expr:
+	expr '<' expr
 		{
 			/* 3.A.14 */
 			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_L,NULL);
@@ -710,16 +732,6 @@ expr:
 			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_NEGACAO,NULL);
 			iks_ast_node_value_t *oon = oo->item;
 			oon->iks_type = IKS_BOOL;
-			iks_ast_connect_nodes(oo,$2);
-			$$ = oo;
-		}
-	| '-' expr %prec INVERSAO
-		{
-			/* 3.A.15 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_INVERSAO,NULL);
-			iks_ast_node_value_t *oon = oo->item;
-			iks_ast_node_value_t *exprn = $2->item;
-			oon->iks_type = exprn->iks_type;
 			iks_ast_connect_nodes(oo,$2);
 			$$ = oo;
 		}
@@ -783,7 +795,6 @@ expr:
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
 		}
-	| func_call
 	;
 
 func_call:
@@ -919,15 +930,16 @@ param_list:
 
 /* 2.6 */
 ctrl_flow:
-		TK_PR_IF '(' expr ')' TK_PR_THEN commands
+		TK_PR_IF '(' logic_expr ')' TK_PR_THEN commands
 		{
 			/* 3.A.3 */
-			iks_tree_t *if_else = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
-			iks_ast_connect_nodes(if_else,$3);
-			iks_ast_connect_nodes(if_else,$6);
-			$$ = if_else;
+			$<nt>0 = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
+			iks_ast_connect_nodes($<nt>0,$3);
+			iks_ast_connect_nodes($<nt>0,$6);
+			code_generator(&($<nt>0));
+			$$ = $<nt>0;
 		}
-	| TK_PR_IF '(' expr ')' TK_PR_THEN commands TK_PR_ELSE commands
+	| TK_PR_IF '(' logic_expr ')' TK_PR_THEN commands TK_PR_ELSE commands
 		{
 			/* 3.A.3 */
 			iks_tree_t *if_else = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
@@ -936,7 +948,7 @@ ctrl_flow:
 			iks_ast_connect_nodes(if_else,$8);
 			$$ = if_else;
 		}
-	| TK_PR_WHILE '(' expr ')' TK_PR_DO commands
+	| TK_PR_WHILE '(' logic_expr ')' TK_PR_DO commands
 		{
 			/* 3.A.5 */
 			iks_tree_t *while_do = iks_ast_new_node(IKS_AST_WHILE_DO,NULL);
@@ -944,7 +956,7 @@ ctrl_flow:
 			iks_ast_connect_nodes(while_do,$6);
 			$$ = while_do;
 		}
-	| TK_PR_DO commands TK_PR_WHILE '(' expr ')' 
+	| TK_PR_DO commands TK_PR_WHILE '(' logic_expr ')' 
 		{
 			/* 3.A.4 */
 			iks_tree_t *do_while = iks_ast_new_node(IKS_AST_DO_WHILE,NULL);
