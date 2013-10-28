@@ -32,11 +32,11 @@ void iks_list_delete(iks_list_t *list);
 /**
  * add node as the last in the list
  */
-void iks_list_append(iks_list_t *list, iks_list_t *new_node);
+void iks_list_append(iks_list_t *list, void *item);
 /**
  * add node as the first in the list
  */
-void iks_list_insert(iks_list_t *list, iks_list_t *new_node);
+void iks_list_insert(iks_list_t *list, void *item);
 /*
  * remove node
  */

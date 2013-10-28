@@ -135,11 +135,8 @@ int iks_graph_edge_set(iks_graph_edge_t *graph_edge, iks_graph_t *src_vertex, ik
     graph_edge->src_vertex = src_vertex;
     graph_edge->dst_vertex = malloc(sizeof(iks_graph_edge_t));
     graph_edge->dst_vertex = dst_vertex;
-    iks_list_t *e;
-    e = new_iks_list();
-    iks_list_set_item(e, (void *)graph_edge);
-    iks_list_append(src_vertex->edges,e);
-    iks_list_append(dst_vertex->edges,e);
+    iks_list_append(src_vertex->edges,(void*)graph_edge);
+    iks_list_append(dst_vertex->edges,(void*)graph_edge);
     return ret;
 }
 

@@ -36,6 +36,7 @@
 #define IKS_AST_LOGICO_COMP_NEGACAO 25 // !
 #define IKS_AST_VETOR_INDEXADO      26 // para var[exp] quando o índice exp é acessado no vetor var
 #define IKS_AST_CHAMADA_DE_FUNCAO   27
+#define IKS_AST_IF		              28
 #define IKS_AST_INDEFINIDO          -1
 
 #include "iks_tree.h"
@@ -43,16 +44,16 @@
 
 iks_tree_t *ast;
 
-typedef struct logic_reg logic_reg;
-struct logic_reg {
+typedef struct logic logic;
+struct logic {
 	char *t; //label
 	char *f; //label
 };
 
 union reg_or_label {
+	logic b; //label
 	char *name; //reg
 	char *next; //label
-	logic_reg b; //label
 };
 
 /**
@@ -64,8 +65,8 @@ struct iks_ast_node_value_t {
     iks_grammar_symbol_t *symbol;
     int need_coercion;
     int iks_type;
-		union reg_or_label temp;
 		iks_list_t *code; //iloc
+		union reg_or_label temp;
 };
 
 /**

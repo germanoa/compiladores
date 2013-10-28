@@ -218,10 +218,7 @@ int decl_symbol(iks_grammar_symbol_t *s,int iks_type, int decl_type, void *symbo
   if (!exist_symbol_local(s,s->symbol_table)) {
     symbol_table_append(s->value,s,s->symbol_table);
     if (function_with_param) {
-      iks_list_t *l;
-      l = new_iks_list();
-      iks_list_set_item(l,(void*)s);      
-      iks_list_append(function_with_param->params,l);
+      iks_list_append(function_with_param->params,(void*)s);
     }
   } else {
     ret=0;

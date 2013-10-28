@@ -9,6 +9,7 @@ static inline void __iks_ast_node_value_init(iks_ast_node_value_t *iks_ast_node_
     iks_ast_node_value->type = IKS_AST_INDEFINIDO;
     iks_ast_node_value->symbol = NULL;
     iks_ast_node_value->need_coercion = 0;
+		iks_ast_node_value->code = new_iks_list();
 }
 
 iks_ast_node_value_t *new_iks_ast_node_value() {
