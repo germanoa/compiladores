@@ -79,6 +79,7 @@ DECLARATIONS
 %type<nt> command 
 %type<nt> commands 
 %type<nt> ctrl_flow 
+%type<nt> else 
 %type<nt> output_list 
 %type<nt> expr 
 %type<nt> arim_expr 
@@ -118,6 +119,8 @@ http://www.gnu.org/software/bison/manual/bison.html#Rules
 
 p:
 		{
+			reg_ctrl = 0; //migrar para funcao de inicializacao
+			label_ctrl = 0; 
 			ptr_function=NULL;
 			ptr_function_call=NULL;
 			function_with_param=NULL;
@@ -929,22 +932,7 @@ param_list:
 
 /* 2.6 */
 ctrl_flow:
-		TK_PR_IF '(' logic_expr ')' TK_PR_THEN commands
-		{
-			$$ = iks_ast_new_node(IKS_AST_IF,NULL);
-			iks_ast_connect_nodes($$,$3);
-			iks_ast_connect_nodes($$,$6);
-			code_generator(&($$));
-		}
-	| TK_PR_IF '(' logic_expr ')' TK_PR_THEN commands TK_PR_ELSE commands
-		{
-			$$ = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
-			iks_ast_connect_nodes($$,$3);
-			iks_ast_connect_nodes($$,$6);
-			iks_ast_connect_nodes($$,$8);
-			code_generator(&($$));
-		}
-	| TK_PR_WHILE '(' logic_expr ')' TK_PR_DO commands
+	TK_PR_WHILE '(' logic_expr ')' TK_PR_DO commands
 		{
 			$$ = iks_ast_new_node(IKS_AST_WHILE_DO,NULL);
 			iks_ast_connect_nodes($$,$3);
@@ -956,7 +944,47 @@ ctrl_flow:
 			iks_ast_connect_nodes($$,$2);
 			iks_ast_connect_nodes($$,$5);
 		}
+	|	TK_PR_IF '(' 
+		{
+			//buffer to short circuit
+			$<nt>$ = iks_ast_new_node(0,NULL);
+			ast_set_temp(TEMP_BT,label_generator(),&($<nt>$));
+			ast_set_temp(TEMP_NEXT,label_generator(),&($<nt>0));
+			ast_set_temp(TEMP_BF,ast_get_temp(TEMP_NEXT,&($<nt>0)),&($<nt>$));
+				
+		}
+		logic_expr ')' TK_PR_THEN commands else
+		{
+
+		  //using and freeing buffer to short circuit
+			if(!$8) {
+				$$ = iks_ast_new_node(IKS_AST_IF,NULL);
+				iks_ast_connect_nodes($$,$4);
+				iks_ast_connect_nodes($$,$7);
+				ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>3)),&($4));
+				ast_set_temp(TEMP_BF,ast_get_temp(TEMP_BF,&($<nt>3)),&($4));
+			}
+			else {
+				$$ = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
+				iks_ast_connect_nodes($$,$4);
+				iks_ast_connect_nodes($$,$7);
+				iks_ast_connect_nodes($$,$8);
+				ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>3)),&($4));
+				ast_set_temp(TEMP_BF,label_generator(),&($4));
+			}
+			//CRIAR AST DELETE, pois TREE DELETE precisa ser customizada
+			//iks_ast_delete($<nt>4);
+			code_generator(&($$));
+		}
 	;
+
+else:
+	TK_PR_ELSE commands
+		{
+			$$ = $2;
+		}
+	| { $$ = NULL; }
+;
 
 %%
 

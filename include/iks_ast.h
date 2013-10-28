@@ -44,6 +44,11 @@
 
 iks_tree_t *ast;
 
+#define TEMP_NAME 0
+#define TEMP_NEXT 1
+#define TEMP_BT 2
+#define TEMP_BF 3
+
 typedef struct logic logic;
 struct logic {
 	char *t; //label
@@ -116,5 +121,10 @@ iks_tree_t *iks_ast_new_node(int type, iks_grammar_symbol_t *symbol);
  * collection of procedures to connect two ast nodes
  */
 void iks_ast_connect_nodes(iks_tree_t *parent, iks_tree_t *child);
+
+void ast_set_temp(int t, char *v, iks_tree_t **ast);
+
+char *ast_get_temp(int t, iks_tree_t **ast);
+
 
 #endif /* __IKS_AST_H__  */

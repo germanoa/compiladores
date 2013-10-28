@@ -68,3 +68,41 @@ void iks_ast_connect_nodes(iks_tree_t *parent, iks_tree_t *child) {
   iks_ast_append(parent,child);
   gv_connect(parent,child);
 }
+
+void ast_set_temp(int t,char *v, iks_tree_t **ast) {
+	iks_ast_node_value_t *ast_n = (*ast)->item;
+	switch(t) {
+		case TEMP_NAME:
+			ast_n->temp.name = v;
+			break;					
+		case TEMP_NEXT:
+			ast_n->temp.next = v;
+			break;					
+		case TEMP_BT:
+			ast_n->temp.b.t = v;
+			break;					
+		case TEMP_BF:
+			ast_n->temp.b.f = v;
+			break;					
+	}
+}
+
+char *ast_get_temp(int t, iks_tree_t **ast) {
+	char *c;
+	iks_ast_node_value_t *ast_n = (*ast)->item;
+	switch(t) {
+		case TEMP_NAME:
+			c = ast_n->temp.name;
+			break;					
+		case TEMP_NEXT:
+			c = ast_n->temp.next;
+			break;					
+		case TEMP_BT:
+			c = ast_n->temp.b.t;
+			break;					
+		case TEMP_BF:
+			c = ast_n->temp.b.f;
+			break;					
+	}
+	return c;
+}

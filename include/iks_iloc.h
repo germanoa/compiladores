@@ -10,8 +10,8 @@
 #define LABEL_WIDTH 32
 #define REGISTER_WIDTH 32
 
-int register_ctrl = 0;
-int label_ctrl = 0;
+int reg_ctrl;
+int label_ctrl;
 
 iks_list_t *program_iloc; //list->item: iloc_t
 
@@ -74,5 +74,12 @@ int register_is_valid(char *label);
  * iloc code generator
  */
 void code_generator(iks_tree_t **ast);
+
+
+/*
+ * iloc code generator for labels
+ */
+iks_list_t *label_code_generator(char *l);
+
 
 #endif /* __IKS_ILOC_H__ */

@@ -13,18 +13,15 @@ iks_list_t *label_code_generator(char *l) {
 }
 
 void code_or(iks_tree_t **ast) {
-	printf("###OR\n");
 	iks_ast_node_value_t *or_n = (*ast)->item;
 	iks_tree_t *e1 = (*ast)->children->item;
 	iks_ast_node_value_t *e1_n = e1->item;
 	iks_tree_t *e2 = (*ast)->children->next->item;
 	iks_ast_node_value_t *e2_n = e2->item;
 
-	printf("size: %d\n",sizeof(e1_n->temp));
 	
 	e1_n->temp.b.t = or_n->temp.b.t;
 	e1_n->temp.b.f = label_generator();
-	printf("size: %d\n",sizeof(e1_n->temp));
 
 	e2_n->temp.b.t = or_n->temp.b.t;
 	e2_n->temp.b.f = or_n->temp.b.f;
@@ -36,14 +33,10 @@ void code_or(iks_tree_t **ast) {
 }
 
 void code_if(iks_tree_t **ast){
-	printf("###IF\n");
 	iks_ast_node_value_t *ctrl_flow_n = (*ast)->item;
 	iks_ast_node_value_t *logic_expr_n = (*ast)->children->item;
 	iks_ast_node_value_t *commands_n = (*ast)->children->next->item;
-	
-	logic_expr_n->temp.b.t = label_generator();
-	logic_expr_n->temp.b.f = ctrl_flow_n->temp.next;
-	
+
 	commands_n->temp.next = ctrl_flow_n->temp.next;
 	
 	iks_list_concat(logic_expr_n->code,label_code_generator(logic_expr_n->temp.b.t));
@@ -56,9 +49,6 @@ void code_if_else(iks_tree_t **ast) {
 	iks_ast_node_value_t *logic_expr_n = (*ast)->children->item;
 	iks_ast_node_value_t *commands1_n = (*ast)->children->next->item;
 	iks_ast_node_value_t *commands2_n = (*ast)->children->next->next->item;
-	
-	logic_expr_n->temp.b.t = label_generator();
-	logic_expr_n->temp.b.f = label_generator();
 	
 	commands1_n->temp.next = ctrl_flow_n->temp.next;
 	commands2_n->temp.next = ctrl_flow_n->temp.next;
@@ -74,22 +64,6 @@ void code_if_else(iks_tree_t **ast) {
 
 	ctrl_flow_n->code = logic_expr_n->code;	
 }
-
-//void code_while_do(iks_tree_t **ast) {
-//	iks_ast_node_value_t *ctrl_flow_n = (*ast)->item;
-//	iks_ast_node_value_t *logic_expr_n = (*ast)->children->item;
-//	iks_ast_node_value_t *commands_n = (*ast)->children->next->item;
-//	
-//	logic_expr_n->temp.b.t = ctrl_flow_n->temp.next;
-//	logic_expr_n->temp.b.f = label_generator();
-//	
-//	commands_n->temp.next = ctrl_flow_n->temp.next;
-//	
-//	iks_list_concat(logic_expr_n->code,label_code_generator(logic_expr_n->temp.b.t));
-//	iks_list_concat(logic_expr_n->code,commands_n->code);
-//	ctrl_flow_n->code = logic_expr_n->code;	
-//}
-
 
 void code_generator(iks_tree_t **ast) {
 	iks_list_t *code;
