@@ -482,7 +482,7 @@ id:
 	;
 
 idv:
-		id '[' expr ']'
+		id idv_dimen
 		{
 			iks_ast_node_value_t *idn;
 			idn = $id->item; 
@@ -511,6 +511,32 @@ idv:
 			} else { //using wrong identificador. id is not a vector
 				return iks_error(ids,IKS_ERROR_USE);
 			}
+		}
+	;
+
+idv_dimen:
+		idv_dimen '[' expr ']'
+		{
+			iks_list_t *list = $1;
+			iks_grammar_symbol_t *lit = $3;
+			int size = atoi(lit->value);
+			iks_list_t *dimen = new_iks_list();
+			iks_list_set_item(dimen,(void*)&size);
+			
+			iks_list_append(list, dimen);
+			
+			dimen_counter++;
+			$$ = list;
+		}
+	| '[' expr ']'
+		{
+			iks_grammar_symbol_t *lit = $2;
+			int size = atoi(lit->value);
+			iks_list_t *dimen = new_iks_list();
+			iks_list_set_item(dimen,(void*)&size);
+			
+			dimen_counter++;
+			$$ = dimen;
 		}
 	;
 
