@@ -36,8 +36,6 @@ void iks_tree_set_item(iks_tree_t *tree, void *item) {
 		return;
 	}
 	tree->item = item;
-    iks_ast_node_value_t *x;
-    x=tree->item;
 }
 
 void iks_tree_set_string(iks_tree_t *tree, const char *string) {
@@ -81,10 +79,7 @@ void iks_tree_depth_print_string(iks_tree_t *tree) {
 }	
 
 void iks_tree_append(iks_tree_t *parent, iks_tree_t *child) {
-    iks_list_t *t;
-    t = new_iks_list();
-    iks_list_set_item(t, (void*) child);
-    iks_list_append(parent->children,t);
+    iks_list_append(parent->children,(void*)child);
 }
 
 void iks_tree_insert(iks_tree_t *parent, iks_tree_t *child) {
@@ -114,19 +109,7 @@ int iks_tree_create_child(iks_tree_t *tree) {
 		}
 	}
 	else { // tree already has children
-		iks_list_t *child = new_iks_list();
-		if(child == NULL) {
-			fprintf(stderr, "ERROR: Error creating list entry for child.\n");
-			return 0;
-		}
-		
-		child->item = new_iks_tree();
-		if(child->item == NULL) {
-			fprintf(stderr, "ERROR: Error creating child.\n");
-			return 0;
-		}
-		
-		iks_list_append(tree->children, child);
+		iks_list_append(tree->children, (void*)new_iks_tree());
 	}
 	
 	return 1;

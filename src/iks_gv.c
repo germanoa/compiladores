@@ -45,6 +45,7 @@ static inline char *__gv_description_from_type (int tipo)
   switch (tipo){
   case IKS_AST_PROGRAMA: return "programa";
   case IKS_AST_IF_ELSE: return "ifelse";
+  case IKS_AST_IF: return "if";
   case IKS_AST_DO_WHILE: return "dowhile";
   case IKS_AST_WHILE_DO: return "whiledo";
   case IKS_AST_INPUT: return "input";
@@ -158,6 +159,7 @@ void gv_declare (const int tipo, const void *pointer, char *name)
 
   case IKS_AST_PROGRAMA:
   case IKS_AST_IF_ELSE:
+  case IKS_AST_IF:
   case IKS_AST_DO_WHILE:
   case IKS_AST_WHILE_DO:
   case IKS_AST_INPUT:

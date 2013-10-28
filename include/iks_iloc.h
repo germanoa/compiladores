@@ -7,6 +7,12 @@
 #include "iks_list.h"
 #include "iks_tree.h"
 
+#define LABEL_WIDTH 32
+#define REGISTER_WIDTH 32
+
+int reg_ctrl;
+int label_ctrl;
+
 iks_list_t *program_iloc; //list->item: iloc_t
 
 typedef struct iloc_t iloc_t;
@@ -43,14 +49,37 @@ struct iloc_oper_t {
 	iks_list_t *dst_opers; //list->item: operands
 };
 
-/**
+
+/*
+ * generate a new label
+ */
+char *label_generator();
+
+/*
+ * generate a new register
+ */
+char *register_generator();
+
+/*
  * verify if label is valid
  */
 int label_is_valid(char *label);
 
-/**
+/*
+ * verify if register is valid
+ */
+int register_is_valid(char *label);
+
+/*
  * iloc code generator
  */
-void code_generator(iks_tree_t *ast);
+void code_generator(iks_tree_t **ast);
+
+
+/*
+ * iloc code generator for labels
+ */
+iks_list_t *label_code_generator(char *l);
+
 
 #endif /* __IKS_ILOC_H__ */
