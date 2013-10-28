@@ -7,6 +7,11 @@
 #include "iks_list.h"
 #include "iks_tree.h"
 
+#define LABEL_WIDTH 32
+#define REGISTER_WIDTH 32
+
+int register_ctrl = 0;
+int label_ctrl = 0;
 
 iks_list_t *program_iloc; //list->item: iloc_t
 
@@ -45,60 +50,15 @@ struct iloc_oper_t {
 };
 
 
-/* 
- * Register struct management
- */
-typedef struct iloc_reg_t iloc_reg_t;
-struct iloc_reg_t{
-	char *id;
-	void *content;
-};
-
-typedef struct iloc_reg_node_t iloc_reg_node_t;
-struct iloc_reg_node_t{
-	iloc_reg_t reg;
-	iloc_reg_node_t *left;
-	iloc_reg_node_t *right;
-};
-
-typedef struct iloc_reg_tree_t iloc_reg_tree_t;
-struct iloc_reg_tree_t{
-	iloc_reg_node_t *root;
-	int reg_ctrl;
-};
-
-/* 
- * Label struct management 
- */
-typedef struct iloc_label_t iloc_label_t;
-struct iloc_label_t{
-	char *id;
-	void *content;
-	int call_ctrl;
-};
-
-typedef struct iloc_label_node_t iloc_label_node_t;
-struct iloc_label_node_t{
-	iloc_label_t label;
-	iloc_label_node_t *left;
-	iloc_label_node_t *right;
-};
-
-typedef struct iloc_label_node_t iloc_label_tree_t;
-struct iloc_tree_label_t{
-	iloc_label_node_t *root;
-};
-
-
 /*
  * generate a new label
  */
-char* label_generator();
+char *label_generator();
 
 /*
  * generate a new register
  */
-char* register_generator();
+char *register_generator();
 
 /*
  * verify if label is valid
