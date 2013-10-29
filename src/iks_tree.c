@@ -169,7 +169,7 @@ int iks_tree_remove(iks_tree_t *tree, iks_tree_t *child) {
 	
 
 void iks_tree_delete(iks_tree_t *tree) {
-	if(tree->children != NULL) {
+	if((tree->children)->item != NULL) { //has children
 		iks_list_t *childList = tree->children;
 	
 		do { // runs through every child
@@ -180,6 +180,6 @@ void iks_tree_delete(iks_tree_t *tree) {
 	
 	iks_list_delete(tree->children);
 	
-    free(tree);
-    tree = NULL;
+  free(tree);
+  tree = NULL;
 }

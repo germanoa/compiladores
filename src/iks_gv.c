@@ -69,6 +69,7 @@ static inline char *__gv_description_from_type (int tipo)
   case IKS_AST_LOGICO_COMP_NEGACAO: return "!";
   case IKS_AST_VETOR_INDEXADO: return "[]";
   case IKS_AST_CHAMADA_DE_FUNCAO: return "call";
+  case IKS_AST_INDEFINIDO: return "INDEFINIDO";
 
   default:
     fprintf (stderr, "%s: tipo provided is invalid here\n", __FUNCTION__);
@@ -183,6 +184,7 @@ void gv_declare (const int tipo, const void *pointer, char *name)
   case IKS_AST_LOGICO_COMP_NEGACAO:
   case IKS_AST_VETOR_INDEXADO:
   case IKS_AST_CHAMADA_DE_FUNCAO:
+  case IKS_AST_INDEFINIDO:
     if (name){
       fprintf (stderr, "%s: name should be NULL\n", __FUNCTION__);
       abort();

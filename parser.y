@@ -28,7 +28,7 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 DECLARATIONS
 */
 
-/* Declaração dos tokens da gramática da Linguagem K */
+/* Declaração dos tokens da gramática da Linguagem IKS */
 %token TK_PR_INT	256		
 %token TK_PR_FLOAT	257
 %token TK_PR_BOOL	258
@@ -73,26 +73,24 @@ DECLARATIONS
 %type<list> array_decl_dimen
 %type<nt> prog
 %type<nt> func
-%type<nt> command_block 
+%type<nt> command_block
 %type<nt> command_block_f
-%type<nt> command_seq 
-%type<nt> command 
-%type<nt> commands 
-%type<nt> ctrl_flow 
-//%type<nt> else 
-%type<nt> output_list 
-%type<nt> expr 
-%type<nt> arim_expr 
-%type<nt> logic_expr 
+%type<nt> command_seq
+%type<nt> command
+%type<nt> commands
+%type<nt> ctrl_flow
+%type<nt> output_list
+%type<nt> expr
+%type<nt> arim_expr
+%type<nt> logic_expr
 %type<nt> func_param_list
-%type<nt> param_list 
+%type<nt> param_list
 %type<nt> terminal_value
 %type<nt> id
 %type<nt> idv
 %type<nt> idv_dimen
 %type<nt> func_call
 %type<nt> shrt_crct_bffr
-
 %type<type> type
 
 %right TK_PR_THEN TK_PR_ELSE
