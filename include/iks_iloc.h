@@ -18,7 +18,7 @@ iks_list_t *program_iloc; //list->item: iloc_t
 typedef struct iloc_t iloc_t;
 struct iloc_t {
 	char *label;
-	iks_list_t *oper; //list->item: iloc_oper_t
+	iks_list_t *opers; //list->item: iloc_oper_t
 };
 
 typedef enum { 
@@ -34,6 +34,7 @@ typedef enum {
 	i2i, c2c, c2i, i2c,
 	cmp_LT, cmp_LE, cmp_EQ, cmp_GE, cmp_GT, cmp_NE, cbr,
 	jump, jumpI,
+  nop
  } opcode_t;
 
 union operands {
@@ -45,8 +46,8 @@ union operands {
 typedef struct iloc_oper_t iloc_oper_t;
 struct iloc_oper_t {
 	opcode_t opcode;
-	iks_list_t *src_opers; //list->item: operands
-	iks_list_t *dst_opers; //list->item: operands
+	iks_list_t *src_operands; //list->item: operands
+	iks_list_t *dst_operands; //list->item: operands
 };
 
 
@@ -77,9 +78,22 @@ void code_generator(iks_tree_t **ast);
 
 
 /*
- * iloc code generator for labels
+ * iloc label insert
  */
-iks_list_t *label_code_generator(char *l);
+void label_insert(iks_list_t *code, char *label);
 
+/*
+ * create a iloc instruction
+ */
+iloc_t *new_iloc(char *label, iloc_oper_t *oper);
+
+/*
+ * create a iloc operation
+ */
+iloc_oper_t *new_iloc_oper(opcode_t opcode, char *s1, char *s2, char *s3, char *d1, char *d2, char *d3);
+
+void iloc_oper_print(iks_list_t *opers);
+
+void iloc_print(iks_list_t *code);
 
 #endif /* __IKS_ILOC_H__ */

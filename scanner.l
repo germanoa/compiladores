@@ -13,7 +13,7 @@ extern YYSTYPE yylval;
 int line_number = 1;
 char *last_identifier;
 
-iks_grammar_symbol_t *push_to_symbol_table(int type) {
+iks_grammar_symbol_t *create_symbol(int type) {
     char *identifier;
     int deslocamento=0;
     int d2=0;
@@ -65,36 +65,44 @@ output { return TK_PR_OUTPUT; }
 return { return TK_PR_RETURN; }
 
 [0-9]+ {
-    yylval.symbol = push_to_symbol_table(TK_LIT_INT);
+    yylval.symbol = create_symbol(TK_LIT_INT);
     yylval.symbol->token_type = TK_LIT_INT;
     return TK_LIT_INT;
 }
 
 ([0-9]+|-[0-9]+)\.[0-9]+ {
-    yylval.symbol = push_to_symbol_table(TK_LIT_FLOAT);
+    yylval.symbol = create_symbol(TK_LIT_FLOAT);
     yylval.symbol->token_type = TK_LIT_FLOAT;
     return TK_LIT_FLOAT;
 }
 
-true { return TK_LIT_TRUE; }
+true {
+    yylval.symbol = create_symbol(TK_LIT_TRUE);
+    yylval.symbol->token_type = TK_LIT_TRUE;
+    return TK_LIT_TRUE;
+}
 
-false { return TK_LIT_FALSE; }
+false {
+    yylval.symbol = create_symbol(TK_LIT_FALSE);
+    yylval.symbol->token_type = TK_LIT_FALSE;
+    return TK_LIT_FALSE;
+}
 
 '[^']' {
-    yylval.symbol = push_to_symbol_table(TK_LIT_CHAR);
+    yylval.symbol = create_symbol(TK_LIT_CHAR);
     yylval.symbol->token_type = TK_LIT_CHAR;
     return TK_LIT_CHAR;
 }
 
 \"[^\"\n\r]*\" {
-    yylval.symbol = push_to_symbol_table(TK_LIT_STRING);
+    yylval.symbol = create_symbol(TK_LIT_STRING);
     yylval.symbol->token_type = TK_LIT_STRING;
     return TK_LIT_STRING;
 }
 
 
 ([a-z]|[A-Z]|_)+([a-z]|[A-Z]|_|[0-9])* {
-    yylval.symbol = push_to_symbol_table(TK_IDENTIFICADOR);
+    yylval.symbol = create_symbol(TK_IDENTIFICADOR);
     yylval.symbol->token_type = TK_IDENTIFICADOR;
     return TK_IDENTIFICADOR;
 }

@@ -82,13 +82,28 @@ void iks_list_remove(iks_list_t *list, iks_list_t *node_to_remove) {
     }
 }
 
-void iks_list_concat(iks_list_t *list1, iks_list_t *list2) {
-    list1->prev->next = list2;
-    list2->prev->next = list1;
-    iks_list_t *temp_list1_prev;
-    temp_list1_prev = list1->prev;
-    list1->prev = list2->prev;
-    list2->prev = temp_list1_prev;
+iks_list_t *iks_list_concat(iks_list_t *list1, iks_list_t *list2) {
+  iks_list_t *new_list;
+  if (!iks_list_is_empty(list2)) {
+    if (iks_list_is_empty(list1)) {
+      free(list1);
+      new_list=list2;
+    }
+    else {
+      list1->prev->next = list2;
+      list2->prev->next = list1;
+      iks_list_t *temp_list1_prev;
+      temp_list1_prev = list1->prev;
+      list1->prev = list2->prev;
+      list2->prev = temp_list1_prev;
+      new_list = list1;
+    }
+  }
+  else {
+    free(list2);
+    new_list=list1;
+  }
+  return new_list;
 }
 
 void iks_list_set_item(iks_list_t *list, void *item) {

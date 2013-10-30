@@ -90,7 +90,10 @@ DECLARATIONS
 %type<nt> idv
 %type<nt> idv_dimen
 %type<nt> func_call
-%type<nt> shrt_crct_bffr
+//%type<nt> shrt_crct_bffr_or
+//%type<nt> shrt_crct_bffr_and
+%type<nt> shrt_crct_bffr_if
+//%type<nt> shrt_crct_bffr_if_else
 %type<type> type
 
 %right TK_PR_THEN TK_PR_ELSE
@@ -153,7 +156,10 @@ prog:
 				iks_ast_connect_nodes($1,$2);
 			}
 			//symbol_table_print((iks_dict_t*)iks_stack_top(scope->st));
-			$$ = $2;
+      $$ = $2;
+			iks_ast_node_value_t *program = $$->item;
+      program_iloc = program->code;
+      iloc_print(program_iloc);
 		}
 	| /* empty */ {}
 	;
@@ -259,7 +265,10 @@ func:
       //iks_dict_delete(st);
 			symbol_table_delete(scope->st->item);
 			scope->st = iks_stack_pop(scope->st);
+
+
 			$$ = ptr_function;
+      code_generator(&($$));
 			ptr_function = NULL; //evita aceitar um return fora de uma função
 		}
 	;
@@ -753,15 +762,6 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
 		}
-	| '!' expr
-		{
-			/* 3.A.15 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_NEGACAO,NULL);
-			iks_ast_node_value_t *oon = oo->item;
-			oon->iks_type = IKS_BOOL;
-			iks_ast_connect_nodes(oo,$2);
-			$$ = oo;
-		}
 	| expr TK_OC_LE expr
 		{
 			/* 3.A.14 */
@@ -802,6 +802,29 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
 		}
+	| '!'
+		{
+			//buffer to short circuit
+			$<nt>$ = iks_ast_new_node(0,NULL);
+			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BF,&($<nt>0)),&($<nt>$));
+			ast_set_temp(TEMP_BF,ast_get_temp(TEMP_BT,&($<nt>0)),&($<nt>$));
+		}
+    expr
+		{
+			/* 3.A.15 */
+			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_NEGACAO,NULL);
+			iks_ast_node_value_t *oon = oo->item;
+			oon->iks_type = IKS_BOOL;
+			iks_ast_connect_nodes(oo,$3);
+
+		  //using and freeing buffer to short circuit
+			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>2)),&($3));
+			ast_set_temp(TEMP_BF,ast_get_temp(TEMP_BF,&($<nt>2)),&($3));
+			//CRIAR AST DELETE, pois TREE DELETE precisa ser customizada
+			//iks_ast_delete($<nt>2);
+
+			$$ = oo;
+		}
 	| expr TK_OC_AND expr
 		{
 			/* 3.A.14 */
@@ -812,18 +835,49 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
 		}
-	| expr TK_OC_OR expr
+	| 
+    //shrt_crct_bffr_or
+    expr
+    TK_OC_OR
+		{
+			//buffer to short circuit
+			$<nt>$ = iks_ast_new_node(0,NULL);
+			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>0)),&($<nt>$));
+			ast_set_temp(TEMP_BF,ast_get_temp(TEMP_BF,&($<nt>0)),&($<nt>$));
+		}
+    expr
 		{
 			$$ = iks_ast_new_node(IKS_AST_LOGICO_OU,NULL);
 			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
 
 			iks_ast_connect_nodes($$,$1);
-			iks_ast_connect_nodes($$,$3);
+			iks_ast_connect_nodes($$,$4);
 
 			code_generator(&($$));
 		}
 	;
+
+//shrt_crct_bffr_or:
+//		/* empty */
+//		{
+//			//buffer to short circuit
+//			$<nt>$ = iks_ast_new_node(0,NULL);
+//			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>0)),&($<nt>$));
+//			ast_set_temp(TEMP_BF,label_generator(),&($<nt>$));
+//		}
+//    expr
+//	;
+//
+//shrt_crct_bffr_and:
+//		/* empty */
+//		{
+//			//buffer to short circuit
+//			$<nt>$ = iks_ast_new_node(0,NULL);
+//			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>0)),&($$));
+//			ast_set_temp(TEMP_BF,label_generator(),&($$));
+//		}
+
 
 func_call:
 		id {
@@ -897,13 +951,15 @@ terminal_value:
 			iks_ast_node_value_t *v1;
 			v1 = new_iks_ast_node_value();
 			iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
-			iks_tree_t *lit;
-			lit = new_iks_tree();
-			iks_tree_set_item(lit,(void*)v1);
-			iks_ast_node_value_t *litn = lit->item;
+
+      $$ = new_iks_tree();
+			iks_tree_set_item($$,(void*)v1);
+			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $1->iks_type;
-			gv_declare(IKS_AST_LITERAL,lit,"true");
-			$$ = lit;
+
+			gv_declare(IKS_AST_LITERAL,$$,"true");
+
+			code_generator(&($$));
 		}
 	| TK_LIT_CHAR
 		{
@@ -958,65 +1014,64 @@ param_list:
 
 /* 2.6 */
 ctrl_flow:
-		TK_PR_WHILE '(' logic_expr ')' TK_PR_DO commands
+		TK_PR_WHILE '(' expr ')' TK_PR_DO commands
 		{
 			$$ = iks_ast_new_node(IKS_AST_WHILE_DO,NULL);
 			iks_ast_connect_nodes($$,$3);
 			iks_ast_connect_nodes($$,$6);
 		}
-	| TK_PR_DO commands TK_PR_WHILE '(' logic_expr ')' 
+	| TK_PR_DO commands TK_PR_WHILE '(' expr ')' 
 		{
 			$$ = iks_ast_new_node(IKS_AST_DO_WHILE,NULL);
 			iks_ast_connect_nodes($$,$2);
 			iks_ast_connect_nodes($$,$5);
 		}
-	|	TK_PR_IF '(' shrt_crct_bffr logic_expr ')' TK_PR_THEN commands TK_PR_ELSE commands {
+	|	TK_PR_IF '(' shrt_crct_bffr_if expr ')' TK_PR_THEN commands TK_PR_ELSE commands {
 
-		  //using and freeing buffer to short circuit
 			$$ = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
 			iks_ast_connect_nodes($$,$4);
 			iks_ast_connect_nodes($$,$7);
 			iks_ast_connect_nodes($$,$9);
-			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($3)),&($4));
-			ast_set_temp(TEMP_BF,label_generator(),&($4));
-			
-			//CRIAR AST DELETE, pois TREE DELETE precisa ser customizada
-			//iks_ast_delete($<nt>4);
-			code_generator(&($$));
-		}
-	|	TK_PR_IF '(' shrt_crct_bffr logic_expr ')' TK_PR_THEN commands {
 
 		  //using and freeing buffer to short circuit
-			$$ = iks_ast_new_node(IKS_AST_IF,NULL);
-			iks_ast_connect_nodes($$,$4);
-			iks_ast_connect_nodes($$,$7);
 			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($3)),&($4));
-			ast_set_temp(TEMP_BF,ast_get_temp(TEMP_BF,&($3)),&($4));
-			
+			ast_set_temp(TEMP_BF,label_generator(),&($4));
 			//CRIAR AST DELETE, pois TREE DELETE precisa ser customizada
-			//iks_ast_delete($<nt>4);
+			//iks_ast_delete($<nt>3);
 			code_generator(&($$));
 		}
+	|	TK_PR_IF '(' shrt_crct_bffr_if expr ')' TK_PR_THEN commands {
+
+			//$$ = iks_ast_new_node(IKS_AST_IF,NULL);
+      $$ = $3;
+			iks_ast_connect_nodes($$,$4);
+			iks_ast_connect_nodes($$,$7);
+
+		  //using and freeing buffer to short circuit
+			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($3)),&($4));
+			ast_set_temp(TEMP_BF,ast_get_temp(TEMP_BF,&($3)),&($4));
+			//CRIAR AST DELETE, pois TREE DELETE precisa ser customizada
+			//iks_ast_delete($<nt>3);
+			code_generator(&($$));
+			iks_ast_node_value_t *v = $$->item;
+		}
 	;
 
-shrt_crct_bffr:
+shrt_crct_bffr_if:
 		/* empty */
 		{
-			/*//buffer to short circuit
-			$<nt>$ = iks_ast_new_node(0,NULL);
+			//buffer to short circuit
+			$<nt>$ = iks_ast_new_node(IKS_AST_IF,NULL);
+			//$<nt>$ = iks_ast_new_node(0,NULL);
 			ast_set_temp(TEMP_BT,label_generator(),&($$));
-			ast_set_temp(TEMP_NEXT,label_generator(),&($<nt>0));
-			ast_set_temp(TEMP_BF,ast_get_temp(TEMP_NEXT,&($<nt>0)),&($$));*/
+			ast_set_temp(TEMP_NEXT,label_generator(),&($<nt>$));
+			ast_set_temp(TEMP_BF,ast_get_temp(TEMP_NEXT,&($<nt>$)),&($$));
 		}
 	;
 
-/*else:
-	TK_PR_ELSE commands
-		{
-			$$ = $2;
-		}
-	| { $$ = NULL; }
-;*/
+//shrt_crct_bffr_if_else:
+//		/* empty */
+//		{ }
+
 
 %%
-

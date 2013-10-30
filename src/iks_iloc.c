@@ -4,14 +4,42 @@
 #include "iks_iloc.h"
 #include "iks_ast.h"
 #include "iks_tree.h"
+#include "parser.h"
 
-iks_list_t *label_code_generator(char *l) {
-	iks_list_t *code;
-	code = new_iks_list();
-	iks_list_set_item(code,l);
-	return code;
+void code_programa(iks_tree_t **ast) {
+
+  //TODO: global_decl
+  
 }
 
+void code_funcao(iks_tree_t **ast) {
+	iks_ast_node_value_t *F = (*ast)->item;
+	iks_tree_t *St = (*ast)->children->item;
+	iks_ast_node_value_t *S = St->item;
+
+	F->code = iks_list_concat(F->code,S->code);
+}
+
+void code_literal(iks_tree_t **ast) {
+	iks_ast_node_value_t *S = (*ast)->item;
+
+  iloc_t *iloc;
+  switch(S->symbol->token_type) {
+    case TK_LIT_TRUE:
+      //gera(goto B.t)
+      iloc = new_iloc(NULL, new_iloc_oper(jumpI,NULL,NULL,NULL,S->temp.b.t,NULL,NULL));
+      iks_list_append(S->code,(void*)iloc);
+      break;
+    case TK_LIT_FALSE:
+      //gera(goto B.f)
+      iloc = new_iloc(NULL, new_iloc_oper(jumpI,NULL,NULL,NULL,S->temp.b.f,NULL,NULL));
+      iks_list_append(S->code,(void*)iloc);
+      break;
+    default:
+      printf("ops at code_literal\n");
+  }
+}
+  
 void code_or(iks_tree_t **ast) {
 	iks_ast_node_value_t *or_n = (*ast)->item;
 	iks_tree_t *e1 = (*ast)->children->item;
@@ -26,43 +54,50 @@ void code_or(iks_tree_t **ast) {
 	e2_n->temp.b.t = or_n->temp.b.t;
 	e2_n->temp.b.f = or_n->temp.b.f;
 
-	iks_list_concat(e1_n->code,label_code_generator(e1_n->temp.b.f));	
-	iks_list_concat(e1_n->code,e2_n->code);	
+  label_insert(e2_n->code,e1_n->temp.b.f);
+	e1_n->code = iks_list_concat(e1_n->code,e2_n->code);	
 
 	or_n->code = e1_n->code;
 }
 
 void code_if(iks_tree_t **ast){
-	iks_ast_node_value_t *ctrl_flow_n = (*ast)->item;
-	iks_ast_node_value_t *logic_expr_n = (*ast)->children->item;
-	iks_ast_node_value_t *commands_n = (*ast)->children->next->item;
+	iks_ast_node_value_t *S = (*ast)->item;
+	iks_tree_t *Bt = (*ast)->children->item;
+	iks_ast_node_value_t *B = Bt->item;
+	iks_tree_t *S1t = (*ast)->children->next->item;
+	iks_ast_node_value_t *S1 = S1t->item;
 
-	commands_n->temp.next = ctrl_flow_n->temp.next;
+	S1->temp.next = S->temp.next;
 	
-	iks_list_concat(logic_expr_n->code,label_code_generator(logic_expr_n->temp.b.t));
-	iks_list_concat(logic_expr_n->code,commands_n->code);
-	ctrl_flow_n->code = logic_expr_n->code;	
+  //B.code || gera(B.t) || S1.code
+  label_insert(S1->code,B->temp.b.t);
+	B->code = iks_list_concat(B->code,S1->code);
+
+	S->code = B->code;	
 }
 
 void code_if_else(iks_tree_t **ast) {
-	iks_ast_node_value_t *ctrl_flow_n = (*ast)->item;
-	iks_ast_node_value_t *logic_expr_n = (*ast)->children->item;
-	iks_ast_node_value_t *commands1_n = (*ast)->children->next->item;
-	iks_ast_node_value_t *commands2_n = (*ast)->children->next->next->item;
+	iks_ast_node_value_t *S = (*ast)->item;
+	iks_ast_node_value_t *B = (*ast)->children->item;
+	iks_ast_node_value_t *S1 = (*ast)->children->next->item;
+	iks_ast_node_value_t *S2 = (*ast)->children->next->next->item;
 	
-	commands1_n->temp.next = ctrl_flow_n->temp.next;
-	commands2_n->temp.next = ctrl_flow_n->temp.next;
+	S1->temp.next = S->temp.next;
+	S2->temp.next = S->temp.next;
 	
-	iks_list_concat(logic_expr_n->code,label_code_generator(logic_expr_n->temp.b.t));
-	iks_list_concat(logic_expr_n->code,commands1_n->code);
+  //B.code || gera(B.t) || S1.code
+  label_insert(S1->code,B->temp.b.t);
+	B->code = iks_list_concat(B->code,S1->code);
 
-	char *goto_code = strcat("goto ",logic_expr_n->temp.b.t);
-	iks_list_concat(logic_expr_n->code,label_code_generator(goto_code));
-	iks_list_concat(logic_expr_n->code,label_code_generator(logic_expr_n->temp.b.f));
+  //|| gera(goto S.next)
+  iloc_t *iloc = new_iloc(NULL, new_iloc_oper(jumpI,NULL,NULL,NULL,S->temp.next,NULL,NULL));
+  iks_list_append(S1->code,(void*)iloc);
 
-	iks_list_concat(logic_expr_n->code,commands2_n->code);
+  //|| gera(B.f:) || S2.code
+  label_insert(S2->code,B->temp.b.f);
+	B->code = iks_list_concat(B->code,S2->code);
 
-	ctrl_flow_n->code = logic_expr_n->code;	
+	S->code = B->code;	
 }
 
 void code_generator(iks_tree_t **ast) {
@@ -73,7 +108,11 @@ void code_generator(iks_tree_t **ast) {
 	n = (*ast)->item;
 	switch(n->type) {
 		case IKS_AST_PROGRAMA:
+      code_programa(ast);
+      break;
 		case IKS_AST_FUNCAO:
+			code_funcao(ast);
+			break;
 		case IKS_AST_IF:
 			code_if(ast);
 			break;
@@ -93,6 +132,8 @@ void code_generator(iks_tree_t **ast) {
 		case IKS_AST_BLOCO:
 		case IKS_AST_IDENTIFICADOR:
 		case IKS_AST_LITERAL:
+			code_literal(ast);
+			break;
 		case IKS_AST_ARIM_SOMA:
 		case IKS_AST_ARIM_SUBTRACAO:
 		case IKS_AST_ARIM_MULTIPLICACAO:
@@ -108,7 +149,7 @@ void code_generator(iks_tree_t **ast) {
 		case IKS_AST_LOGICO_COMP_GE:
 		case IKS_AST_LOGICO_COMP_L:
 		case IKS_AST_LOGICO_COMP_G:
-		case IKS_AST_LOGICO_COMP_NEGACAO:
+//		case IKS_AST_LOGICO_COMP_NEGACAO:
 		case IKS_AST_VETOR_INDEXADO:
 		case IKS_AST_CHAMADA_DE_FUNCAO:
 		case IKS_AST_INDEFINIDO:
@@ -151,4 +192,95 @@ char *register_generator(){
   new_register = strcat(prefix, new_register);
 
   return new_register;
+}
+
+void label_insert(iks_list_t *code, char *label) {
+  iloc_t *iloc = code->item;
+  if(!iloc) {
+    iloc_t *iloc = new_iloc(label, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));
+    iks_list_append(code,(void*)iloc);
+  }
+  else {
+    if(!iloc->label) {
+      iloc->label = label;
+    }
+    else {
+      iloc_t *iloc = new_iloc(label, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));
+      iks_list_append(code,(void*)iloc);
+    }
+  }
+}
+
+iloc_t *new_iloc(char *label, iloc_oper_t *oper) {
+  iloc_t *iloc;
+  iloc = malloc(sizeof(iloc_t));
+  iloc->label = label;
+  iloc->opers = new_iks_list();
+  iks_list_append(iloc->opers,(void*)oper);
+  return iloc;
+}
+
+iloc_oper_t *new_iloc_oper(opcode_t opcode, char *s1, char *s2, char *s3, char *d1, char *d2, char *d3) {
+  iloc_oper_t *oper;
+  oper = malloc(sizeof(iloc_oper_t));
+  oper->opcode = opcode;
+  oper->src_operands = new_iks_list();
+  oper->dst_operands = new_iks_list();
+  if (s1) {
+    iks_list_append(oper->src_operands,(void*)s1);
+    if (s2) {
+      iks_list_append(oper->src_operands,(void*)s2);
+    }
+      if (s3) {
+        iks_list_append(oper->src_operands,(void*)s3);
+      }
+  }
+  if (d1) {
+    iks_list_append(oper->dst_operands,(void*)d1);
+    if (d2) {
+      iks_list_append(oper->dst_operands,(void*)d2);
+    }
+      if (d3) {
+        iks_list_append(oper->dst_operands,(void*)d3);
+      }
+  }
+  return oper;
+}
+
+void iloc_oper_print(iks_list_t *opers) {
+  iks_list_t *it;
+  it = opers;
+  do {
+    iloc_oper_t *oper = it->item;
+
+    if (!oper) break;
+    switch(oper->opcode) {
+      case nop:
+        break;
+      case jumpI:
+        printf("jumpI -> %s",oper->dst_operands->item);
+        break;
+
+    }
+    printf("\n");
+
+    it = it->next;    
+  } while(it != opers);
+}
+
+void iloc_print(iks_list_t *code) {
+  iks_list_t *it;
+  it = code;
+  do {
+    iloc_t *iloc = it->item;
+
+    if (!iloc) break;
+    if (iloc->label) {
+      printf ("%s: ",iloc->label);
+    }
+
+    iloc_oper_print(iloc->opers);
+
+    it = it->next;    
+  } while(it != code);
 }

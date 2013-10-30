@@ -44,7 +44,7 @@ void iks_list_remove(iks_list_t *list, iks_list_t *node_to_remove);
 /*
  * concat two lists
  */
-void iks_list_concat(iks_list_t *list1, iks_list_t *list2);
+iks_list_t *iks_list_concat(iks_list_t *list1, iks_list_t *list2);
 /*
  * set item
  */

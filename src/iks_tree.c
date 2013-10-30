@@ -159,7 +159,7 @@ int iks_tree_remove(iks_tree_t *tree, iks_tree_t *child) {
 		else return 1;
 	}
 	else { // found father
-		iks_list_concat(tree->children, child->children);
+		tree->children = iks_list_concat(tree->children, child->children);
 		iks_list_remove(tree->children, childList);
 		
 		free(child);
