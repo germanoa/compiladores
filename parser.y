@@ -100,7 +100,10 @@ DECLARATIONS
 %right '='
 %left '<'
 %left '>'
-%left TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE
+%left TK_OC_LE
+%left TK_OC_GE
+%left TK_OC_EQ
+%left TK_OC_NE
 %left TK_OC_OR
 %left TK_OC_AND
 %left '+' '-'
