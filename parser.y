@@ -82,6 +82,7 @@ DECLARATIONS
 %type<nt> ctrl_flow
 %type<nt> output_list
 %type<nt> expr
+%type<nt> real_expr
 %type<nt> arim_expr
 %type<nt> logic_expr
 %type<nt> func_param_list
@@ -630,6 +631,14 @@ output_list:
 
 /* 2.5 */
 expr:
+		{
+			
+		} real_expr {
+			$$ = $real_expr;
+		}
+	;
+
+real_expr:
 		id
 		{
 			iks_ast_node_value_t *n;
@@ -831,9 +840,7 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
 		}
-	| 
-    //shrt_crct_bffr_or
-    expr
+	| expr
     TK_OC_OR
 		{
 			//buffer to short circuit
@@ -853,27 +860,6 @@ logic_expr:
 			code_generator(&($$));
 		}
 	;
-
-//shrt_crct_bffr_or:
-//		/* empty */
-//		{
-//			//buffer to short circuit
-//			$<nt>$ = iks_ast_new_node(0,NULL);
-//			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>0)),&($<nt>$));
-//			ast_set_temp(TEMP_BF,label_generator(),&($<nt>$));
-//		}
-//    expr
-//	;
-//
-//shrt_crct_bffr_and:
-//		/* empty */
-//		{
-//			//buffer to short circuit
-//			$<nt>$ = iks_ast_new_node(0,NULL);
-//			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>0)),&($$));
-//			ast_set_temp(TEMP_BF,label_generator(),&($$));
-//		}
-
 
 func_call:
 		id {
