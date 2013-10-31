@@ -90,7 +90,7 @@ DECLARATIONS
 %type<nt> idv
 %type<nt> idv_dimen
 %type<nt> func_call
-//%type<nt> shrt_crct_bffr_or
+%type<nt> shrt_crct_bffr_or
 //%type<nt> shrt_crct_bffr_and
 %type<nt> shrt_crct_bffr_if
 //%type<nt> shrt_crct_bffr_if_else
@@ -100,10 +100,7 @@ DECLARATIONS
 %right '='
 %left '<'
 %left '>'
-%left TK_OC_LE
-%left TK_OC_GE
-%left TK_OC_EQ
-%left TK_OC_NE
+%left TK_OC_LE TK_OC_GE TK_OC_EQ TK_OC_NE
 %left TK_OC_OR
 %left TK_OC_AND
 %left '+' '-'
@@ -858,25 +855,28 @@ logic_expr:
 		}
 	;
 
-//shrt_crct_bffr_or:
-//		/* empty */
-//		{
-//			//buffer to short circuit
-//			$<nt>$ = iks_ast_new_node(0,NULL);
-//			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>0)),&($<nt>$));
-//			ast_set_temp(TEMP_BF,label_generator(),&($<nt>$));
-//		}
-//    expr
-//	;
-//
+shrt_crct_bffr_or:
+		/* empty */
+		{
+			//buffer to short circuit
+			$<nt>$ = iks_ast_new_node(0,NULL);
+			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>0)),&($<nt>$));
+			ast_set_temp(TEMP_BF,label_generator(),&($<nt>$));
+		}
+    expr
+    {
+    	$$ = $expr;
+    }
+	;
+
 //shrt_crct_bffr_and:
-//		/* empty */
-//		{
-//			//buffer to short circuit
-//			$<nt>$ = iks_ast_new_node(0,NULL);
-//			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>0)),&($$));
-//			ast_set_temp(TEMP_BF,label_generator(),&($$));
-//		}
+		/* empty */
+		/*{
+			//buffer to short circuit
+			$<nt>$ = iks_ast_new_node(0,NULL);
+			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>0)),&($$));
+			ast_set_temp(TEMP_BF,label_generator(),&($$));
+		}*/
 
 
 func_call:
