@@ -15,9 +15,10 @@ void code_programa(iks_tree_t **ast) {
 void code_funcao(iks_tree_t **ast) {
 	iks_ast_node_value_t *F = (*ast)->item;
 	iks_tree_t *St = (*ast)->children->item;
-	iks_ast_node_value_t *S = St->item;
-
-	F->code = iks_list_concat(F->code,S->code);
+	if (St) {
+		iks_ast_node_value_t *S = St->item;
+		F->code = iks_list_concat(F->code,S->code);
+	}
 }
 
 void code_literal(iks_tree_t **ast) {

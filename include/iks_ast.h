@@ -46,8 +46,10 @@ iks_tree_t *ast;
 
 #define TEMP_NAME 0
 #define TEMP_NEXT 1
-#define TEMP_BT 2
-#define TEMP_BF 3
+#define TEMP_LOCAL 2
+#define TEMP_BT 3
+#define TEMP_BF 4
+#define TEMP_BEGIN 4
 
 typedef struct logic logic;
 struct logic {
@@ -55,10 +57,13 @@ struct logic {
 	char *f; //label
 };
 
-union reg_or_label {
+typedef struct reg_or_label reg_or_label;
+struct reg_or_label {
 	logic b; //label
 	char *name; //reg
 	char *next; //label
+	char *local; //label
+	char *begin; //label
 };
 
 /**
@@ -71,7 +76,7 @@ struct iks_ast_node_value_t {
     int need_coercion;
     int iks_type;
 		iks_list_t *code; //iloc
-		union reg_or_label temp;
+		reg_or_label temp;
 };
 
 /**
@@ -126,5 +131,8 @@ void ast_set_temp(int t, char *v, iks_tree_t **ast);
 
 char *ast_get_temp(int t, iks_tree_t **ast);
 
+reg_or_label *new_reg_or_label();
+
+void delete_reg_or_label(reg_or_label **rl);
 
 #endif /* __IKS_AST_H__  */
