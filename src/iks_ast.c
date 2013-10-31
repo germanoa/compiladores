@@ -10,6 +10,11 @@ static inline void __iks_ast_node_value_init(iks_ast_node_value_t *iks_ast_node_
     iks_ast_node_value->symbol = NULL;
     iks_ast_node_value->need_coercion = 0;
 		iks_ast_node_value->code = new_iks_list();
+		iks_ast_node_value->temp.b.t = NULL;
+		iks_ast_node_value->temp.b.f = NULL;
+		iks_ast_node_value->temp.name = NULL;
+		iks_ast_node_value->temp.next = NULL;
+		iks_ast_node_value->temp.local = NULL;
 }
 
 iks_ast_node_value_t *new_iks_ast_node_value() {
@@ -84,6 +89,9 @@ void ast_set_temp(int t,char *v, iks_tree_t **ast) {
 		case TEMP_BF:
 			ast_n->temp.b.f = v;
 			break;					
+		case TEMP_LOCAL:
+			ast_n->temp.local = v;
+			break;					
 	}
 }
 
@@ -105,4 +113,14 @@ char *ast_get_temp(int t, iks_tree_t **ast) {
 			break;					
 	}
 	return c;
+}
+
+reg_or_label *new_reg_or_label() {
+    reg_or_label *rl;
+    rl = malloc(sizeof(reg_or_label));
+    return rl;
+}
+
+void delete_reg_or_label(reg_or_label **rl) {
+    free(rl);
 }
