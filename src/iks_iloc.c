@@ -68,8 +68,6 @@ void code_if(iks_tree_t **ast){
 	iks_tree_t *S1t = (*ast)->children->next->item;
 	iks_ast_node_value_t *S1 = S1t->item;
 
-	S1->temp.next = S->temp.next;
-	
   //B.code || gera(B.t) || S1.code
   label_insert(S1->code,B->temp.b.t);
 	B->code = iks_list_concat(B->code,S1->code);

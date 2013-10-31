@@ -80,6 +80,7 @@ DECLARATIONS
 %type<nt> command
 %type<nt> commands
 %type<nt> ctrl_flow
+%type<nt> ctrl_flow2
 %type<nt> output_list
 %type<nt> expr
 %type<nt> arim_expr
@@ -857,26 +858,6 @@ logic_expr:
 		}
 	;
 
-//shrt_crct_bffr_or:
-//		/* empty */
-//		{
-//			//buffer to short circuit
-//			$<nt>$ = iks_ast_new_node(0,NULL);
-//			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>0)),&($<nt>$));
-//			ast_set_temp(TEMP_BF,label_generator(),&($<nt>$));
-//		}
-//    expr
-//	;
-//
-//shrt_crct_bffr_and:
-//		/* empty */
-//		{
-//			//buffer to short circuit
-//			$<nt>$ = iks_ast_new_node(0,NULL);
-//			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>0)),&($$));
-//			ast_set_temp(TEMP_BF,label_generator(),&($$));
-//		}
-
 
 func_call:
 		id {
@@ -936,13 +917,19 @@ terminal_value:
 			iks_ast_node_value_t *v1;
 			v1 = new_iks_ast_node_value();
 			iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
-			iks_tree_t *lit;
-			lit = new_iks_tree();
-			iks_tree_set_item(lit,(void*)v1);
-			iks_ast_node_value_t *litn = lit->item;
+
+			$$ = new_iks_tree();
+			iks_tree_set_item($$,(void*)v1);
+			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $1->iks_type;
-			gv_declare(IKS_AST_LITERAL,lit,"false");
-			$$ = lit;
+
+
+			gv_declare(IKS_AST_LITERAL,$$,"false");
+
+		  reg_or_label *S = $<temp>0;
+     	ast_set_temp(TEMP_BT,S->b.t,&($$));
+     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+			code_generator(&($$));
 		}
 	| TK_LIT_TRUE
 		{
@@ -958,6 +945,9 @@ terminal_value:
 
 			gv_declare(IKS_AST_LITERAL,$$,"true");
 
+		  reg_or_label *S = $<temp>0;
+     	ast_set_temp(TEMP_BT,S->b.t,&($$));
+     	ast_set_temp(TEMP_BF,S->b.f,&($$));
 			code_generator(&($$));
 		}
 	| TK_LIT_CHAR
@@ -1013,6 +1003,17 @@ param_list:
 
 /* 2.6 */
 ctrl_flow:
+	{ 
+		$<temp>$ = new_reg_or_label();
+		$<temp>$->next = label_generator();
+  }
+	ctrl_flow2
+	{
+	  //delete_reg_or_label(&($<temp>-1));
+		$$ = $2;
+	}
+
+ctrl_flow2:
 		TK_PR_WHILE '(' expr ')' TK_PR_DO commands
 		{
 			$$ = iks_ast_new_node(IKS_AST_WHILE_DO,NULL);
@@ -1046,7 +1047,7 @@ ctrl_flow:
 			iks_ast_connect_nodes($$,$8);
 
 			code_generator(&($$));
-			delete_reg_or_label(&($<temp>-3)); // ..._after_if_b
+			//delete_reg_or_label(&($<temp>-3)); // ..._after_if_b
 		}
 	;
 
@@ -1055,24 +1056,19 @@ shrt_crct_before_if_b:
 		{
 			$<temp>$ = new_reg_or_label();
 			$<temp>$->b.t = label_generator();
-			iks_ast_node_value_t *S = $<nt>-2->item;
-			$<temp>$->b.f = S->temp.next;
+			reg_or_label *S = $<temp>-2;
+			$<temp>$->b.f = S->next;
 		}
 	;
 
 shrt_crct_after_if_b:
 		/* empty */
 		{
-		  //B1
-			ast_set_temp(TEMP_BT,$<temp>-1->b.t,&($<nt>0));
-			ast_set_temp(TEMP_BF,$<temp>-1->b.f,&($<nt>0));
-			delete_reg_or_label(&($<temp>-1)); //..._before_if_b
-
 			//B2
 			$<temp>$ = new_reg_or_label();
 			$<temp>$->b.t = label_generator();
-			iks_ast_node_value_t *S = $<nt>-2->item;
-			$<temp>$->b.f = S->temp.next;
+			reg_or_label *S = $<temp>-3;
+			$<temp>$->b.f = S->next;
 		}
 	;
 
