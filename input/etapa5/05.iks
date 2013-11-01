@@ -1,0 +1,12 @@
+int:main() {
+
+	while (true) do {
+		if(true) then {
+
+		}
+		else {
+
+		}
+	}
+
+}

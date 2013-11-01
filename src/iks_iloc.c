@@ -143,13 +143,6 @@ void code_do_while(iks_tree_t **ast) {
 	iks_tree_t *Bt = (*ast)->children->next->item;
 	iks_ast_node_value_t *B = Bt->item;
 
-	//printf("a\n");
-	//iloc_print(S1->code);
-	//printf("a\n");
-	//printf("b\n");
-	//iloc_print(B->code);
-	//printf("b\n");
-
 	// S.code = X = gera(S.begin) || S1.code || B.code
   label_insert(S1->code,S->temp.begin);
 	S->code = iks_list_concat(S->code,S1->code);

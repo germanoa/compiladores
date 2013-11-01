@@ -1,0 +1,10 @@
+int:a;
+int: main() {
+  if(true) then {
+		if(true) then {
+		}
+	else {
+		if(true) then { }
+	}
+	};
+}
