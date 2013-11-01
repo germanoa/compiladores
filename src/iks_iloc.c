@@ -70,19 +70,18 @@ void code_if(iks_tree_t **ast){
 
 	// X = gera(B.t) || S1.code
   label_insert(S1->code,B->temp.b.t);
-	// B.code || X
-	B->code = iks_list_concat(B->code,S1->code);
+	// S.code = B.code || X
+	S->code = iks_list_concat(B->code,S1->code);
 
 	// adicionamos gera(B.f) por compatibilidade com if_else
 	// pois B.f teria que ser S.next mas teve q ser rot()
-  //B.code || gera(B.t) || S1.code || gera(B.f)
+  //S.code = B.code || gera(B.t) || S1.code || gera(B.f)
   iloc_t *iloc = new_iloc(NULL, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));
 	iks_list_t *gambi = new_iks_list();
   iks_list_append(gambi,(void*)iloc);
   label_insert(gambi,B->temp.b.f);
-	B->code = iks_list_concat(B->code,gambi);
+	S->code = iks_list_concat(S->code,gambi);
 
-	S->code = B->code;	
 }
 
 void code_if_else(iks_tree_t **ast) {
@@ -96,27 +95,49 @@ void code_if_else(iks_tree_t **ast) {
 
 	// X = gera(B.t) || S1.code
   label_insert(S1->code,B->temp.b.t);
-	// B.code || X
-	B->code = iks_list_concat(B->code,S1->code);
-  // B.code || gera(goto S.next)
+	// S.code = B.code || X
+	S->code = iks_list_concat(B->code,S1->code);
+  // S.code = S.code || gera(goto S.next)
 	// aqui vamos gerar e usar S2.next ao inves de S.next, cfe. explicado
 	// no parser em ctrl_flow2
 	S2->temp.next = label_generator();
   iloc_t *goto_S_next = new_iloc(NULL, new_iloc_oper(jumpI,NULL,NULL,NULL,S2->temp.next,NULL,NULL));
-  iks_list_append(B->code,(void*)goto_S_next);
+  iks_list_append(S->code,(void*)goto_S_next);
 	// Y = gera(B.f) || S2.code
   label_insert(S2->code,B->temp.b.f);
-	// B.code || Y
-	B->code = iks_list_concat(B->code,S2->code);
-	// B.code || gera(goto(S2.next)
+	// S.code = S.code || Y
+	S->code = iks_list_concat(S->code,S2->code);
+	// S.code = S.code || gera(goto(S2.next)
   iloc_t *goto_S2_next = new_iloc(NULL, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));
 	iks_list_t *gambi = new_iks_list();
   iks_list_append(gambi,(void*)goto_S2_next);
   label_insert(gambi,S2->temp.next);
-	B->code = iks_list_concat(B->code,gambi);
+	S->code = iks_list_concat(S->code,gambi);
 
-	S->code = B->code;	
 }
+
+void code_while_do(iks_tree_t **ast) {
+	iks_ast_node_value_t *S = (*ast)->item;
+	iks_tree_t *Bt = (*ast)->children->item;
+	iks_ast_node_value_t *B = Bt->item;
+	iks_tree_t *S1t = (*ast)->children->next->item;
+	iks_ast_node_value_t *S1 = S1t->item;
+
+	// S.code = X = gera(S.begin) || B.code
+  label_insert(B->code,S->temp.begin);
+	S->code = iks_list_concat(S->code,B->code);
+
+
+	// S.code = Y = X || gera(B.t) || S1.code
+  label_insert(S1->code,B->temp.b.t);
+	S->code = iks_list_concat(S->code,S1->code);
+
+	// S.code = Y || gera(goto(S.begin)
+  iloc_t *goto_S_begin = new_iloc(NULL, new_iloc_oper(jumpI,NULL,NULL,NULL,S->temp.begin,NULL,NULL));
+  iks_list_append(S->code,(void*)goto_S_begin);
+
+}
+
 
 void code_generator(iks_tree_t **ast) {
 	iks_list_t *code;
@@ -137,12 +158,12 @@ void code_generator(iks_tree_t **ast) {
 		case IKS_AST_IF_ELSE:
 			code_if_else(ast);
 			break;
-//		case IKS_AST_DO_WHILE:
+		case IKS_AST_DO_WHILE:
 //			code_do_while(ast);
-//			break;
-//		case IKS_AST_WHILE_DO:
-//			code_while_do(ast);
-//			break;
+			break;
+		case IKS_AST_WHILE_DO:
+			code_while_do(ast);
+			break;
 		case IKS_AST_INPUT:
 		case IKS_AST_OUTPUT:
 		case IKS_AST_ATRIBUICAO:
