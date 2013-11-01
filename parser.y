@@ -374,12 +374,15 @@ commands:
 				}
 			}
 
-			iks_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
-			iks_ast_node_value_t *atrn = atribuicao->item;
+			$$ = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
+			iks_ast_node_value_t *atrn = $$->item;
 			atrn->iks_type = ids->iks_type;
-			iks_ast_connect_nodes(atribuicao,$1);
-			iks_ast_connect_nodes(atribuicao,$3);
-			$$ = atribuicao;
+
+			iks_ast_connect_nodes($$,$1);
+			iks_ast_connect_nodes($$,$3);
+
+			code_generator(&($$));
+
 		}
 	| idv '=' expr
 		{
@@ -905,18 +908,20 @@ terminal_value:
 		TK_LIT_INT
 		{
 			$1->iks_type=IKS_INT;
-			iks_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
-			iks_ast_node_value_t *litn = lit->item;
+			$$ = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $1->iks_type;
-			$$ = lit;
+			
+			code_generator(&($$));
 		}
 	| TK_LIT_FLOAT
 		{
 			$1->iks_type=IKS_FLOAT;
-			iks_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
-			iks_ast_node_value_t *litn = lit->item;
+			$$ = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $1->iks_type;
-			$$ = lit;
+			
+			code_generator(&($$));
 		}
 	| TK_LIT_FALSE
 		{
@@ -960,18 +965,20 @@ terminal_value:
 	| TK_LIT_CHAR
 		{
 			$1->iks_type=IKS_CHAR;
-			iks_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
-			iks_ast_node_value_t *litn = lit->item;
+			$$ = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $1->iks_type;
-			$$ = lit;
+			
+			code_generator(&($$));
 		}
 	| TK_LIT_STRING
 		{
 			$1->iks_type=IKS_STRING;
-			iks_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
-			iks_ast_node_value_t *litn = lit->item;
+			$$ = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $1->iks_type;
-			$$ = lit;
+			
+			code_generator(&($$));
 		}
 	;
 

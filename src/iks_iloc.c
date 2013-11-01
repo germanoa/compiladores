@@ -22,10 +22,8 @@ void code_funcao(iks_tree_t **ast) {
 	}
 }
 
-void code_id(iks_tree_t **ast) {
+void code_id_lits(iks_tree_t **ast) {
 	iks_ast_node_value_t *E = (*ast)->item;
-
-
 
 	//registrador que receberah conteudo de id na memoria
 	E->temp.name = register_generator();
@@ -86,6 +84,12 @@ void code_literal(iks_tree_t **ast) {
       iloc = new_iloc(NULL, new_iloc_oper(jumpI,NULL,NULL,NULL,S->temp.b.f,NULL,NULL));
       iks_list_append(S->code,(void*)iloc);
       break;
+    case TK_LIT_INT:
+    case TK_LIT_FLOAT:
+    case TK_LIT_CHAR:
+    case TK_LIT_STRING:
+			code_id_lits(ast);
+			break;
     default:
       printf("ops at code_literal\n");
   }
@@ -238,6 +242,45 @@ void code_comp_l(iks_tree_t **ast) {
 
 }
 
+void code_attr(iks_tree_t **ast) {
+	iks_ast_node_value_t *S = (*ast)->item;
+	iks_tree_t *IDt = (*ast)->children->item;
+	iks_ast_node_value_t *ID = IDt->item;
+	iks_tree_t *Et = (*ast)->children->next->item;
+	iks_ast_node_value_t *E = Et->item;
+
+	S->temp.name = register_generator();
+
+  iloc_t *attr;
+	opcode_t op;
+	switch(E->iks_type) {
+		case IKS_INT:
+			if (S->iks_type==IKS_CHAR) { op=i2c; } 
+			else { op=i2i; } 
+			attr = new_iloc(NULL, new_iloc_oper(op,E->temp.name,\
+			 																				  NULL,\
+																								NULL,\
+																								S->temp.name,\
+																								NULL,\
+																								NULL));
+			break;	
+		case IKS_CHAR:
+			if (S->iks_type==IKS_INT) { op=c2i; } 
+			else { op=c2c; } 
+			attr = new_iloc(NULL, new_iloc_oper(op,E->temp.name,\
+			 																				  NULL,\
+																								NULL,\
+																								S->temp.name,\
+																								NULL,\
+																								NULL));
+			break;	
+	}
+	iks_list_t *attr_code = new_iks_list();
+	iks_list_append(attr_code,attr);
+	S->code = iks_list_concat(E->code,attr_code);
+
+}
+
 void code_generator(iks_tree_t **ast) {
 	iks_list_t *code;
 	code = new_iks_list();
@@ -266,10 +309,12 @@ void code_generator(iks_tree_t **ast) {
 		case IKS_AST_INPUT:
 		case IKS_AST_OUTPUT:
 		case IKS_AST_ATRIBUICAO:
+			code_attr(ast);
+			break;
 		case IKS_AST_RETURN:
 		case IKS_AST_BLOCO:
 		case IKS_AST_IDENTIFICADOR:
-			code_id(ast);
+			code_id_lits(ast);
 			break;
 		case IKS_AST_LITERAL:
 			code_literal(ast);
@@ -432,6 +477,22 @@ void iloc_oper_print(iks_list_t *opers) {
         break;
       case cload:
         printf("cload %s => %s",oper->src_operands->item,\
+																		 oper->dst_operands->item);
+        break;
+      case i2i:
+        printf("i2i %s => %s",oper->src_operands->item,\
+																		 oper->dst_operands->item);
+        break;
+      case i2c:
+        printf("i2c %s => %s",oper->src_operands->item,\
+																		 oper->dst_operands->item);
+        break;
+      case c2i:
+        printf("c2i %s => %s",oper->src_operands->item,\
+																		 oper->dst_operands->item);
+        break;
+      case c2c:
+        printf("c2c %s => %s",oper->src_operands->item,\
 																		 oper->dst_operands->item);
         break;
 
