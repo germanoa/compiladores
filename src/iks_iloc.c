@@ -68,33 +68,52 @@ void code_if(iks_tree_t **ast){
 	iks_tree_t *S1t = (*ast)->children->next->item;
 	iks_ast_node_value_t *S1 = S1t->item;
 
-  //B.code || gera(B.t) || S1.code
+	// X = gera(B.t) || S1.code
   label_insert(S1->code,B->temp.b.t);
+	// B.code || X
 	B->code = iks_list_concat(B->code,S1->code);
+
+	// adicionamos gera(B.f) por compatibilidade com if_else
+	// pois B.f teria que ser S.next mas teve q ser rot()
+  //B.code || gera(B.t) || S1.code || gera(B.f)
+  iloc_t *iloc = new_iloc(NULL, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));
+	iks_list_t *gambi = new_iks_list();
+  iks_list_append(gambi,(void*)iloc);
+  label_insert(gambi,B->temp.b.f);
+	B->code = iks_list_concat(B->code,gambi);
 
 	S->code = B->code;	
 }
 
 void code_if_else(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
-	iks_ast_node_value_t *B = (*ast)->children->item;
-	iks_ast_node_value_t *S1 = (*ast)->children->next->item;
-	iks_ast_node_value_t *S2 = (*ast)->children->next->next->item;
-	
-	S1->temp.next = S->temp.next;
-	S2->temp.next = S->temp.next;
-	
-  //B.code || gera(B.t) || S1.code
+	iks_tree_t *Bt = (*ast)->children->item;
+	iks_ast_node_value_t *B = Bt->item;
+	iks_tree_t *S1t = (*ast)->children->next->item;
+	iks_ast_node_value_t *S1 = S1t->item;
+	iks_tree_t *S2t = (*ast)->children->next->next->item;
+	iks_ast_node_value_t *S2 = S2t->item;
+
+	// X = gera(B.t) || S1.code
   label_insert(S1->code,B->temp.b.t);
+	// B.code || X
 	B->code = iks_list_concat(B->code,S1->code);
-
-  //|| gera(goto S.next)
-  iloc_t *iloc = new_iloc(NULL, new_iloc_oper(jumpI,NULL,NULL,NULL,S->temp.next,NULL,NULL));
-  iks_list_append(S1->code,(void*)iloc);
-
-  //|| gera(B.f:) || S2.code
+  // B.code || gera(goto S.next)
+	// aqui vamos gerar e usar S2.next ao inves de S.next, cfe. explicado
+	// no parser em ctrl_flow2
+	S2->temp.next = label_generator();
+  iloc_t *goto_S_next = new_iloc(NULL, new_iloc_oper(jumpI,NULL,NULL,NULL,S2->temp.next,NULL,NULL));
+  iks_list_append(B->code,(void*)goto_S_next);
+	// Y = gera(B.f) || S2.code
   label_insert(S2->code,B->temp.b.f);
+	// B.code || Y
 	B->code = iks_list_concat(B->code,S2->code);
+	// B.code || gera(goto(S2.next)
+  iloc_t *goto_S2_next = new_iloc(NULL, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));
+	iks_list_t *gambi = new_iks_list();
+  iks_list_append(gambi,(void*)goto_S2_next);
+  label_insert(gambi,S2->temp.next);
+	B->code = iks_list_concat(B->code,gambi);
 
 	S->code = B->code;	
 }

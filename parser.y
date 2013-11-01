@@ -83,7 +83,7 @@ DECLARATIONS
 %type<nt> ctrl_flow2
 %type<nt> output_list
 %type<nt> expr
-%type<nt> real_expr
+//%type<nt> real_expr
 %type<nt> arim_expr
 %type<nt> logic_expr
 %type<nt> func_param_list
@@ -300,6 +300,9 @@ command_block:
 			iks_tree_t *bloco = iks_ast_new_node(IKS_AST_BLOCO,NULL);
 			if ($2) { //because can command_seq <- command <- empty
 				iks_ast_connect_nodes(bloco,$2);
+				iks_ast_node_value_t *S = $2->item;
+				iks_ast_node_value_t *bloco_n = bloco->item;
+				bloco_n->code = S->code;
 			}
 			$$ = bloco;
 		}
@@ -999,6 +1002,7 @@ param_list:
 /* 2.6 */
 ctrl_flow:
 	{ 
+		//S->next
 		$<temp>$ = new_reg_or_label();
 		$<temp>$->next = label_generator();
   }
@@ -1006,6 +1010,20 @@ ctrl_flow:
 	{
 	  //delete_reg_or_label(&($<temp>-1));
 		$$ = $2;
+		//nossos S->next sao locais, ou seja, em if_else
+		// S2->next nao eh S->next, mas possui um proprio S2->next
+		// para nossa gramatica funciona. incompativel com coisas avancadas
+		// tipo switch-case de C.
+		// o resultado quando temos ctrl_flows encadeados eh
+		// uma pilha final de labels, trazendo o efeito necessario
+		iloc_t *iloc = new_iloc(NULL, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));  iks_list_t *gambi = new_iks_list();
+  	iks_list_append(gambi,(void*)iloc);
+		reg_or_label *S = $<temp>1;
+  	label_insert(gambi,S->next);
+
+		iks_ast_node_value_t *ctrl_flow2 = $$->item;
+  	ctrl_flow2->code = iks_list_concat(ctrl_flow2->code,gambi);
+
 	}
 
 ctrl_flow2:
@@ -1021,18 +1039,13 @@ ctrl_flow2:
 			iks_ast_connect_nodes($$,$2);
 			iks_ast_connect_nodes($$,$5);
 		}
-	|	TK_PR_IF '(' shrt_crct_before_if_b expr shrt_crct_after_if_b ')' TK_PR_THEN commands TK_PR_ELSE commands {
+	|	TK_PR_IF '(' shrt_crct_before_if_b expr shrt_crct_after_if_b ')' TK_PR_THEN commands TK_PR_ELSE shrt_crct_after_else commands {
 
 			$$ = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
 			iks_ast_connect_nodes($$,$4);
 			iks_ast_connect_nodes($$,$8);
-			iks_ast_connect_nodes($$,$10);
+			iks_ast_connect_nodes($$,$11);
 
-		  //using and freeing buffer to short circuit
-			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($3)),&($4));
-			ast_set_temp(TEMP_BF,label_generator(),&($4));
-			//CRIAR AST DELETE, pois TREE DELETE precisa ser customizada
-			//iks_ast_delete($<nt>3);
 			code_generator(&($$));
 		}
 	|	TK_PR_IF '(' shrt_crct_before_if_b expr shrt_crct_after_if_b ')' TK_PR_THEN commands {
@@ -1046,24 +1059,35 @@ ctrl_flow2:
 		}
 	;
 
+shrt_crct_after_else:
+	{
+		//nao faz nada pelo descrito nos comentarios de ctrl_flow2
+		//reg_or_label *S = $<temp>-9;
+		//$<temp>$ = new_reg_or_label();
+		//$<temp>$->b.f = S->next;
+	}
+
 shrt_crct_before_if_b:
 		/* empty */
 		{
+			reg_or_label *S = $<temp>-2;
+
 			$<temp>$ = new_reg_or_label();
 			$<temp>$->b.t = label_generator();
-			reg_or_label *S = $<temp>-2;
-			$<temp>$->b.f = S->next;
+			//deveria ser S->next. gambi explicada em iks_iloc.c
+			// permite compatibilidade com if_else
+			$<temp>$->b.f = label_generator(); //deveria ser S->next
+			//$<temp>$->b.f = S->next;
 		}
 	;
 
 shrt_crct_after_if_b:
 		/* empty */
 		{
-			//B2
-			$<temp>$ = new_reg_or_label();
-			$<temp>$->b.t = label_generator();
-			reg_or_label *S = $<temp>-3;
-			$<temp>$->b.f = S->next;
+			//nao faz nada pelo descrito nos comentarios de ctrl_flow2
+			//reg_or_label *S = $<temp>-4;
+			//$<temp>$ = new_reg_or_label();
+			//$<temp>$->b.f = S->next;
 		}
 	;
 

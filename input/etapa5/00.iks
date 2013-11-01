@@ -1,4 +1,7 @@
 int:a;
 int: main() {
-   if(true) then {};
+  if(true) then {
+		if(false) then {
+		}
+	};
 }
