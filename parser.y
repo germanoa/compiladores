@@ -1039,11 +1039,16 @@ ctrl_flow2:
 			code_generator(&($$));
 
 		}
-	| TK_PR_DO commands TK_PR_WHILE '(' expr ')' 
+	| TK_PR_DO shrt_crct_before_do_while_cmd commands TK_PR_WHILE '(' shrt_crct_before_do_while_b expr ')' 
 		{
 			$$ = iks_ast_new_node(IKS_AST_DO_WHILE,NULL);
-			iks_ast_connect_nodes($$,$2);
-			iks_ast_connect_nodes($$,$5);
+			iks_ast_connect_nodes($$,$3);
+			iks_ast_connect_nodes($$,$7);
+
+		  reg_or_label *S = $<temp>2;
+			ast_set_temp(TEMP_BEGIN,S->begin,&($$));
+
+			code_generator(&($$));
 		}
 	|	TK_PR_IF '(' shrt_crct_before_if_b expr shrt_crct_after_if_b ')' TK_PR_THEN commands TK_PR_ELSE shrt_crct_after_else commands {
 
@@ -1083,6 +1088,27 @@ shrt_crct_after_while_b:
 			$<temp>$ = new_reg_or_label();
 			$<temp>$->begin = label_generator();
 	}
+
+
+shrt_crct_before_do_while_cmd:
+	{
+			//reg_or_label *S = $<temp>-1;
+			//S->begin = label_generator();
+			//printf("S->begin = %s\n",S->begin);
+
+			$<temp>$ = new_reg_or_label();
+			$<temp>$->begin = label_generator();
+	}
+
+shrt_crct_before_do_while_b:
+	{
+			reg_or_label *S = $<temp>-5;
+			reg_or_label *S1 = $<temp>-3;
+
+			$<temp>$->b.t = S1->begin;
+			$<temp>$->b.f = S->next;
+	}
+
 
 shrt_crct_after_else:
 	{

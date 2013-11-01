@@ -76,9 +76,9 @@ void code_if(iks_tree_t **ast){
 	// adicionamos gera(B.f) por compatibilidade com if_else
 	// pois B.f teria que ser S.next mas teve q ser rot()
   //S.code = B.code || gera(B.t) || S1.code || gera(B.f)
-  iloc_t *iloc = new_iloc(NULL, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));
+  iloc_t *B_f = new_iloc(NULL, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));
 	iks_list_t *gambi = new_iks_list();
-  iks_list_append(gambi,(void*)iloc);
+  iks_list_append(gambi,(void*)B_f);
   label_insert(gambi,B->temp.b.f);
 	S->code = iks_list_concat(S->code,gambi);
 
@@ -127,7 +127,6 @@ void code_while_do(iks_tree_t **ast) {
   label_insert(B->code,S->temp.begin);
 	S->code = iks_list_concat(S->code,B->code);
 
-
 	// S.code = Y = X || gera(B.t) || S1.code
   label_insert(S1->code,B->temp.b.t);
 	S->code = iks_list_concat(S->code,S1->code);
@@ -135,9 +134,35 @@ void code_while_do(iks_tree_t **ast) {
 	// S.code = Y || gera(goto(S.begin)
   iloc_t *goto_S_begin = new_iloc(NULL, new_iloc_oper(jumpI,NULL,NULL,NULL,S->temp.begin,NULL,NULL));
   iks_list_append(S->code,(void*)goto_S_begin);
-
 }
 
+void code_do_while(iks_tree_t **ast) {
+	iks_ast_node_value_t *S = (*ast)->item;
+	iks_tree_t *S1t = (*ast)->children->item;
+	iks_ast_node_value_t *S1 = S1t->item;
+	iks_tree_t *Bt = (*ast)->children->next->item;
+	iks_ast_node_value_t *B = Bt->item;
+
+	//printf("a\n");
+	//iloc_print(S1->code);
+	//printf("a\n");
+	//printf("b\n");
+	//iloc_print(B->code);
+	//printf("b\n");
+
+	// S.code = X = gera(S.begin) || S1.code || B.code
+  label_insert(S1->code,S->temp.begin);
+	S->code = iks_list_concat(S->code,S1->code);
+	S->code = iks_list_concat(S->code,B->code);
+
+
+	////S.code = X || gera(B.f)
+  //iloc_t *B_f = new_iloc(NULL, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));
+	//iks_list_t *gambi = new_iks_list();
+  //iks_list_append(gambi,(void*)B_f);
+  //label_insert(gambi,B->temp.b.f);
+	//S->code = iks_list_concat(S->code,gambi);
+}
 
 void code_generator(iks_tree_t **ast) {
 	iks_list_t *code;
@@ -159,7 +184,7 @@ void code_generator(iks_tree_t **ast) {
 			code_if_else(ast);
 			break;
 		case IKS_AST_DO_WHILE:
-//			code_do_while(ast);
+			code_do_while(ast);
 			break;
 		case IKS_AST_WHILE_DO:
 			code_while_do(ast);
