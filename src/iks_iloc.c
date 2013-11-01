@@ -7,12 +7,21 @@
 #include "iks_tree.h"
 #include "parser.h"
 
-void code_programa(iks_tree_t **ast) {
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
+void code_programa(iks_tree_t **ast) {
   //TODO: global_decl
-  
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void code_funcao(iks_tree_t **ast) {
 	iks_ast_node_value_t *F = (*ast)->item;
 	iks_tree_t *St = (*ast)->children->item;
@@ -22,6 +31,11 @@ void code_funcao(iks_tree_t **ast) {
 	}
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void code_id_lits(iks_tree_t **ast) {
 	iks_ast_node_value_t *E = (*ast)->item;
 
@@ -34,36 +48,26 @@ void code_id_lits(iks_tree_t **ast) {
 
 	iloc_t *_load,*_loadi;
 
-	_loadi = new_iloc(NULL, new_iloc_oper(loadI,addr,\
-	 																				  NULL,\
-																						NULL,\
-																						reg_temp,\
-																						NULL,\
-																						NULL));
+	_loadi = new_iloc(NULL, new_iloc_oper(loadI,addr,\NULL,\NULL,\reg_temp,\NULL,\NULL));
 
 	// carregando conteudo da memoria para registrador E->temp.name
 	switch(E->iks_type) {
 		case IKS_INT:
-			_load = new_iloc(NULL, new_iloc_oper(load,reg_temp,\
-			 																				  NULL,\
-																								NULL,\
-																								E->temp.name,\
-																								NULL,\
-																								NULL));
+			_load = new_iloc(NULL, new_iloc_oper(load,reg_temp,\NULL,\NULL,\E->temp.name,\NULL,\NULL));
 			break;	
 		case IKS_CHAR:
-			_load = new_iloc(NULL, new_iloc_oper(cload,reg_temp,\
-			 																				  NULL,\
-																								NULL,\
-																								E->temp.name,\
-																								NULL,\
-																								NULL));
+			_load = new_iloc(NULL, new_iloc_oper(cload,reg_temp,\NULL,\NULL,\E->temp.name,\NULL,\NULL));
 			break;	
 	}
 	iks_list_append(E->code,_loadi);
 	iks_list_append(E->code,_load);
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void code_literal(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
 
@@ -89,7 +93,12 @@ void code_literal(iks_tree_t **ast) {
       printf("ops at code_literal\n");
   }
 }
-  
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void code_or(iks_tree_t **ast) {
 	iks_ast_node_value_t *or_n = (*ast)->item;
 	iks_tree_t *e1 = (*ast)->children->item;
@@ -110,6 +119,12 @@ void code_or(iks_tree_t **ast) {
 	or_n->code = e1_n->code;
 }
 
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void code_if(iks_tree_t **ast){
 	iks_ast_node_value_t *S = (*ast)->item;
 	iks_tree_t *Bt = (*ast)->children->item;
@@ -133,6 +148,11 @@ void code_if(iks_tree_t **ast){
 
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void code_if_else(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
 	iks_tree_t *Bt = (*ast)->children->item;
@@ -165,6 +185,12 @@ void code_if_else(iks_tree_t **ast) {
 
 }
 
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void code_while_do(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
 	iks_tree_t *Bt = (*ast)->children->item;
@@ -185,6 +211,11 @@ void code_while_do(iks_tree_t **ast) {
   iks_list_append(S->code,(void*)goto_S_begin);
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void code_do_while(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
 	iks_tree_t *S1t = (*ast)->children->item;
@@ -206,6 +237,11 @@ void code_do_while(iks_tree_t **ast) {
 	//S->code = iks_list_concat(S->code,gambi);
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void code_comp_l(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
 	iks_tree_t *E1t = (*ast)->children->item;
@@ -217,19 +253,9 @@ void code_comp_l(iks_tree_t **ast) {
 
 	B->temp.name = register_generator();
 
-  iks_list_t *comp_l = new_iks_list();
-	iloc_t *cmp_lt = new_iloc(NULL, new_iloc_oper(cmp_LT,E1->temp.name,\
-																											 E2->temp.name,\
-																											 NULL,\
-																											 B->temp.name,\
-																											 NULL,\
-																											 NULL));	
-	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,B->temp.name,\
-																								 NULL,\
-																								 NULL,\
-																								 B->temp.b.t,\
-																								 B->temp.b.f,\
-																								 NULL));	
+  	iks_list_t *comp_l = new_iks_list();
+	iloc_t *cmp_lt = new_iloc(NULL, new_iloc_oper(cmp_LT,E1->temp.name,\E2->temp.name,\NULL,\B->temp.name,\NULL,\NULL));	
+	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,B->temp.name,\NULL,\NULL,\B->temp.b.t,\B->temp.b.f,\NULL));	
 	iks_list_append(comp_l,cmp_lt);	
 	iks_list_append(comp_l,_cbr);	
 
@@ -237,6 +263,11 @@ void code_comp_l(iks_tree_t **ast) {
 
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void code_attr(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
 	iks_tree_t *IDt = (*ast)->children->item;
@@ -252,22 +283,12 @@ void code_attr(iks_tree_t **ast) {
 		case IKS_INT:
 			if (S->iks_type==IKS_CHAR) { op=i2c; } 
 			else { op=i2i; } 
-			attr = new_iloc(NULL, new_iloc_oper(op,E->temp.name,\
-			 																				  NULL,\
-																								NULL,\
-																								S->temp.name,\
-																								NULL,\
-																								NULL));
+			attr = new_iloc(NULL, new_iloc_oper(op,E->temp.name,\NULL,\NULL,\S->temp.name,\NULL,\NULL));
 			break;	
 		case IKS_CHAR:
 			if (S->iks_type==IKS_INT) { op=c2i; } 
 			else { op=c2c; } 
-			attr = new_iloc(NULL, new_iloc_oper(op,E->temp.name,\
-			 																				  NULL,\
-																								NULL,\
-																								S->temp.name,\
-																								NULL,\
-																								NULL));
+			attr = new_iloc(NULL, new_iloc_oper(op,E->temp.name,\NULL,\NULL,\S->temp.name,\NULL,\NULL));
 			break;	
 	}
 	iks_list_t *attr_code = new_iks_list();
@@ -276,6 +297,11 @@ void code_attr(iks_tree_t **ast) {
 
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void code_generator(iks_tree_t **ast) {
 	iks_list_t *code;
 	code = new_iks_list();
@@ -340,6 +366,11 @@ void code_generator(iks_tree_t **ast) {
 	}
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 char *label_generator(){
   char temp_label[LABEL_WIDTH];
   char *prefix, *new_label;
@@ -358,6 +389,11 @@ char *label_generator(){
   return new_label;
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 char *int_to_char(int i) {
 	#define MAXMEM  10 //quantidade de digitos maximo pra memoria
 	char temp[MAXMEM];
@@ -368,6 +404,11 @@ char *int_to_char(int i) {
 	return t;
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 char *register_generator(){
   char temp_register[REGISTER_WIDTH];
   char *prefix, *new_register;
@@ -386,6 +427,11 @@ char *register_generator(){
   return new_register;
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void label_insert(iks_list_t *code, char *label) {
   iloc_t *iloc = code->item;
   if(!iloc) {
@@ -403,6 +449,11 @@ void label_insert(iks_list_t *code, char *label) {
   }
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 iloc_t *new_iloc(char *label, iloc_oper_t *oper) {
   iloc_t *iloc;
   iloc = malloc(sizeof(iloc_t));
@@ -412,6 +463,11 @@ iloc_t *new_iloc(char *label, iloc_oper_t *oper) {
   return iloc;
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 iloc_oper_t *new_iloc_oper(opcode_t opcode, char *s1, char *s2, char *s3, char *d1, char *d2, char *d3) {
   iloc_oper_t *oper;
   oper = malloc(sizeof(iloc_oper_t));
@@ -439,6 +495,11 @@ iloc_oper_t *new_iloc_oper(opcode_t opcode, char *s1, char *s2, char *s3, char *
   return oper;
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void iloc_oper_print(iks_list_t *opers) {
   iks_list_t *it;
   it = opers;
@@ -454,42 +515,31 @@ void iloc_oper_print(iks_list_t *opers) {
         printf("jumpI -> %s",oper->dst_operands->item);
         break;
       case cmp_LT:
-        printf("cmp_LT %s, %s -> %s",oper->src_operands->item,\
-																		 oper->src_operands->next->item,\
-																		 oper->dst_operands->item);
+        printf("cmp_LT %s, %s -> %s",oper->src_operands->item,\oper->src_operands->next->item,\oper->dst_operands->item);
         break;
       case cbr:
-        printf("cbr %s -> %s, %s",oper->src_operands->item,\
-																		 oper->dst_operands->item,\
-																		 oper->dst_operands->next->item);
+        printf("cbr %s -> %s, %s",oper->src_operands->item,\oper->dst_operands->item,\oper->dst_operands->next->item);
         break;
       case loadI:
-        printf("loadI %s => %s",oper->src_operands->item,\
-																		 oper->dst_operands->item);
+        printf("loadI %s => %s",oper->src_operands->item,\oper->dst_operands->item);
         break;
       case load:
-        printf("load %s => %s",oper->src_operands->item,\
-																		 oper->dst_operands->item);
+        printf("load %s => %s",oper->src_operands->item,\ oper->dst_operands->item);
         break;
       case cload:
-        printf("cload %s => %s",oper->src_operands->item,\
-																		 oper->dst_operands->item);
+        printf("cload %s => %s",oper->src_operands->item,\oper->dst_operands->item);
         break;
       case i2i:
-        printf("i2i %s => %s",oper->src_operands->item,\
-																		 oper->dst_operands->item);
+        printf("i2i %s => %s",oper->src_operands->item,\oper->dst_operands->item);
         break;
       case i2c:
-        printf("i2c %s => %s",oper->src_operands->item,\
-																		 oper->dst_operands->item);
+        printf("i2c %s => %s",oper->src_operands->item,\oper->dst_operands->item);
         break;
       case c2i:
-        printf("c2i %s => %s",oper->src_operands->item,\
-																		 oper->dst_operands->item);
+        printf("c2i %s => %s",oper->src_operands->item,\oper->dst_operands->item);
         break;
       case c2c:
-        printf("c2c %s => %s",oper->src_operands->item,\
-																		 oper->dst_operands->item);
+        printf("c2c %s => %s",oper->src_operands->item,\oper->dst_operands->item);
         break;
 
     }
@@ -499,6 +549,11 @@ void iloc_oper_print(iks_list_t *opers) {
   } while(it != opers);
 }
 
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void iloc_print(iks_list_t *code) {
   iks_list_t *it;
   it = code;
