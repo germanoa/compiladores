@@ -1,3 +1,6 @@
+int:z;
+int:z1;
+float:f;
 int:a;
 int:b;
 int: main() {

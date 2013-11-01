@@ -30,12 +30,7 @@ void code_id_lits(iks_tree_t **ast) {
 	//registrador que receberah endereco na memoria deste id
 	char *reg_temp = register_generator();
 
-	int addr_base = 4; // TODO: tem que buscar o addr_base do escopo
-	//carregando endereco de memoria para registrador
-
-	//TODO: ESTAH ESTOURANDO BUFFER. VERIFICAR
-	//char *addr = int_to_char(E->symbol->addr_offset+addr_base);
-	char *addr = "todo";
+	char *addr = int_to_char(E->symbol->addr_offset);
 
 	iloc_t *_load,*_loadi;
 
@@ -364,10 +359,11 @@ char *label_generator(){
 }
 
 char *int_to_char(int i) {
+	#define MAXMEM  10 //quantidade de digitos maximo pra memoria
+	char temp[MAXMEM];
 	char *t;
-	int MAXMEM = 10; //quantidade de digitos maximo pra memoria
 									//horrivel, pensar como melhorar isso
-	malloc (sizeof(MAXMEM));
+	t = malloc (sizeof(char) * MAXMEM);
 	sprintf(t, "%d", i);
 	return t;
 }
