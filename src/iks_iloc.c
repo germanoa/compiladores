@@ -3,6 +3,7 @@
 #include <string.h>
 #include "iks_iloc.h"
 #include "iks_ast.h"
+#include "iks_types.h"
 #include "iks_tree.h"
 #include "parser.h"
 
@@ -19,6 +20,55 @@ void code_funcao(iks_tree_t **ast) {
 		iks_ast_node_value_t *S = St->item;
 		F->code = iks_list_concat(F->code,S->code);
 	}
+}
+
+void code_id(iks_tree_t **ast) {
+	iks_ast_node_value_t *E = (*ast)->item;
+
+
+
+	//registrador que receberah conteudo de id na memoria
+	E->temp.name = register_generator();
+	//registrador que receberah endereco na memoria deste id
+	char *reg_temp = register_generator();
+
+	int addr_base = 4; // TODO: tem que buscar o addr_base do escopo
+	//carregando endereco de memoria para registrador
+
+	//TODO: ESTAH ESTOURANDO BUFFER. VERIFICAR
+	//char *addr = int_to_char(E->symbol->addr_offset+addr_base);
+	char *addr = "todo";
+
+	iloc_t *_load,*_loadi;
+
+	_loadi = new_iloc(NULL, new_iloc_oper(loadI,addr,\
+	 																				  NULL,\
+																						NULL,\
+																						reg_temp,\
+																						NULL,\
+																						NULL));
+
+	// carregando conteudo da memoria para registrador E->temp.name
+	switch(E->iks_type) {
+		case IKS_INT:
+			_load = new_iloc(NULL, new_iloc_oper(load,reg_temp,\
+			 																				  NULL,\
+																								NULL,\
+																								E->temp.name,\
+																								NULL,\
+																								NULL));
+			break;	
+		case IKS_CHAR:
+			_load = new_iloc(NULL, new_iloc_oper(cload,reg_temp,\
+			 																				  NULL,\
+																								NULL,\
+																								E->temp.name,\
+																								NULL,\
+																								NULL));
+			break;	
+	}
+	iks_list_append(E->code,_loadi);
+	iks_list_append(E->code,_load);
 }
 
 void code_literal(iks_tree_t **ast) {
@@ -157,6 +207,37 @@ void code_do_while(iks_tree_t **ast) {
 	//S->code = iks_list_concat(S->code,gambi);
 }
 
+void code_comp_l(iks_tree_t **ast) {
+	iks_ast_node_value_t *B = (*ast)->item;
+	iks_tree_t *E1t = (*ast)->children->item;
+	iks_ast_node_value_t *E1 = E1t->item;
+	iks_tree_t *E2t = (*ast)->children->next->item;
+	iks_ast_node_value_t *E2 = E2t->item;
+
+	B->code = iks_list_concat(E1->code,E2->code);
+
+	B->temp.name = register_generator();
+
+  iks_list_t *comp_l = new_iks_list();
+	iloc_t *cmp_lt = new_iloc(NULL, new_iloc_oper(cmp_LT,E1->temp.name,\
+																											 E2->temp.name,\
+																											 NULL,\
+																											 B->temp.name,\
+																											 NULL,\
+																											 NULL));	
+	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,B->temp.name,\
+																								 NULL,\
+																								 NULL,\
+																								 B->temp.b.t,\
+																								 B->temp.b.f,\
+																								 NULL));	
+	iks_list_append(comp_l,cmp_lt);	
+	iks_list_append(comp_l,_cbr);	
+
+	B->code = iks_list_concat(B->code,comp_l);
+
+}
+
 void code_generator(iks_tree_t **ast) {
 	iks_list_t *code;
 	code = new_iks_list();
@@ -188,6 +269,8 @@ void code_generator(iks_tree_t **ast) {
 		case IKS_AST_RETURN:
 		case IKS_AST_BLOCO:
 		case IKS_AST_IDENTIFICADOR:
+			code_id(ast);
+			break;
 		case IKS_AST_LITERAL:
 			code_literal(ast);
 			break;
@@ -206,6 +289,8 @@ void code_generator(iks_tree_t **ast) {
 		case IKS_AST_LOGICO_COMP_GE:
 		case IKS_AST_LOGICO_COMP_L:
 		case IKS_AST_LOGICO_COMP_G:
+			code_comp_l(ast);
+			break;
 //		case IKS_AST_LOGICO_COMP_NEGACAO:
 		case IKS_AST_VETOR_INDEXADO:
 		case IKS_AST_CHAMADA_DE_FUNCAO:
@@ -231,6 +316,15 @@ char *label_generator(){
   new_label = strcat(prefix, new_label);
 
   return new_label;
+}
+
+char *int_to_char(int i) {
+	char *t;
+	int MAXMEM = 10; //quantidade de digitos maximo pra memoria
+									//horrivel, pensar como melhorar isso
+	malloc (sizeof(MAXMEM));
+	sprintf(t, "%d", i);
+	return t;
 }
 
 char *register_generator(){
@@ -311,11 +405,34 @@ void iloc_oper_print(iks_list_t *opers) {
     iloc_oper_t *oper = it->item;
 
     if (!oper) break;
+    printf("\t");
     switch(oper->opcode) {
       case nop:
         break;
       case jumpI:
         printf("jumpI -> %s",oper->dst_operands->item);
+        break;
+      case cmp_LT:
+        printf("cmp_LT %s, %s -> %s",oper->src_operands->item,\
+																		 oper->src_operands->next->item,\
+																		 oper->dst_operands->item);
+        break;
+      case cbr:
+        printf("cbr %s -> %s, %s",oper->src_operands->item,\
+																		 oper->dst_operands->item,\
+																		 oper->dst_operands->next->item);
+        break;
+      case loadI:
+        printf("loadI %s => %s",oper->src_operands->item,\
+																		 oper->dst_operands->item);
+        break;
+      case load:
+        printf("load %s => %s",oper->src_operands->item,\
+																		 oper->dst_operands->item);
+        break;
+      case cload:
+        printf("cload %s => %s",oper->src_operands->item,\
+																		 oper->dst_operands->item);
         break;
 
     }

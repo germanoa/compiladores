@@ -484,10 +484,12 @@ id:
 			iks_grammar_symbol_t *s;
 			s = search_symbol_global($1,scope->st);
 			if (s) {
-				iks_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,s);
-				iks_ast_node_value_t *idn = identificador->item;
+				$$ = iks_ast_new_node(IKS_AST_IDENTIFICADOR,s);
+				iks_ast_node_value_t *idn = $$->item;
 				idn->iks_type = s->iks_type;
-				$$ = identificador;
+
+				code_generator(&($$));
+
 			} else {
 				fprintf(stderr,"identificador não declarado\n");
 				return(IKS_ERROR_UNDECLARED);
@@ -735,18 +737,25 @@ arim_expr:
 logic_expr:
 	expr '<' expr
 		{
-			/* 3.A.14 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_L,NULL);
-			iks_ast_node_value_t *oon = oo->item;
+			$$ = iks_ast_new_node(IKS_AST_LOGICO_COMP_L,NULL);
+			iks_ast_node_value_t *oon = $$->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
+
 			int type = infer_type($1, $3);
 			if(type > 5) //erro de coerção
 				return type;
 			oon->iks_type = type;
-			iks_ast_connect_nodes(oo,$1);
-			iks_ast_connect_nodes(oo,$3);
-			$$ = oo;
+
+			iks_ast_connect_nodes($$,$1);
+			iks_ast_connect_nodes($$,$3);
+
+		  reg_or_label *S = $<temp>0;
+     	ast_set_temp(TEMP_BT,S->b.t,&($$));
+     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+			code_generator(&($$));
+			
+
 		}
 	| expr '>' expr
 		{

@@ -50,6 +50,10 @@ struct iloc_oper_t {
 	iks_list_t *dst_operands; //list->item: operands
 };
 
+/*
+ * generate a new register
+ */
+char *int_to_char(int i);
 
 /*
  * generate a new label
