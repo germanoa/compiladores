@@ -190,10 +190,13 @@ int exist_symbol_local(iks_grammar_symbol_t *symbol, iks_dict_t *symbol_table) {
 }
 
 
-int decl_symbol(iks_grammar_symbol_t *s,int iks_type, int decl_type, void *symbol_table, iks_grammar_symbol_t *function_with_param) {
+//int decl_symbol(iks_grammar_symbol_t *s,int iks_type, int decl_type, void *symbol_table, iks_grammar_symbol_t *function_with_param) {
+int decl_symbol(iks_grammar_symbol_t *s,int iks_type, int decl_type, scope_t *scope, iks_grammar_symbol_t *function_with_param) {
   int ret=1;
   s->iks_type = iks_type;
   
+	iks_dict_t *symbol_table = (iks_dict_t*) iks_stack_top(scope->st);
+
   switch (iks_type) {
     case IKS_INT:
       s->iks_size=4;
@@ -211,7 +214,9 @@ int decl_symbol(iks_grammar_symbol_t *s,int iks_type, int decl_type, void *symbo
       s->iks_size=1;
       break;
   }
-  
+	s->addr_offset = scope->base_addr + scope->next_addr;
+	scope->next_addr += s->iks_size;
+ 
   s->decl_type = decl_type;
   s->symbol_table = (iks_dict_t*)symbol_table;
   
@@ -312,3 +317,52 @@ int iks_error(iks_grammar_symbol_t *s, int error_type) {
   }
   return ret;
 }
+
+
+int verify_function_args(iks_grammar_symbol_t *s, iks_list_t *args) {
+  int ret=0;
+  iks_grammar_symbol_t *s1,*s2;
+  iks_list_t *l1,*l2;
+  int sl1,sl2,diff;
+  l1 = s->params->next;
+  l2 = args->next;
+  sl1 = iks_list_size(s->params->next);
+  sl2 = iks_list_size(args->next);
+  diff = sl1-sl2;
+  if (diff!=0) {
+    if (sl1>sl2) {
+      fprintf(stderr,"faltam %d argumentos em '%s'\n",diff,s->value);
+      ret=IKS_ERROR_MISSING_ARGS;
+    }   
+    else {
+      fprintf(stderr,"sobram %d argumentos em '%s'\n",diff*-1,s->value);
+      ret=IKS_ERROR_EXCESS_ARGS;
+    }   
+  }
+  else if (sl1!=0){
+    do {
+       s1 = l1->item;
+       s2 = l2->item;
+       if (s1->iks_type!=s2->iks_type) {
+        fprintf(stderr,"tipos incompativeis entre '%s' e '%s'\n",s1->value,s2->value);
+        ret=IKS_ERROR_WRONG_TYPE_ARGS;
+        break;
+       }
+       l1 = l1->next;
+       l2 = l2->next;
+    } while(l1 != s->params);
+  }
+  return ret;
+}
+
+
+int symbol_is_iks_type(iks_grammar_symbol_t *s,int iks_type) {
+  int ret=1;
+  //printf("%d vs %d\n",s->iks_type,iks_type);
+  if (!(s->iks_type==iks_type)) {
+    ret=0;
+  }
+  return ret;
+}
+
+

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "iks_grammar.h"
+//#include "iks_grammar.h"
 #include "iks_tree.h"
 #include "iks_stack.h"
 #include "iks_ast.h"
@@ -9,6 +9,7 @@
 static inline void __scope_init(scope_t *scope) {
 	scope->st = new_iks_stack();
 	scope->base_addr = 0;
+	scope->next_addr = 0;
 }
 
 scope_t *new_scope() {
@@ -67,50 +68,50 @@ int verify_coercion(iks_tree_t *id, iks_tree_t *expr) {
   return ret;
 }
 
-int verify_function_args(iks_grammar_symbol_t *s, iks_list_t *args) {
-  int ret=0;
-  iks_grammar_symbol_t *s1,*s2;
-  iks_list_t *l1,*l2;
-  int sl1,sl2,diff;
-  l1 = s->params->next;
-  l2 = args->next;
-  sl1 = iks_list_size(s->params->next);
-  sl2 = iks_list_size(args->next);
-  diff = sl1-sl2;
-  if (diff!=0) {
-    if (sl1>sl2) {
-      fprintf(stderr,"faltam %d argumentos em '%s'\n",diff,s->value);
-      ret=IKS_ERROR_MISSING_ARGS;
-    }
-    else {
-      fprintf(stderr,"sobram %d argumentos em '%s'\n",diff*-1,s->value);
-      ret=IKS_ERROR_EXCESS_ARGS;
-    }
-  }
-  else if (sl1!=0){
-    do {
-       s1 = l1->item;
-       s2 = l2->item;
-       if (s1->iks_type!=s2->iks_type) {
-        fprintf(stderr,"tipos incompativeis entre '%s' e '%s'\n",s1->value,s2->value);
-        ret=IKS_ERROR_WRONG_TYPE_ARGS;
-        break;
-       }
-       l1 = l1->next;
-       l2 = l2->next;
-    } while(l1 != s->params);
-  }
-  return ret;
-}
-
-int symbol_is_iks_type(iks_grammar_symbol_t *s,int iks_type) {
-  int ret=1;
-  //printf("%d vs %d\n",s->iks_type,iks_type);
-  if (!(s->iks_type==iks_type)) {
-    ret=0;
-  }
-  return ret;
-}
+//int verify_function_args(iks_grammar_symbol_t *s, iks_list_t *args) {
+//  int ret=0;
+//  iks_grammar_symbol_t *s1,*s2;
+//  iks_list_t *l1,*l2;
+//  int sl1,sl2,diff;
+//  l1 = s->params->next;
+//  l2 = args->next;
+//  sl1 = iks_list_size(s->params->next);
+//  sl2 = iks_list_size(args->next);
+//  diff = sl1-sl2;
+//  if (diff!=0) {
+//    if (sl1>sl2) {
+//      fprintf(stderr,"faltam %d argumentos em '%s'\n",diff,s->value);
+//      ret=IKS_ERROR_MISSING_ARGS;
+//    }
+//    else {
+//      fprintf(stderr,"sobram %d argumentos em '%s'\n",diff*-1,s->value);
+//      ret=IKS_ERROR_EXCESS_ARGS;
+//    }
+//  }
+//  else if (sl1!=0){
+//    do {
+//       s1 = l1->item;
+//       s2 = l2->item;
+//       if (s1->iks_type!=s2->iks_type) {
+//        fprintf(stderr,"tipos incompativeis entre '%s' e '%s'\n",s1->value,s2->value);
+//        ret=IKS_ERROR_WRONG_TYPE_ARGS;
+//        break;
+//       }
+//       l1 = l1->next;
+//       l2 = l2->next;
+//    } while(l1 != s->params);
+//  }
+//  return ret;
+//}
+//
+//int symbol_is_iks_type(iks_grammar_symbol_t *s,int iks_type) {
+//  int ret=1;
+//  //printf("%d vs %d\n",s->iks_type,iks_type);
+//  if (!(s->iks_type==iks_type)) {
+//    ret=0;
+//  }
+//  return ret;
+//}
 
 int infer_type(iks_tree_t *tree1, iks_tree_t *tree2) {
 	iks_ast_node_value_t *tree1n = tree1->item;

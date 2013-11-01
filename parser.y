@@ -203,7 +203,8 @@ array_decl_dimen:
 decl:
 		type ':' TK_IDENTIFICADOR
 		{
-			if (!decl_symbol($3,$1,IKS_DECL_VAR,iks_stack_top(scope->st),function_with_param)) {
+			//if (!decl_symbol($3,$1,IKS_DECL_VAR,iks_stack_top(scope->st),function_with_param)) {
+			if (!decl_symbol($3,$1,IKS_DECL_VAR,scope,function_with_param)) {
 				return(IKS_ERROR_DECLARED);
 			}
 			$$ = $3;
@@ -236,7 +237,8 @@ type:
 /* 2.2 */
 func:
 		type ':' TK_IDENTIFICADOR {
-			if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,iks_stack_top(scope->st),function_with_param)) {
+			//if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,iks_stack_top(scope->st),function_with_param)) {
+			if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,scope,function_with_param)) {
 				return(IKS_ERROR_DECLARED);
 			}
 			
