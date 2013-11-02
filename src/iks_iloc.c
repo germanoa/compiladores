@@ -188,11 +188,11 @@ void code_log_or(ast)(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Generate code to a equal comparison type
+* Input: pointer of pointer of iks_tree
+* Output:	none
 ******************************************************************************/
-void code_comp_eq(ast)(iks_tree_t **ast) {
+void code_comp_eq(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
@@ -212,12 +212,12 @@ void code_comp_eq(ast)(iks_tree_t **ast) {
 																								NULL,
 																								NULL));	
 	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,
-																								B->temp.name,
-																								NULL,
-																								NULL,
-																								B->temp.b.t,
-																								B->temp.b.f,
-																								NULL));	
+																							B->temp.name,
+																							NULL,
+																							NULL,
+																							B->temp.b.t,
+																							B->temp.b.f,
+																							NULL));	
 	iks_list_append(comp_eq,cmp_eq);	
 	iks_list_append(comp_eq,_cbr);	
 
@@ -226,11 +226,11 @@ void code_comp_eq(ast)(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Generate code to a not equal comparison type
+* Input: pointer of pointer of iks_tree
+* Output:	none
 ******************************************************************************/			
-void code_comp_ne(ast)(iks_tree_t **ast) {
+void code_comp_ne(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
@@ -250,12 +250,12 @@ void code_comp_ne(ast)(iks_tree_t **ast) {
 																								NULL,
 																								NULL));	
 	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,
-																								B->temp.name,
-																								NULL,
-																								NULL,
-																								B->temp.b.t,
-																								B->temp.b.f,
-																								NULL));	
+																							B->temp.name,
+																							NULL,
+																							NULL,
+																							B->temp.b.t,
+																							B->temp.b.f,
+																							NULL));	
 	iks_list_append(comp_ne,cmp_ne);	
 	iks_list_append(comp_ne,_cbr);	
 
@@ -264,11 +264,11 @@ void code_comp_ne(ast)(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Generate code to a less or equal comparison type
+* Input: pointer of pointer of iks_tree
+* Output:	none
 ******************************************************************************/
-void code_comp_le(ast)(iks_tree_t **ast) {
+void code_comp_le(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
@@ -302,11 +302,11 @@ void code_comp_le(ast)(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Generate code to a greater or equal comparison type
+* Input: pointer of pointer of iks_tree
+* Output:	none
 ******************************************************************************/
-void code_comp_ge(ast)(iks_tree_t **ast) {
+void code_comp_ge(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
@@ -340,9 +340,9 @@ void code_comp_ge(ast)(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Generate code to a less comparison type
+* Input: pointer of pointer of iks_tree
+* Output:	none
 ******************************************************************************/
 void code_comp_lt(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
@@ -379,11 +379,11 @@ void code_comp_lt(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Generate code to a greater comparison type
+* Input: pointer of pointer of iks_tree
+* Output:	none
 ******************************************************************************/
-void code_comp_gt(ast)(iks_tree_t **ast) {
+void code_comp_gt(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
@@ -417,7 +417,7 @@ void code_comp_gt(ast)(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
+* Objective:
 * Input:
 * Output:	
 ******************************************************************************/
