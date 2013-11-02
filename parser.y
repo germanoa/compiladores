@@ -683,6 +683,7 @@ arim_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr '-' expr
 		{
@@ -698,6 +699,7 @@ arim_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr '*' expr
 		{
@@ -713,6 +715,7 @@ arim_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr '/' expr
 		{
@@ -728,6 +731,7 @@ arim_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| '-' expr %prec INVERSAO
 		{
@@ -738,6 +742,7 @@ arim_expr:
 			oon->iks_type = exprn->iks_type;
 			iks_ast_connect_nodes(oo,$expr);
 			$$ = oo;
+			code_generator(&($$));
 		}
   ;
 
@@ -769,13 +774,16 @@ logic_expr:
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
+			
 			int type = infer_type($1, $3);
 			if(type > 5) //erro de coerção
 				return type;
 			oon->iks_type = type;
+
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr TK_OC_LE expr
 		{
@@ -786,6 +794,7 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr TK_OC_GE expr
 		{
@@ -796,6 +805,7 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr TK_OC_EQ expr
 		{
@@ -806,6 +816,7 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr TK_OC_NE expr
 		{
@@ -816,6 +827,7 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| '!'
 		{
@@ -884,7 +896,8 @@ func_call:
 				xn->iks_type = n->iks_type;
 				iks_ast_connect_nodes(x,$id);
 				ptr_function_call=x;
-			} else {
+			} 
+			else {
 				return iks_error(s,IKS_ERROR_USE);
 			}
 			args = new_iks_list();
