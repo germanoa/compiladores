@@ -194,16 +194,18 @@ void code_log_or(ast)(iks_tree_t **ast) {
 ******************************************************************************/
 void code_comp_eq(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
+	
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
+
 	iks_tree_t *E2t = (*ast)->children->next->item;
 	iks_ast_node_value_t *E2 = E2t->item;
 
 	B->code = iks_list_concat(E1->code,E2->code);
-
 	B->temp.name = register_generator();
 
 	iks_list_t *comp_eq = new_iks_list();
+
 	iloc_t *cmp_eq = new_iloc(NULL, new_iloc_oper(cmp_EQ,	
 																								E1->temp.name,
 																								E2->temp.name,
@@ -232,16 +234,18 @@ void code_comp_eq(iks_tree_t **ast) {
 ******************************************************************************/			
 void code_comp_ne(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
+	
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
+
 	iks_tree_t *E2t = (*ast)->children->next->item;
 	iks_ast_node_value_t *E2 = E2t->item;
 
 	B->code = iks_list_concat(E1->code,E2->code);
-
 	B->temp.name = register_generator();
 
-	iks_list_t *comp_ne = new_iks_list();
+	iks_list_t *comp_eq = new_iks_list();
+
 	iloc_t *cmp_ne = new_iloc(NULL, new_iloc_oper(cmp_NE,	
 																								E1->temp.name,
 																								E2->temp.name,
@@ -270,16 +274,18 @@ void code_comp_ne(iks_tree_t **ast) {
 ******************************************************************************/
 void code_comp_le(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
+	
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
+
 	iks_tree_t *E2t = (*ast)->children->next->item;
 	iks_ast_node_value_t *E2 = E2t->item;
 
 	B->code = iks_list_concat(E1->code,E2->code);
-
 	B->temp.name = register_generator();
 
-	iks_list_t *comp_le = new_iks_list();
+	iks_list_t *comp_eq = new_iks_list();
+
 	iloc_t *cmp_le = new_iloc(NULL, new_iloc_oper(cmp_LE,	
 																								E1->temp.name,
 																								E2->temp.name,
@@ -308,16 +314,18 @@ void code_comp_le(iks_tree_t **ast) {
 ******************************************************************************/
 void code_comp_ge(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
+	
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
+
 	iks_tree_t *E2t = (*ast)->children->next->item;
 	iks_ast_node_value_t *E2 = E2t->item;
 
 	B->code = iks_list_concat(E1->code,E2->code);
-
 	B->temp.name = register_generator();
 
-	iks_list_t *comp_ge = new_iks_list();
+	iks_list_t *comp_eq = new_iks_list();
+
 	iloc_t *cmp_ge = new_iloc(NULL, new_iloc_oper(cmp_GE,	
 																								E1->temp.name,
 																								E2->temp.name,
@@ -346,16 +354,18 @@ void code_comp_ge(iks_tree_t **ast) {
 ******************************************************************************/
 void code_comp_lt(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
+	
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
+
 	iks_tree_t *E2t = (*ast)->children->next->item;
 	iks_ast_node_value_t *E2 = E2t->item;
 
 	B->code = iks_list_concat(E1->code,E2->code);
-
 	B->temp.name = register_generator();
 
-	iks_list_t *comp_lt = new_iks_list();
+	iks_list_t *comp_eq = new_iks_list();
+
 	iloc_t *cmp_lt = new_iloc(NULL, new_iloc_oper(cmp_LT,	
 																								E1->temp.name,
 																								E2->temp.name,
@@ -385,16 +395,18 @@ void code_comp_lt(iks_tree_t **ast) {
 ******************************************************************************/
 void code_comp_gt(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
+	
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
+
 	iks_tree_t *E2t = (*ast)->children->next->item;
 	iks_ast_node_value_t *E2 = E2t->item;
 
 	B->code = iks_list_concat(E1->code,E2->code);
-
 	B->temp.name = register_generator();
 
-	iks_list_t *comp_gt = new_iks_list();
+	iks_list_t *comp_eq = new_iks_list();
+
 	iloc_t *cmp_gt = new_iloc(NULL, new_iloc_oper(cmp_GT,	
 																								E1->temp.name,
 																								E2->temp.name,
