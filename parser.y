@@ -148,13 +148,13 @@ prog:
 			/* 3.A.1 */
 			// just the first function is child of ast
 			if (iks_list_is_empty(ast->children)) {
-				iks_ast_connect_nodes(ast,$2);
+				iks_ast_connect_nodes(ast,$func);
 			}
 			else {
-				iks_ast_connect_nodes($1,$2);
+				iks_ast_connect_nodes($prog,$func);
 			}
 			//symbol_table_print((iks_dict_t*)iks_stack_top(scope->st));
-      $$ = $2;
+      $$ = $func;
 			iks_ast_node_value_t *program = $$->item;
       program_iloc = program->code;
       iloc_print(program_iloc);
@@ -180,8 +180,8 @@ array_decl_dimen:
 		array_decl_dimen '[' TK_LIT_INT ']'
 		{
 			//append to list of dimensions
-			iks_list_t *list = $1;
-			iks_grammar_symbol_t *lit = $3;
+			iks_list_t *list = $array_decl_dimen;
+			iks_grammar_symbol_t *lit = $TK_LIT_INT;
 			int size = atoi(lit->value);
 			
 			iks_list_append(list, (void*)&size);
@@ -192,7 +192,7 @@ array_decl_dimen:
 	| '[' TK_LIT_INT ']'
 		{
 			//create list of dimensions
-			iks_grammar_symbol_t *lit = $2;
+			iks_grammar_symbol_t *lit = $TK_LIT_INT;
 			int size = atoi(lit->value);
 			iks_list_t *dimen = new_iks_list();
 			iks_list_set_item(dimen,(void*)&size);
@@ -206,10 +206,10 @@ decl:
 		type ':' TK_IDENTIFICADOR
 		{
 			//if (!decl_symbol($3,$1,IKS_DECL_VAR,iks_stack_top(scope->st),function_with_param)) {
-			if (!decl_symbol($3,$1,IKS_DECL_VAR,scope,function_with_param)) {
+			if (!decl_symbol($TK_IDENTIFICADOR,$type,IKS_DECL_VAR,scope,function_with_param)) {
 				return(IKS_ERROR_DECLARED); //was already declared before
 			}
-			$$ = $3;
+			$$ = $TK_IDENTIFICADOR;
 		}
 	;
 
@@ -240,7 +240,7 @@ type:
 func:
 		type ':' TK_IDENTIFICADOR {
 			//if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,iks_stack_top(scope->st),function_with_param)) {
-			if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,scope,function_with_param)) {
+			if (!decl_symbol($TK_IDENTIFICADOR,$type,IKS_DECL_FUNCTION,scope,function_with_param)) {
 				return(IKS_ERROR_DECLARED);
 			}
 			
@@ -250,10 +250,10 @@ func:
 			/* 3.A.2 */
 			iks_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3);
 			iks_ast_node_value_t *funcaon = funcao->item;
-			funcaon->iks_type = $1;
+			funcaon->iks_type = $type;
 			scope->st = iks_stack_push(scope->st,(void*)symbol_table_local);
 			ptr_function=funcao;
-			function_with_param=$3; //begin params decl
+			function_with_param=$TK_IDENTIFICADOR; //begin params decl
 		} '(' func_param_decl_list ')' {
 			function_with_param=NULL; // end params decl
 		} decl_list {
@@ -294,7 +294,7 @@ decl_list: // pode ser vazia?
 command_block_f://two command_block because cmd_blk from function isnt in ast
 		'{' command_seq '}'
 		{
-			$$ = $2;
+			$$ = $command_seq;
 		}
 	;
 
@@ -302,9 +302,9 @@ command_block:
 		'{' command_seq '}'
 		{
 			iks_tree_t *bloco = iks_ast_new_node(IKS_AST_BLOCO,NULL);
-			if ($2) { //because can command_seq <- command <- empty
-				iks_ast_connect_nodes(bloco,$2);
-				iks_ast_node_value_t *S = $2->item;
+			if ($command_seq) { //because can command_seq <- command <- empty
+				iks_ast_connect_nodes(bloco,$command_seq);
+				iks_ast_node_value_t *S = $command_seq->item;
 				iks_ast_node_value_t *bloco_n = bloco->item;
 				bloco_n->code = S->code;
 			}
@@ -316,8 +316,8 @@ command_seq:
 		command ';' command_seq
 		{
 			/* 3.A.10 */
-			if ($3) { //because can command_seq <- command <- empty
-				iks_ast_connect_nodes($1,$3);
+			if ($command_seq) { //because can command_seq <- command <- empty
+				iks_ast_connect_nodes($command,$command_seq);
 			}
 		}
 	| command
@@ -341,27 +341,27 @@ commands:
 		{
 			/* 3.A.8 */
 			iks_ast_node_value_t *idn,*exprn;
-			idn = $1->item;
-			exprn = $3->item;
+			idn = $id->item;
+			exprn = $expr->item;
 
 			iks_grammar_symbol_t *ids,*exprs;
 			ids = idn->symbol;
 			exprs = exprn->symbol;
 
-			if(!symbol_is_decl_type(ids,IKS_DECL_VAR)) {
+			if(!symbol_is_decl_type(ids,IKS_DECL_VAR)) { //was symbol declared?
 				return iks_error(ids,IKS_ERROR_USE);
 			}
 
-			if(ids->iks_type == IKS_STRING) { //strings set size dinamically
-				// CHECAR SE O VETOR DE CHAR TEM SÓ 1 DIMENSÃO
+			if(ids->iks_type == IKS_STRING) {
+				//na verdade, acho que isso tem que ser tratado na regra idv '=' expr
 				//update_vector_symbol(...);
 			}
 
 			iks_tree_t *e;
-			e=$3;
+			e=$expr;
 			if(exprn->type==IKS_AST_CHAMADA_DE_FUNCAO) {
 				iks_list_t *expr_child;
-				expr_child =  $3->children;
+				expr_child =  $expr->children;
 				e = expr_child->next->item;
 				iks_ast_node_value_t *en;
 				en = (iks_ast_node_value_t*)e->item;
@@ -369,7 +369,7 @@ commands:
 			}            
 			if (exprs) {
 				if(ids->iks_type!=exprs->iks_type) {
-					int coercion=verify_coercion($1,e);
+					int coercion=verify_coercion($id,e);
 					if (coercion) { //if coercion is invalid
 						return coercion;
 					} else { //attribute id type to attribution
@@ -382,8 +382,8 @@ commands:
 			iks_ast_node_value_t *atrn = $$->item;
 			atrn->iks_type = ids->iks_type;
 
-			iks_ast_connect_nodes($$,$1);
-			iks_ast_connect_nodes($$,$3);
+			iks_ast_connect_nodes($$,$id);
+			iks_ast_connect_nodes($$,$expr);
 
 			code_generator(&($$));
 
@@ -392,7 +392,7 @@ commands:
 		{
 			/* 3.A.8 */
 			iks_list_t *id_child;
-			id_child =  $1->children;
+			id_child =  $idv->children;
 			iks_tree_t *id_tree;
 			id_tree = id_child->next->item;
 			iks_ast_node_value_t *idn,*exprn;
@@ -406,10 +406,10 @@ commands:
 			}
 
 			iks_tree_t *e;
-			e=$3;
+			e=$expr;
 			if(exprn->type==IKS_AST_CHAMADA_DE_FUNCAO) {
 				iks_list_t *expr_child;
-				expr_child =  $3->children;
+				expr_child =  $expr->children;
 				e = expr_child->next->item;
 				iks_ast_node_value_t *en;
 				en = (iks_ast_node_value_t*)e->item;
@@ -428,10 +428,10 @@ commands:
 
 			iks_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
 			iks_ast_node_value_t *atrn = atribuicao->item;
-			iks_ast_node_value_t *idvn = $1->item;
+			iks_ast_node_value_t *idvn = $idv->item;
 			atrn->iks_type = idvn->iks_type;
-			iks_ast_connect_nodes(atribuicao,$1);
-			iks_ast_connect_nodes(atribuicao,$3);
+			iks_ast_connect_nodes(atribuicao,$idv);
+			iks_ast_connect_nodes(atribuicao,$expr);
 			$$ = atribuicao;
 
 		}
@@ -439,7 +439,7 @@ commands:
 		{
 			/* 3.A.7 */
 			iks_tree_t *output = iks_ast_new_node(IKS_AST_OUTPUT,NULL);
-			iks_ast_connect_nodes(output,$2);
+			iks_ast_connect_nodes(output,$output_list);
 			$$ = output;
 		}
 	| TK_PR_INPUT expr
@@ -454,7 +454,7 @@ commands:
 				return iks_error(exprs,IKS_ERROR_WRONG_PAR_INPUT);
 			} else {
 				iks_tree_t *input = iks_ast_new_node(IKS_AST_INPUT,NULL);
-				iks_ast_connect_nodes(input,$2);
+				iks_ast_connect_nodes(input,$expr);
 				$$ = input;
 			}
 		}
@@ -471,7 +471,7 @@ commands:
 			fs = fn->symbol;
 			
 			if(exprn->iks_type != fn->iks_type) {
-				int coercion = verify_coercion(ptr_function, $2);
+				int coercion = verify_coercion(ptr_function, $expr);
 				if(coercion) {
 					fprintf(stderr, "return: tipo %d deveria ser %d\n", exprn->iks_type, fn->iks_type);
 					return iks_error(exprs,IKS_ERROR_WRONG_PAR_RETURN);
@@ -480,7 +480,7 @@ commands:
 
 			/* 3.A.9 */
 			iks_tree_t *ret = iks_ast_new_node(IKS_AST_RETURN,NULL);
-			iks_ast_connect_nodes(ret,$2);
+			iks_ast_connect_nodes(ret,$expr);
 			$$ = ret;
 		}
 	;
@@ -512,7 +512,7 @@ idv:
 			iks_grammar_symbol_t *ids;
 			ids = idn->symbol;
 			
-			if(symbol_is_decl_type(ids,IKS_DECL_VECTOR)) {
+			if(symbol_is_decl_type(ids,IKS_DECL_VECTOR)) { //is id a vector?
 				iks_tree_t *vet = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
 				
 				iks_ast_connect_nodes(vet,$id);
@@ -542,9 +542,9 @@ idv_dimen:
 			iks_ast_node_value_delete(int_treen); //removing temporary tree
 			iks_tree_delete(int_tree);
 			
-			iks_ast_connect_nodes($1, $expr);
+			iks_ast_connect_nodes($idv_dimen, $expr);
 			
-			$$ = $1;
+			$$ = $idv_dimen;
 		}
 	| '[' expr ']'
 		{
@@ -567,7 +567,7 @@ output_list:
 		expr
 		{
 			iks_ast_node_value_t *exprn;
-			exprn = $1->item;
+			exprn = $expr->item;
 			iks_grammar_symbol_t *exprs;
 			exprs = exprn->symbol;
 
@@ -604,7 +604,7 @@ output_list:
 	| expr ',' output_list
 		{
 			iks_ast_node_value_t *exprn;
-			exprn = $1->item;
+			exprn = $expr->item;
 			iks_grammar_symbol_t *exprs;
 			exprs = exprn->symbol;
 
@@ -638,7 +638,7 @@ output_list:
 					break;
 			}
 
-			iks_ast_connect_nodes($1,$3);
+			iks_ast_connect_nodes($expr,$output_list);
 		}
 	;
 
@@ -647,7 +647,7 @@ expr:
 		id
 		{
 			iks_ast_node_value_t *n;
-			n = $1->item; 
+			n = $id->item; 
 			iks_grammar_symbol_t *s;
 			s = n->symbol;
 			if(!symbol_is_decl_type(s,IKS_DECL_VAR)) {
@@ -661,7 +661,7 @@ expr:
 	| terminal_value
 	| '(' expr ')'
 		{
-			$$ = $2;
+			$$ = $expr;
 		}
 	| func_call
 	| arim_expr
@@ -734,9 +734,9 @@ arim_expr:
 			/* 3.A.15 */
 			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_INVERSAO,NULL);
 			iks_ast_node_value_t *oon = oo->item;
-			iks_ast_node_value_t *exprn = $2->item;
+			iks_ast_node_value_t *exprn = $expr->item;
 			oon->iks_type = exprn->iks_type;
-			iks_ast_connect_nodes(oo,$2);
+			iks_ast_connect_nodes(oo,$expr);
 			$$ = oo;
 		}
   ;
@@ -835,8 +835,8 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$3);
 
 		  //using and freeing buffer to short circuit
-			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>2)),&($3));
-			ast_set_temp(TEMP_BF,ast_get_temp(TEMP_BF,&($<nt>2)),&($3));
+			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>2)),&($expr));
+			ast_set_temp(TEMP_BF,ast_get_temp(TEMP_BF,&($<nt>2)),&($expr));
 			//CRIAR AST DELETE, pois TREE DELETE precisa ser customizada
 			//iks_ast_delete($<nt>2);
 
@@ -876,7 +876,7 @@ logic_expr:
 func_call:
 		id {
 			iks_ast_node_value_t *n;
-			n = $1->item; 
+			n = $id->item; 
 			iks_grammar_symbol_t *s;
 			s = n->symbol;
 			/* 3.A.17 */
@@ -884,7 +884,7 @@ func_call:
 				iks_tree_t *x = iks_ast_new_node(IKS_AST_CHAMADA_DE_FUNCAO,NULL);
 				iks_ast_node_value_t *xn = x->item;
 				xn->iks_type = n->iks_type;
-				iks_ast_connect_nodes(x,$1);
+				iks_ast_connect_nodes(x,$id);
 				ptr_function_call=x;
 			} else {
 				return iks_error(s,IKS_ERROR_USE);
@@ -911,19 +911,19 @@ terminal_value:
 	/* 3.A.11 */
 		TK_LIT_INT
 		{
-			$1->iks_type=IKS_INT;
-			$$ = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			$TK_LIT_INT->iks_type=IKS_INT;
+			$$ = iks_ast_new_node(IKS_AST_LITERAL,$TK_LIT_INT);
 			iks_ast_node_value_t *litn = $$->item;
-			litn->iks_type = $1->iks_type;
+			litn->iks_type = $TK_LIT_INT->iks_type;
 			
 			code_generator(&($$));
 		}
 	| TK_LIT_FLOAT
 		{
-			$1->iks_type=IKS_FLOAT;
-			$$ = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			$TK_LIT_FLOAT->iks_type=IKS_FLOAT;
+			$$ = iks_ast_new_node(IKS_AST_LITERAL,$TK_LIT_FLOAT);
 			iks_ast_node_value_t *litn = $$->item;
-			litn->iks_type = $1->iks_type;
+			litn->iks_type = $TK_LIT_FLOAT->iks_type;
 			
 			code_generator(&($$));
 		}
@@ -932,12 +932,12 @@ terminal_value:
 			$1->iks_type=IKS_BOOL;
 			iks_ast_node_value_t *v1;
 			v1 = new_iks_ast_node_value();
-			iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
+			iks_ast_node_value_set(v1,IKS_AST_LITERAL,$TK_LIT_FALSE);
 
 			$$ = new_iks_tree();
 			iks_tree_set_item($$,(void*)v1);
 			iks_ast_node_value_t *litn = $$->item;
-			litn->iks_type = $1->iks_type;
+			litn->iks_type = $TK_LIT_FALSE->iks_type;
 
 
 			gv_declare(IKS_AST_LITERAL,$$,"false");
@@ -949,15 +949,15 @@ terminal_value:
 		}
 	| TK_LIT_TRUE
 		{
-			$1->iks_type=IKS_BOOL;
+			$TK_LIT_TRUE->iks_type=IKS_BOOL;
 			iks_ast_node_value_t *v1;
 			v1 = new_iks_ast_node_value();
-			iks_ast_node_value_set(v1,IKS_AST_LITERAL,$1);
+			iks_ast_node_value_set(v1,IKS_AST_LITERAL,$TK_LIT_TRUE);
 
       $$ = new_iks_tree();
 			iks_tree_set_item($$,(void*)v1);
 			iks_ast_node_value_t *litn = $$->item;
-			litn->iks_type = $1->iks_type;
+			litn->iks_type = $TK_LIT_TRUE->iks_type;
 
 			gv_declare(IKS_AST_LITERAL,$$,"true");
 
@@ -968,19 +968,19 @@ terminal_value:
 		}
 	| TK_LIT_CHAR
 		{
-			$1->iks_type=IKS_CHAR;
-			$$ = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			$TK_LIT_CHAR->iks_type=IKS_CHAR;
+			$$ = iks_ast_new_node(IKS_AST_LITERAL,$TK_LIT_CHAR);
 			iks_ast_node_value_t *litn = $$->item;
-			litn->iks_type = $1->iks_type;
+			litn->iks_type = $TK_LIT_CHAR->iks_type;
 			
 			code_generator(&($$));
 		}
 	| TK_LIT_STRING
 		{
-			$1->iks_type=IKS_STRING;
-			$$ = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			$TK_LIT_STRING->iks_type=IKS_STRING;
+			$$ = iks_ast_new_node(IKS_AST_LITERAL,$TK_LIT_STRING);
 			iks_ast_node_value_t *litn = $$->item;
-			litn->iks_type = $1->iks_type;
+			litn->iks_type = $TK_LIT_STRING->iks_type;
 			
 			code_generator(&($$));
 		}
@@ -995,7 +995,7 @@ param_list:
 		expr
 		{
 			iks_ast_node_value_t *n;
-			n = $1->item; 
+			n = $expr->item; 
 			iks_grammar_symbol_t *s;
 			s = n->symbol;
 			iks_list_t *l; 
@@ -1005,16 +1005,16 @@ param_list:
 		}
 	| expr ',' param_list
 		{
-			if ($3) { //because can command_seq <- command <- empty
+			if ($param_list) { //because can command_seq <- command <- empty
 				iks_ast_node_value_t *n;
-				n = $1->item; 
+				n = $expr->item; 
 				iks_grammar_symbol_t *s;
 				s = n->symbol;
 				iks_list_t *l; 
 				l = new_iks_list();
 				iks_list_set_item(l,(void*)s);     
 				iks_list_insert(args,l);
-				iks_ast_connect_nodes($1,$3);
+				iks_ast_connect_nodes($expr,$param_list);
 			}
 		}
 	;
@@ -1027,7 +1027,7 @@ ctrl_flow:
 			$<temp>$->next = label_generator();
 		} ctrl_flow2 {
 			//delete_reg_or_label(&($<temp>-1));
-			$$ = $2;
+			$$ = $ctrl_flow2;
 			//nossos S->next sao locais, ou seja, em if_else
 			// S2->next nao eh S->next, mas possui um proprio S2->next
 			// para nossa gramatica funciona. incompativel com coisas avancadas
@@ -1049,8 +1049,8 @@ ctrl_flow2:
 		TK_PR_WHILE '(' shrt_crct_before_while_b  expr shrt_crct_after_while_b ')' TK_PR_DO commands
 		{
 			$$ = iks_ast_new_node(IKS_AST_WHILE_DO,NULL);
-			iks_ast_connect_nodes($$,$4);
-			iks_ast_connect_nodes($$,$8);
+			iks_ast_connect_nodes($$,$expr);
+			iks_ast_connect_nodes($$,$commands);
 
 		  reg_or_label *S = $<temp>5;
 			ast_set_temp(TEMP_BEGIN,S->begin,&($$));
@@ -1061,8 +1061,8 @@ ctrl_flow2:
 	| TK_PR_DO shrt_crct_before_do_while_cmd commands TK_PR_WHILE '(' shrt_crct_before_do_while_b expr ')' 
 		{
 			$$ = iks_ast_new_node(IKS_AST_DO_WHILE,NULL);
-			iks_ast_connect_nodes($$,$3);
-			iks_ast_connect_nodes($$,$7);
+			iks_ast_connect_nodes($$,$commands);
+			iks_ast_connect_nodes($$,$expr);
 
 		  reg_or_label *S = $<temp>2;
 			ast_set_temp(TEMP_BEGIN,S->begin,&($$));
@@ -1072,7 +1072,7 @@ ctrl_flow2:
 	|	TK_PR_IF '(' shrt_crct_before_if_b expr shrt_crct_after_if_b ')' TK_PR_THEN commands TK_PR_ELSE shrt_crct_after_else commands {
 
 			$$ = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
-			iks_ast_connect_nodes($$,$4);
+			iks_ast_connect_nodes($$,$expr);
 			iks_ast_connect_nodes($$,$8);
 			iks_ast_connect_nodes($$,$11);
 
@@ -1081,8 +1081,8 @@ ctrl_flow2:
 	|	TK_PR_IF '(' shrt_crct_before_if_b expr shrt_crct_after_if_b ')' TK_PR_THEN commands {
 
 			$$ = iks_ast_new_node(IKS_AST_IF,NULL);
-			iks_ast_connect_nodes($$,$4);
-			iks_ast_connect_nodes($$,$8);
+			iks_ast_connect_nodes($$,$expr);
+			iks_ast_connect_nodes($$,$commands);
 
 			code_generator(&($$));
 			//delete_reg_or_label(&($<temp>-3)); // ..._after_if_b
