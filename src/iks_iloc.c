@@ -119,7 +119,7 @@ void code_literal(iks_tree_t **ast) {
 * Input:
 * Output:	
 ******************************************************************************/
-void code_arit_som(ast)(iks_tree_t **ast) {
+void code_arit_som(iks_tree_t **ast) {
 
 }
 
@@ -129,7 +129,7 @@ void code_arit_som(ast)(iks_tree_t **ast) {
 * Input:
 * Output:	
 ******************************************************************************/
-void code_arit_sub(ast)(iks_tree_t **ast) {
+void code_arit_sub(iks_tree_t **ast) {
 
 }
 
@@ -139,7 +139,7 @@ void code_arit_sub(ast)(iks_tree_t **ast) {
 * Input:
 * Output:	
 ******************************************************************************/
-void code_arit_mul(ast)(iks_tree_t **ast) {
+void code_arit_mul(iks_tree_t **ast) {
 
 }
 
@@ -149,7 +149,7 @@ void code_arit_mul(ast)(iks_tree_t **ast) {
 * Input:
 * Output:	
 ******************************************************************************/
-void code_arit_div(ast)(iks_tree_t **ast) {
+void code_arit_div(iks_tree_t **ast) {
 
 }
 
@@ -159,7 +159,7 @@ void code_arit_div(ast)(iks_tree_t **ast) {
 * Input:
 * Output:	
 ******************************************************************************/
-void code_log_inv(ast)(iks_tree_t **ast) {
+void code_log_inv(iks_tree_t **ast) {
 
 }
 
@@ -169,7 +169,7 @@ void code_log_inv(ast)(iks_tree_t **ast) {
 * Input:
 * Output:	
 ******************************************************************************/
-void code_log_and(ast)(iks_tree_t **ast) {
+void code_log_and(iks_tree_t **ast) {
 
 }
 
@@ -179,7 +179,7 @@ void code_log_and(ast)(iks_tree_t **ast) {
 * Input:
 * Output:	
 ******************************************************************************/
-void code_log_or(ast)(iks_tree_t **ast) {
+void code_log_or(iks_tree_t **ast) {
 
 }
 
@@ -241,7 +241,7 @@ void code_comp_ne(iks_tree_t **ast) {
 	B->code = iks_list_concat(E1->code,E2->code);
 	B->temp.name = register_generator();
 
-	iks_list_t *comp_eq = new_iks_list();
+	iks_list_t *comp_ne = new_iks_list();
 
 	iloc_t *cmp_ne = new_iloc(NULL, new_iloc_oper(cmp_NE,	
 																								E1->temp.name,
@@ -281,7 +281,7 @@ void code_comp_le(iks_tree_t **ast) {
 	B->code = iks_list_concat(E1->code,E2->code);
 	B->temp.name = register_generator();
 
-	iks_list_t *comp_eq = new_iks_list();
+	iks_list_t *comp_le = new_iks_list();
 
 	iloc_t *cmp_le = new_iloc(NULL, new_iloc_oper(cmp_LE,	
 																								E1->temp.name,
@@ -321,7 +321,7 @@ void code_comp_ge(iks_tree_t **ast) {
 	B->code = iks_list_concat(E1->code,E2->code);
 	B->temp.name = register_generator();
 
-	iks_list_t *comp_eq = new_iks_list();
+	iks_list_t *comp_ge = new_iks_list();
 
 	iloc_t *cmp_ge = new_iloc(NULL, new_iloc_oper(cmp_GE,	
 																								E1->temp.name,
@@ -361,7 +361,7 @@ void code_comp_lt(iks_tree_t **ast) {
 	B->code = iks_list_concat(E1->code,E2->code);
 	B->temp.name = register_generator();
 
-	iks_list_t *comp_eq = new_iks_list();
+	iks_list_t *comp_lt = new_iks_list();
 
 	iloc_t *cmp_lt = new_iloc(NULL, new_iloc_oper(cmp_LT,	
 																								E1->temp.name,
@@ -402,7 +402,7 @@ void code_comp_gt(iks_tree_t **ast) {
 	B->code = iks_list_concat(E1->code,E2->code);
 	B->temp.name = register_generator();
 
-	iks_list_t *comp_eq = new_iks_list();
+	iks_list_t *comp_gt = new_iks_list();
 
 	iloc_t *cmp_gt = new_iloc(NULL, new_iloc_oper(cmp_GT,	
 																								E1->temp.name,
@@ -661,12 +661,20 @@ void code_generator(iks_tree_t **ast) {
 			code_while_do(ast);
 			break;
 		case IKS_AST_INPUT:
+			
+			break;
 		case IKS_AST_OUTPUT:
+			
+			break;
 		case IKS_AST_ATRIBUICAO:
 			code_attr(ast);
 			break;
 		case IKS_AST_RETURN:
+			
+			break;
 		case IKS_AST_BLOCO:
+			
+			break;
 		case IKS_AST_IDENTIFICADOR:
 			code_id_lits(ast);
 			break;
@@ -714,7 +722,12 @@ void code_generator(iks_tree_t **ast) {
 			break;
 		//case IKS_AST_LOGICO_COMP_NEGACAO:
 		case IKS_AST_VETOR_INDEXADO:
+			
+			break;
 		case IKS_AST_CHAMADA_DE_FUNCAO:
+			
+			break;
+		
 		case IKS_AST_INDEFINIDO:
 		default:
 			fprintf(stderr,"error at code_generator\n");
@@ -891,6 +904,31 @@ void iloc_oper_print(iks_list_t *opers) {
 																			(char*)oper->src_operands->next->item,
 																			(char*)oper->dst_operands->item);
 				break;
+			case cmp_LE:
+				printf("cmp_LE %s, %s -> %s",	(char*)oper->src_operands->item,
+																			(char*)oper->src_operands->next->item,
+																			(char*)oper->dst_operands->item);
+				break;
+			case cmp_EQ:
+				printf("cmp_EQ %s, %s -> %s",	(char*)oper->src_operands->item,
+																			(char*)oper->src_operands->next->item,
+																			(char*)oper->dst_operands->item);
+				break;
+			case cmp_GE:
+				printf("cmp_GE %s, %s -> %s",	(char*)oper->src_operands->item,
+																			(char*)oper->src_operands->next->item,
+																			(char*)oper->dst_operands->item);
+				break;
+			case cmp_GT:
+				printf("cmp_GT %s, %s -> %s",	(char*)oper->src_operands->item,
+																			(char*)oper->src_operands->next->item,
+																			(char*)oper->dst_operands->item);
+				break;
+			case cmp_NE:
+				printf("cmp_NE %s, %s -> %s",	(char*)oper->src_operands->item,
+																			(char*)oper->src_operands->next->item,
+																			(char*)oper->dst_operands->item);
+				break;
 			case cbr:
 				printf("cbr %s -> %s, %s",(char*)oper->src_operands->item,
 																	(char*)oper->dst_operands->item,
@@ -927,6 +965,7 @@ void iloc_oper_print(iks_list_t *opers) {
 			default:
 				fprintf(stderr,"error at iloc_oper_print\n");
     }
+    
     printf("\n");
 
     it = it->next;    
