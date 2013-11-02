@@ -23,7 +23,7 @@
 /* Código de retorno para erros semânticos */
 
 /* Verficação de declarações */
-#define IKS_ERROR_UNDECLARED 		1 //identificador não declarado
+#define IKS_ERROR_UNDECLARED 	999	 //identificador não declarado
 #define IKS_ERROR_DECLARED 		2 //identificador já declarado
 
 /* Uso correto de identificadores */

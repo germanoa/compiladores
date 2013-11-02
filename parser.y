@@ -632,6 +632,27 @@ output_list:
 
 /* 2.5 */
 expr:
+		{
+			$<list>$ = new_iks_list();
+			reg_or_label *B = $<temp>0;
+			
+			reg_or_label *or = new_reg_or_label();
+			or->b.t = B->b.t;
+			or->b.f = label_generator();
+			
+			reg_or_label *and = new_reg_or_label();
+			and->b.t = B->b.t;
+			and->b.f = B->b.f;
+			
+			iks_list_append($<list>$,or);
+			iks_list_append($<list>$,and); 
+		} real_expr {
+			iks_list_delete($<list>1);
+			$$ = $real_expr;
+		}
+	;
+	
+real_expr:
 		id
 		{
 			iks_ast_node_value_t *n;
@@ -998,15 +1019,14 @@ param_list:
 
 /* 2.6 */
 ctrl_flow:
-	{ 
-		$<temp>$ = new_reg_or_label();
-		$<temp>$->next = label_generator();
-  }
-	ctrl_flow2
-	{
-	  //delete_reg_or_label(&($<temp>-1));
-		$$ = $2;
-	}
+		{ 
+			$<temp>$ = new_reg_or_label();
+			$<temp>$->next = label_generator();
+		} ctrl_flow2 {
+			//delete_reg_or_label(&($<temp>-1));
+			$$ = $2;
+		}
+	;
 
 ctrl_flow2:
 		TK_PR_WHILE '(' expr ')' TK_PR_DO commands
