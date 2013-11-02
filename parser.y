@@ -172,13 +172,14 @@ array_decl:
 		decl {
 			dimen_counter = 0;
 		} array_decl_dimen {
-			update_vector_symbol($decl,dimen_counter,$array_decl_dimen);
+			update_vector_symbol($decl,dimen_counter,$array_decl_dimen); //add information about dimensions
 		}
 	;
 
 array_decl_dimen:
 		array_decl_dimen '[' TK_LIT_INT ']'
 		{
+			//append to list of dimensions
 			iks_list_t *list = $1;
 			iks_grammar_symbol_t *lit = $3;
 			int size = atoi(lit->value);
@@ -190,6 +191,7 @@ array_decl_dimen:
 		}
 	| '[' TK_LIT_INT ']'
 		{
+			//create list of dimensions
 			iks_grammar_symbol_t *lit = $2;
 			int size = atoi(lit->value);
 			iks_list_t *dimen = new_iks_list();
@@ -205,7 +207,7 @@ decl:
 		{
 			//if (!decl_symbol($3,$1,IKS_DECL_VAR,iks_stack_top(scope->st),function_with_param)) {
 			if (!decl_symbol($3,$1,IKS_DECL_VAR,scope,function_with_param)) {
-				return(IKS_ERROR_DECLARED);
+				return(IKS_ERROR_DECLARED); //was already declared before
 			}
 			$$ = $3;
 		}
