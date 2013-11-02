@@ -112,8 +112,8 @@ void code_literal(iks_tree_t **ast) {
 			code_id_lits(ast);
 			break;
     default:
-      printf("ops at code_literal\n");
-	}
+      fprintf(stderr,"error at code_literal\n");
+  }
 }
 
 
@@ -427,6 +427,7 @@ void code_generator(iks_tree_t **ast) {
 		case IKS_AST_CHAMADA_DE_FUNCAO:
 		case IKS_AST_INDEFINIDO:
 		default:
+			fprintf(stderr,"error at code_generator\n");
 			break;
 	}
 }
@@ -611,37 +612,39 @@ void iloc_oper_print(iks_list_t *opers) {
 																	(char*)oper->dst_operands->item,
 																	(char*)oper->dst_operands->next->item);
 				break;
-			case loadI:
-				printf("loadI %s => %s",(char*)oper->src_operands->item,
-																(char*)oper->dst_operands->item);
-				break;
-			case load:
-				printf("load %s => %s",	(char*)oper->src_operands->item,
-																(char*)oper->dst_operands->item);
-				break;
-			case cload:
-				printf("cload %s => %s",(char*)oper->src_operands->item,
-																(char*)oper->dst_operands->item);
-				break;
-			case i2i:
-				printf("i2i %s => %s",(char*)oper->src_operands->item,
-															(char*)oper->dst_operands->item);
+      case loadI:
+        printf("loadI %s => %s",(char*)oper->src_operands->item,
+        												(char*)oper->dst_operands->item);
         break;
-			case i2c:
-				printf("i2c %s => %s",(char*)oper->src_operands->item,
-															(char*)oper->dst_operands->item);
-				break;
-			case c2i:
-				printf("c2i %s => %s",(char*)oper->src_operands->item,
-															(char*)oper->dst_operands->item);
-				break;
-			case c2c:
-				printf("c2c %s => %s",(char*)oper->src_operands->item,
-															(char*)oper->dst_operands->item);
-				break;
-		}
+      case load:
+        printf("load %s => %s",	(char*)oper->src_operands->item,
+        												(char*)oper->dst_operands->item);
+        break;
+      case cload:
+        printf("cload %s => %s",(char*)oper->src_operands->item,
+        												(char*)oper->dst_operands->item);
+        break;
+      case i2i:
+        printf("i2i %s => %s",(char*)oper->src_operands->item,
+        											(char*)oper->dst_operands->item);
+        break;
+      case i2c:
+        printf("i2c %s => %s",(char*)oper->src_operands->item,
+        											(char*)oper->dst_operands->item);
+        break;
+      case c2i:
+        printf("c2i %s => %s",(char*)oper->src_operands->item,
+        											(char*)oper->dst_operands->item);
+        break;
+      case c2c:
+        printf("c2c %s => %s",(char*)oper->src_operands->item,
+    													(char*)oper->dst_operands->item);
+        break;
+			case default:
+				fprintf(stderr,"error at iloc_oper_print\n");
+    }
+    printf("\n");
 
-		printf("\n");
     it = it->next;    
   
 	} while(it != opers);
