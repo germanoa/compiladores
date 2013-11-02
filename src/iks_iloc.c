@@ -31,6 +31,7 @@ void code_funcao(iks_tree_t **ast) {
 	}
 }
 
+
 /******************************************************************************
 * Objective: 
 * Input:
@@ -78,6 +79,7 @@ void code_id_lits(iks_tree_t **ast) {
 	iks_list_append(E->code,_load);
 }
 
+
 /******************************************************************************
 * Objective: 
 * Input:
@@ -108,6 +110,7 @@ void code_literal(iks_tree_t **ast) {
       printf("ops at code_literal\n");
   }
 }
+
 
 /******************************************************************************
 * Objective: 
@@ -162,6 +165,7 @@ void code_if(iks_tree_t **ast){
 	S->code = iks_list_concat(S->code,gambi);
 
 }
+
 
 /******************************************************************************
 * Objective: 
@@ -226,6 +230,7 @@ void code_while_do(iks_tree_t **ast) {
   iks_list_append(S->code,(void*)goto_S_begin);
 }
 
+
 /******************************************************************************
 * Objective: 
 * Input:
@@ -251,6 +256,7 @@ void code_do_while(iks_tree_t **ast) {
   //label_insert(gambi,B->temp.b.f);
 	//S->code = iks_list_concat(S->code,gambi);
 }
+
 
 /******************************************************************************
 * Objective: 
@@ -287,6 +293,7 @@ void code_comp_l(iks_tree_t **ast) {
 	B->code = iks_list_concat(B->code,comp_l);
 
 }
+
 
 /******************************************************************************
 * Objective: 
@@ -332,10 +339,11 @@ void code_attr(iks_tree_t **ast) {
 
 }
 
-/******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+
+/****************************************************************************** 
+* Objective: main function for code generator
+* Input: ast
+* Output: none	
 ******************************************************************************/
 void code_generator(iks_tree_t **ast) {
 	iks_list_t *code;
@@ -401,10 +409,11 @@ void code_generator(iks_tree_t **ast) {
 	}
 }
 
+
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: generate a new label from global label controller
+* Input: none
+* Output: pointer to a new string to be used as label name	
 ******************************************************************************/
 char *label_generator(){
   char temp_label[LABEL_WIDTH];
@@ -424,25 +433,26 @@ char *label_generator(){
   return new_label;
 }
 
+
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Address value conversion from integer to string
+* Input: an integer value
+* Output: pointer to corresponding string
 ******************************************************************************/
 char *int_to_char(int i) {
-	#define MAXMEM  10 //quantidade de digitos maximo pra memoria
 	char temp[MAXMEM];
 	char *t;
-									//horrivel, pensar como melhorar isso
+	//horrivel, pensar como melhorar isso
 	t = malloc (sizeof(char) * MAXMEM);
 	sprintf(t, "%d", i);
 	return t;
 }
 
+
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: generate a new register from global register controller
+* Input: none
+* Output: pointer to a new string to be used as register name
 ******************************************************************************/
 char *register_generator(){
   char temp_register[REGISTER_WIDTH];
@@ -462,10 +472,11 @@ char *register_generator(){
   return new_register;
 }
 
+
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: insert a label in iloc code list
+* Input: list of iloc operations and new label to insert.
+* Output: none
 ******************************************************************************/
 void label_insert(iks_list_t *code, char *label) {
   iloc_t *iloc = code->item;
@@ -484,10 +495,11 @@ void label_insert(iks_list_t *code, char *label) {
   }
 }
 
+
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: create an iloc code
+* Input: label of new iloc code, operands list
+* Output: pointer to a new iloc_t
 ******************************************************************************/
 iloc_t *new_iloc(char *label, iloc_oper_t *oper) {
   iloc_t *iloc;
@@ -498,10 +510,12 @@ iloc_t *new_iloc(char *label, iloc_oper_t *oper) {
   return iloc;
 }
 
+
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: create an iloc operation
+* Input: type of iloc operation, three pointers to names of source operands  
+* 	and three pointers to names of destination operands. 
+* Output: pointer to a new iloc_oper_t
 ******************************************************************************/
 iloc_oper_t *new_iloc_oper(opcode_t opcode, char *s1, char *s2, char *s3, char *d1, char *d2, char *d3) {
   iloc_oper_t *oper;
@@ -530,10 +544,11 @@ iloc_oper_t *new_iloc_oper(opcode_t opcode, char *s1, char *s2, char *s3, char *
   return oper;
 }
 
-/******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+
+/****************************************************************************** 
+* Objective: print operands of an iloc operation 
+* Input: operands list
+* Output: none
 ******************************************************************************/
 void iloc_oper_print(iks_list_t *opers) {
   iks_list_t *it;
@@ -595,10 +610,11 @@ void iloc_oper_print(iks_list_t *opers) {
   } while(it != opers);
 }
 
-/******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+
+/****************************************************************************** 
+* Objective: print an iloc code
+* Input: code list
+* Output: none
 ******************************************************************************/
 void iloc_print(iks_list_t *code) {
   iks_list_t *it;
