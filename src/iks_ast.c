@@ -92,6 +92,9 @@ void ast_set_temp(int t,char *v, iks_tree_t **ast) {
 		case TEMP_LOCAL:
 			ast_n->temp.local = v;
 			break;					
+		case TEMP_BEGIN:
+			ast_n->temp.begin = v;
+			break;					
 	}
 }
 

@@ -83,7 +83,7 @@ DECLARATIONS
 %type<nt> ctrl_flow2
 %type<nt> output_list
 %type<nt> expr
-%type<nt> real_expr
+//%type<nt> real_expr
 %type<nt> arim_expr
 %type<nt> logic_expr
 %type<nt> func_param_list
@@ -203,7 +203,8 @@ array_decl_dimen:
 decl:
 		type ':' TK_IDENTIFICADOR
 		{
-			if (!decl_symbol($3,$1,IKS_DECL_VAR,iks_stack_top(scope->st),function_with_param)) {
+			//if (!decl_symbol($3,$1,IKS_DECL_VAR,iks_stack_top(scope->st),function_with_param)) {
+			if (!decl_symbol($3,$1,IKS_DECL_VAR,scope,function_with_param)) {
 				return(IKS_ERROR_DECLARED);
 			}
 			$$ = $3;
@@ -236,7 +237,8 @@ type:
 /* 2.2 */
 func:
 		type ':' TK_IDENTIFICADOR {
-			if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,iks_stack_top(scope->st),function_with_param)) {
+			//if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,iks_stack_top(scope->st),function_with_param)) {
+			if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,scope,function_with_param)) {
 				return(IKS_ERROR_DECLARED);
 			}
 			
@@ -300,6 +302,9 @@ command_block:
 			iks_tree_t *bloco = iks_ast_new_node(IKS_AST_BLOCO,NULL);
 			if ($2) { //because can command_seq <- command <- empty
 				iks_ast_connect_nodes(bloco,$2);
+				iks_ast_node_value_t *S = $2->item;
+				iks_ast_node_value_t *bloco_n = bloco->item;
+				bloco_n->code = S->code;
 			}
 			$$ = bloco;
 		}
@@ -371,12 +376,15 @@ commands:
 				}
 			}
 
-			iks_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
-			iks_ast_node_value_t *atrn = atribuicao->item;
+			$$ = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
+			iks_ast_node_value_t *atrn = $$->item;
 			atrn->iks_type = ids->iks_type;
-			iks_ast_connect_nodes(atribuicao,$1);
-			iks_ast_connect_nodes(atribuicao,$3);
-			$$ = atribuicao;
+
+			iks_ast_connect_nodes($$,$1);
+			iks_ast_connect_nodes($$,$3);
+
+			code_generator(&($$));
+
 		}
 	| idv '=' expr
 		{
@@ -481,10 +489,12 @@ id:
 			iks_grammar_symbol_t *s;
 			s = search_symbol_global($1,scope->st);
 			if (s) {
-				iks_tree_t *identificador = iks_ast_new_node(IKS_AST_IDENTIFICADOR,s);
-				iks_ast_node_value_t *idn = identificador->item;
+				$$ = iks_ast_new_node(IKS_AST_IDENTIFICADOR,s);
+				iks_ast_node_value_t *idn = $$->item;
 				idn->iks_type = s->iks_type;
-				$$ = identificador;
+
+				code_generator(&($$));
+
 			} else {
 				fprintf(stderr,"identificador não declarado\n");
 				return(IKS_ERROR_UNDECLARED);
@@ -632,27 +642,6 @@ output_list:
 
 /* 2.5 */
 expr:
-		{
-			$<list>$ = new_iks_list();
-			reg_or_label *B = $<temp>0;
-			
-			reg_or_label *or = new_reg_or_label();
-			or->b.t = B->b.t;
-			or->b.f = label_generator();
-			
-			reg_or_label *and = new_reg_or_label();
-			and->b.t = B->b.t;
-			and->b.f = B->b.f;
-			
-			iks_list_append($<list>$,or);
-			iks_list_append($<list>$,and); 
-		} real_expr {
-			iks_list_delete($<list>1);
-			$$ = $real_expr;
-		}
-	;
-	
-real_expr:
 		id
 		{
 			iks_ast_node_value_t *n;
@@ -753,18 +742,25 @@ arim_expr:
 logic_expr:
 	expr '<' expr
 		{
-			/* 3.A.14 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_L,NULL);
-			iks_ast_node_value_t *oon = oo->item;
+			$$ = iks_ast_new_node(IKS_AST_LOGICO_COMP_L,NULL);
+			iks_ast_node_value_t *oon = $$->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
+
 			int type = infer_type($1, $3);
 			if(type > 5) //erro de coerção
 				return type;
 			oon->iks_type = type;
-			iks_ast_connect_nodes(oo,$1);
-			iks_ast_connect_nodes(oo,$3);
-			$$ = oo;
+
+			iks_ast_connect_nodes($$,$1);
+			iks_ast_connect_nodes($$,$3);
+
+		  reg_or_label *S = $<temp>0;
+     	ast_set_temp(TEMP_BT,S->b.t,&($$));
+     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+			code_generator(&($$));
+			
+
 		}
 	| expr '>' expr
 		{
@@ -914,18 +910,20 @@ terminal_value:
 		TK_LIT_INT
 		{
 			$1->iks_type=IKS_INT;
-			iks_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
-			iks_ast_node_value_t *litn = lit->item;
+			$$ = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $1->iks_type;
-			$$ = lit;
+			
+			code_generator(&($$));
 		}
 	| TK_LIT_FLOAT
 		{
 			$1->iks_type=IKS_FLOAT;
-			iks_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
-			iks_ast_node_value_t *litn = lit->item;
+			$$ = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $1->iks_type;
-			$$ = lit;
+			
+			code_generator(&($$));
 		}
 	| TK_LIT_FALSE
 		{
@@ -969,18 +967,20 @@ terminal_value:
 	| TK_LIT_CHAR
 		{
 			$1->iks_type=IKS_CHAR;
-			iks_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
-			iks_ast_node_value_t *litn = lit->item;
+			$$ = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $1->iks_type;
-			$$ = lit;
+			
+			code_generator(&($$));
 		}
 	| TK_LIT_STRING
 		{
 			$1->iks_type=IKS_STRING;
-			iks_tree_t *lit = iks_ast_new_node(IKS_AST_LITERAL,$1);
-			iks_ast_node_value_t *litn = lit->item;
+			$$ = iks_ast_new_node(IKS_AST_LITERAL,$1);
+			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $1->iks_type;
-			$$ = lit;
+			
+			code_generator(&($$));
 		}
 	;
 
@@ -1019,40 +1019,62 @@ param_list:
 
 /* 2.6 */
 ctrl_flow:
-		{ 
-			$<temp>$ = new_reg_or_label();
-			$<temp>$->next = label_generator();
-		} ctrl_flow2 {
-			//delete_reg_or_label(&($<temp>-1));
-			$$ = $2;
-		}
-	;
+	{ 
+		//S->next
+		$<temp>$ = new_reg_or_label();
+		$<temp>$->next = label_generator();
+  }
+	ctrl_flow2
+	{
+	  //delete_reg_or_label(&($<temp>-1));
+		$$ = $2;
+		//nossos S->next sao locais, ou seja, em if_else
+		// S2->next nao eh S->next, mas possui um proprio S2->next
+		// para nossa gramatica funciona. incompativel com coisas avancadas
+		// tipo switch-case de C.
+		// o resultado quando temos ctrl_flows encadeados eh
+		// uma pilha final de labels, trazendo o efeito necessario
+		iloc_t *iloc = new_iloc(NULL, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));  iks_list_t *gambi = new_iks_list();
+  	iks_list_append(gambi,(void*)iloc);
+		reg_or_label *S = $<temp>1;
+  	label_insert(gambi,S->next);
+
+		iks_ast_node_value_t *ctrl_flow2 = $$->item;
+  	ctrl_flow2->code = iks_list_concat(ctrl_flow2->code,gambi);
+
+	}
 
 ctrl_flow2:
-		TK_PR_WHILE '(' expr ')' TK_PR_DO commands
+		TK_PR_WHILE '(' shrt_crct_before_while_b  expr shrt_crct_after_while_b ')' TK_PR_DO commands
 		{
 			$$ = iks_ast_new_node(IKS_AST_WHILE_DO,NULL);
-			iks_ast_connect_nodes($$,$3);
-			iks_ast_connect_nodes($$,$6);
+			iks_ast_connect_nodes($$,$4);
+			iks_ast_connect_nodes($$,$8);
+
+		  reg_or_label *S = $<temp>5;
+			ast_set_temp(TEMP_BEGIN,S->begin,&($$));
+
+			code_generator(&($$));
+
 		}
-	| TK_PR_DO commands TK_PR_WHILE '(' expr ')' 
+	| TK_PR_DO shrt_crct_before_do_while_cmd commands TK_PR_WHILE '(' shrt_crct_before_do_while_b expr ')' 
 		{
 			$$ = iks_ast_new_node(IKS_AST_DO_WHILE,NULL);
-			iks_ast_connect_nodes($$,$2);
-			iks_ast_connect_nodes($$,$5);
+			iks_ast_connect_nodes($$,$3);
+			iks_ast_connect_nodes($$,$7);
+
+		  reg_or_label *S = $<temp>2;
+			ast_set_temp(TEMP_BEGIN,S->begin,&($$));
+
+			code_generator(&($$));
 		}
-	|	TK_PR_IF '(' shrt_crct_before_if_b expr shrt_crct_after_if_b ')' TK_PR_THEN commands TK_PR_ELSE commands {
+	|	TK_PR_IF '(' shrt_crct_before_if_b expr shrt_crct_after_if_b ')' TK_PR_THEN commands TK_PR_ELSE shrt_crct_after_else commands {
 
 			$$ = iks_ast_new_node(IKS_AST_IF_ELSE,NULL);
 			iks_ast_connect_nodes($$,$4);
 			iks_ast_connect_nodes($$,$8);
-			iks_ast_connect_nodes($$,$10);
+			iks_ast_connect_nodes($$,$11);
 
-		  //using and freeing buffer to short circuit
-			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($3)),&($4));
-			ast_set_temp(TEMP_BF,label_generator(),&($4));
-			//CRIAR AST DELETE, pois TREE DELETE precisa ser customizada
-			//iks_ast_delete($<nt>3);
 			code_generator(&($$));
 		}
 	|	TK_PR_IF '(' shrt_crct_before_if_b expr shrt_crct_after_if_b ')' TK_PR_THEN commands {
@@ -1066,24 +1088,75 @@ ctrl_flow2:
 		}
 	;
 
+shrt_crct_before_while_b:
+	{
+			reg_or_label *S = $<temp>-2;
+
+			$<temp>$ = new_reg_or_label();
+			$<temp>$->b.t = label_generator();
+			$<temp>$->b.f = S->next;
+	}
+
+shrt_crct_after_while_b:
+	{
+			//reg_or_label *S = $<temp>-4;
+			//S->begin = label_generator();
+			//printf("S->begin = %s\n",S->begin);
+
+			$<temp>$ = new_reg_or_label();
+			$<temp>$->begin = label_generator();
+	}
+
+
+shrt_crct_before_do_while_cmd:
+	{
+			//reg_or_label *S = $<temp>-1;
+			//S->begin = label_generator();
+			//printf("S->begin = %s\n",S->begin);
+
+			$<temp>$ = new_reg_or_label();
+			$<temp>$->begin = label_generator();
+	}
+
+shrt_crct_before_do_while_b:
+	{
+			reg_or_label *S = $<temp>-5;
+			reg_or_label *S1 = $<temp>-3;
+
+			$<temp>$->b.t = S1->begin;
+			$<temp>$->b.f = S->next;
+	}
+
+
+shrt_crct_after_else:
+	{
+		//nao faz nada pelo descrito nos comentarios de ctrl_flow2
+		//reg_or_label *S = $<temp>-9;
+		//$<temp>$ = new_reg_or_label();
+		//$<temp>$->b.f = S->next;
+	}
+
 shrt_crct_before_if_b:
 		/* empty */
 		{
+			reg_or_label *S = $<temp>-2;
+
 			$<temp>$ = new_reg_or_label();
 			$<temp>$->b.t = label_generator();
-			reg_or_label *S = $<temp>-2;
-			$<temp>$->b.f = S->next;
+			//deveria ser S->next. gambi explicada em iks_iloc.c
+			// permite compatibilidade com if_else
+			$<temp>$->b.f = label_generator(); //deveria ser S->next
+			//$<temp>$->b.f = S->next;
 		}
 	;
 
 shrt_crct_after_if_b:
 		/* empty */
 		{
-			//B2
-			$<temp>$ = new_reg_or_label();
-			$<temp>$->b.t = label_generator();
-			reg_or_label *S = $<temp>-3;
-			$<temp>$->b.f = S->next;
+			//nao faz nada pelo descrito nos comentarios de ctrl_flow2
+			//reg_or_label *S = $<temp>-4;
+			//$<temp>$ = new_reg_or_label();
+			//$<temp>$->b.f = S->next;
 		}
 	;
 

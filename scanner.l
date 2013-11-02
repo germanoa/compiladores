@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include "iks_dict.h"
 #include "iks_tree.h"
+#include "iks_types.h"
 #include "iks_grammar.h"
 #include "parser.h"
-#include "iks_types.h"
 
 
 extern YYSTYPE yylval;

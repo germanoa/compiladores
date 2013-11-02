@@ -49,7 +49,7 @@ iks_tree_t *ast;
 #define TEMP_LOCAL 2
 #define TEMP_BT 3
 #define TEMP_BF 4
-#define TEMP_BEGIN 4
+#define TEMP_BEGIN 5
 
 typedef struct logic logic;
 struct logic {

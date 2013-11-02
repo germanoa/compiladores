@@ -4,6 +4,7 @@
 #include "iks_dict.h"
 #include "iks_tree.h"
 #include "iks_stack.h"
+#include "iks_types.h"
 
 #define IKS_SIMBOLO_INDEFINIDO 0
 #define IKS_SIMBOLO_LITERAL_INT 1
@@ -92,7 +93,8 @@ int exist_symbol_local(iks_grammar_symbol_t *symbol, iks_dict_t *symbol_table);
 /**
  * add symbol to a symbol_table
  */
-int decl_symbol(iks_grammar_symbol_t *s, int iks_type, int decl_type, void *symbol_table, iks_grammar_symbol_t *function_with_param);
+//int decl_symbol(iks_grammar_symbol_t *s, int iks_type, int decl_type, void *symbol_table, iks_grammar_symbol_t *function_with_param);
+int decl_symbol(iks_grammar_symbol_t *s, int iks_type, int decl_type, scope_t *scope, iks_grammar_symbol_t *function_with_param);
 
 /**
  * update a vector symbol at symbol_table
@@ -108,6 +110,11 @@ int symbol_is_decl_type(iks_grammar_symbol_t *s,int decl_type);
  * handling errors
  */
 int iks_error(iks_grammar_symbol_t *s, int error_type);
+
+int verify_function_args(iks_grammar_symbol_t *s, iks_list_t *args);
+
+int symbol_is_iks_type(iks_grammar_symbol_t *s,int iks_type);
+
 
 
 #endif /* __IKS_GRAMMAR_H */

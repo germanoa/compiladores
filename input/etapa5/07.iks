@@ -1,0 +1,9 @@
+int:main() {
+
+	do {
+		if(false) then { }
+
+	}	while(true)
+
+
+}

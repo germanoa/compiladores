@@ -6,6 +6,7 @@
 
 #include "iks_stack.h"
 #include "iks_tree.h"
+//#include "iks_grammar.h"
 
 /* Códigos de tipos de dados linguagem */
 #define IKS_NOTYPE 	0 
@@ -65,6 +66,7 @@ typedef struct scope_t scope_t;
 struct scope_t {
 	iks_stack_t *st; //symbol tables 
 	int base_addr;	
+	int next_addr;	
 };
 scope_t *scope;
 
@@ -72,9 +74,10 @@ scope_t *new_scope();
 
 int verify_coercion(iks_tree_t *id, iks_tree_t *expr);
 
-int verify_function_args(iks_grammar_symbol_t *s, iks_list_t *args);
 
-int symbol_is_iks_type(iks_grammar_symbol_t *s,int iks_type);
+//int verify_function_args(iks_grammar_symbol_t *s, iks_list_t *args);
+
+//int symbol_is_iks_type(iks_grammar_symbol_t *s,int iks_type);
 
 /**
  * return type inferred (only works with int, float and bool)
