@@ -105,7 +105,7 @@ void code_literal(iks_tree_t **ast) {
 			code_id_lits(ast);
 			break;
     default:
-      printf("ops at code_literal\n");
+      fprintf(stderr,"error at code_literal\n");
   }
 }
 
@@ -397,6 +397,7 @@ void code_generator(iks_tree_t **ast) {
 		case IKS_AST_CHAMADA_DE_FUNCAO:
 		case IKS_AST_INDEFINIDO:
 		default:
+			fprintf(stderr,"error at code_generator\n");
 			break;
 	}
 }
@@ -587,7 +588,8 @@ void iloc_oper_print(iks_list_t *opers) {
         printf("c2c %s => %s",(char*)oper->src_operands->item,
     													(char*)oper->dst_operands->item);
         break;
-
+			case default:
+				fprintf(stderr,"error at iloc_oper_print\n");
     }
     printf("\n");
 
