@@ -172,13 +172,14 @@ array_decl:
 		decl {
 			dimen_counter = 0;
 		} array_decl_dimen {
-			update_vector_symbol($decl,dimen_counter,$array_decl_dimen);
+			update_vector_symbol($decl,dimen_counter,$array_decl_dimen); //add information about dimensions
 		}
 	;
 
 array_decl_dimen:
 		array_decl_dimen '[' TK_LIT_INT ']'
 		{
+			//append to list of dimensions
 			iks_list_t *list = $1;
 			iks_grammar_symbol_t *lit = $3;
 			int size = atoi(lit->value);
@@ -190,6 +191,7 @@ array_decl_dimen:
 		}
 	| '[' TK_LIT_INT ']'
 		{
+			//create list of dimensions
 			iks_grammar_symbol_t *lit = $2;
 			int size = atoi(lit->value);
 			iks_list_t *dimen = new_iks_list();
@@ -205,7 +207,7 @@ decl:
 		{
 			//if (!decl_symbol($3,$1,IKS_DECL_VAR,iks_stack_top(scope->st),function_with_param)) {
 			if (!decl_symbol($3,$1,IKS_DECL_VAR,scope,function_with_param)) {
-				return(IKS_ERROR_DECLARED);
+				return(IKS_ERROR_DECLARED); //was already declared before
 			}
 			$$ = $3;
 		}
@@ -1019,30 +1021,29 @@ param_list:
 
 /* 2.6 */
 ctrl_flow:
-	{ 
-		//S->next
-		$<temp>$ = new_reg_or_label();
-		$<temp>$->next = label_generator();
-  }
-	ctrl_flow2
-	{
-	  //delete_reg_or_label(&($<temp>-1));
-		$$ = $2;
-		//nossos S->next sao locais, ou seja, em if_else
-		// S2->next nao eh S->next, mas possui um proprio S2->next
-		// para nossa gramatica funciona. incompativel com coisas avancadas
-		// tipo switch-case de C.
-		// o resultado quando temos ctrl_flows encadeados eh
-		// uma pilha final de labels, trazendo o efeito necessario
-		iloc_t *iloc = new_iloc(NULL, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));  iks_list_t *gambi = new_iks_list();
-  	iks_list_append(gambi,(void*)iloc);
-		reg_or_label *S = $<temp>1;
-  	label_insert(gambi,S->next);
+		{ 
+			//S->next
+			$<temp>$ = new_reg_or_label();
+			$<temp>$->next = label_generator();
+		} ctrl_flow2 {
+			//delete_reg_or_label(&($<temp>-1));
+			$$ = $2;
+			//nossos S->next sao locais, ou seja, em if_else
+			// S2->next nao eh S->next, mas possui um proprio S2->next
+			// para nossa gramatica funciona. incompativel com coisas avancadas
+			// tipo switch-case de C.
+			// o resultado quando temos ctrl_flows encadeados eh
+			// uma pilha final de labels, trazendo o efeito necessario
+			iloc_t *iloc = new_iloc(NULL, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));  iks_list_t *gambi = new_iks_list();
+			iks_list_append(gambi,(void*)iloc);
+			reg_or_label *S = $<temp>1;
+			label_insert(gambi,S->next);
 
-		iks_ast_node_value_t *ctrl_flow2 = $$->item;
-  	ctrl_flow2->code = iks_list_concat(ctrl_flow2->code,gambi);
+			iks_ast_node_value_t *ctrl_flow2 = $$->item;
+			ctrl_flow2->code = iks_list_concat(ctrl_flow2->code,gambi);
 
-	}
+		}
+	;
 
 ctrl_flow2:
 		TK_PR_WHILE '(' shrt_crct_before_while_b  expr shrt_crct_after_while_b ')' TK_PR_DO commands
@@ -1089,52 +1090,55 @@ ctrl_flow2:
 	;
 
 shrt_crct_before_while_b:
-	{
+		{
 			reg_or_label *S = $<temp>-2;
 
 			$<temp>$ = new_reg_or_label();
 			$<temp>$->b.t = label_generator();
 			$<temp>$->b.f = S->next;
-	}
+		}
+	;
 
 shrt_crct_after_while_b:
-	{
+		{
 			//reg_or_label *S = $<temp>-4;
 			//S->begin = label_generator();
 			//printf("S->begin = %s\n",S->begin);
 
 			$<temp>$ = new_reg_or_label();
 			$<temp>$->begin = label_generator();
-	}
-
+		}
+	;
 
 shrt_crct_before_do_while_cmd:
-	{
+		{
 			//reg_or_label *S = $<temp>-1;
 			//S->begin = label_generator();
 			//printf("S->begin = %s\n",S->begin);
 
 			$<temp>$ = new_reg_or_label();
 			$<temp>$->begin = label_generator();
-	}
+		}
+	;
 
 shrt_crct_before_do_while_b:
-	{
+		{
 			reg_or_label *S = $<temp>-5;
 			reg_or_label *S1 = $<temp>-3;
 
 			$<temp>$->b.t = S1->begin;
 			$<temp>$->b.f = S->next;
-	}
-
+		}
+	;
 
 shrt_crct_after_else:
-	{
-		//nao faz nada pelo descrito nos comentarios de ctrl_flow2
-		//reg_or_label *S = $<temp>-9;
-		//$<temp>$ = new_reg_or_label();
-		//$<temp>$->b.f = S->next;
-	}
+		{
+			//nao faz nada pelo descrito nos comentarios de ctrl_flow2
+			//reg_or_label *S = $<temp>-9;
+			//$<temp>$ = new_reg_or_label();
+			//$<temp>$->b.f = S->next;
+		}
+	;
 
 shrt_crct_before_if_b:
 		/* empty */

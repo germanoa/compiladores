@@ -49,15 +49,30 @@ void code_id_lits(iks_tree_t **ast) {
 
 	iloc_t *_load,*_loadi;
 
-	_loadi = new_iloc(NULL, new_iloc_oper(loadI,addr,\NULL,\NULL,\reg_temp,\NULL,\NULL));
+	_loadi = new_iloc(NULL, new_iloc_oper(loadI,addr,
+																							NULL,
+																							NULL,
+																							reg_temp,
+																							NULL,
+																							NULL));
 
 	// carregando conteudo da memoria para registrador E->temp.name
 	switch(E->iks_type) {
 		case IKS_INT:
-			_load = new_iloc(NULL, new_iloc_oper(load,reg_temp,\NULL,\NULL,\E->temp.name,\NULL,\NULL));
+			_load = new_iloc(NULL, new_iloc_oper(load,reg_temp,
+																								NULL,
+																								NULL,
+																								E->temp.name,
+																								NULL,
+																								NULL));
 			break;	
 		case IKS_CHAR:
-			_load = new_iloc(NULL, new_iloc_oper(cload,reg_temp,\NULL,\NULL,\E->temp.name,\NULL,\NULL));
+			_load = new_iloc(NULL, new_iloc_oper(cload,	reg_temp,
+																									NULL,
+																									NULL,
+																									E->temp.name,
+																									NULL,
+																									NULL));
 			break;	
 	}
 	iks_list_append(E->code,_loadi);
@@ -260,8 +275,18 @@ void code_comp_l(iks_tree_t **ast) {
 	B->temp.name = register_generator();
 
   	iks_list_t *comp_l = new_iks_list();
-	iloc_t *cmp_lt = new_iloc(NULL, new_iloc_oper(cmp_LT,E1->temp.name,\E2->temp.name,\NULL,\B->temp.name,\NULL,\NULL));	
-	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,B->temp.name,\NULL,\NULL,\B->temp.b.t,\B->temp.b.f,\NULL));	
+	iloc_t *cmp_lt = new_iloc(NULL, new_iloc_oper(cmp_LT,	E1->temp.name,
+																												E2->temp.name,
+																												NULL,
+																												B->temp.name,
+																												NULL,
+																												NULL));	
+	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,B->temp.name,
+																									NULL,
+																									NULL,
+																									B->temp.b.t,
+																									B->temp.b.f,
+																									NULL));	
 	iks_list_append(comp_l,cmp_lt);	
 	iks_list_append(comp_l,_cbr);	
 
@@ -290,12 +315,22 @@ void code_attr(iks_tree_t **ast) {
 		case IKS_INT:
 			if (S->iks_type==IKS_CHAR) { op=i2c; } 
 			else { op=i2i; } 
-			attr = new_iloc(NULL, new_iloc_oper(op,E->temp.name,\NULL,\NULL,\S->temp.name,\NULL,\NULL));
+			attr = new_iloc(NULL, new_iloc_oper(op,	E->temp.name,
+																							NULL,
+																							NULL,
+																							S->temp.name,
+																							NULL,
+																							NULL));
 			break;	
 		case IKS_CHAR:
 			if (S->iks_type==IKS_INT) { op=c2i; } 
 			else { op=c2c; } 
-			attr = new_iloc(NULL, new_iloc_oper(op,E->temp.name,\NULL,\NULL,\S->temp.name,\NULL,\NULL));
+			attr = new_iloc(NULL, new_iloc_oper(op,	E->temp.name,
+																							NULL,
+																							NULL,
+																							S->temp.name,
+																							NULL,
+																							NULL));
 			break;	
 	}
 	iks_list_t *attr_code = new_iks_list();
@@ -527,34 +562,45 @@ void iloc_oper_print(iks_list_t *opers) {
       case nop:
         break;
       case jumpI:
-        printf("jumpI -> %s",oper->dst_operands->item);
+        printf("jumpI -> %s",(char*)oper->dst_operands->item);
         break;
       case cmp_LT:
-        printf("cmp_LT %s, %s -> %s",oper->src_operands->item,\oper->src_operands->next->item,\oper->dst_operands->item);
+        printf("cmp_LT %s, %s -> %s",	(char*)oper->src_operands->item,
+        															(char*)oper->src_operands->next->item,
+        															(char*)oper->dst_operands->item);
         break;
       case cbr:
-        printf("cbr %s -> %s, %s",oper->src_operands->item,\oper->dst_operands->item,\oper->dst_operands->next->item);
+        printf("cbr %s -> %s, %s",(char*)oper->src_operands->item,
+        													(char*)oper->dst_operands->item,
+        													(char*)oper->dst_operands->next->item);
         break;
       case loadI:
-        printf("loadI %s => %s",oper->src_operands->item,\oper->dst_operands->item);
+        printf("loadI %s => %s",(char*)oper->src_operands->item,
+        												(char*)oper->dst_operands->item);
         break;
       case load:
-        printf("load %s => %s",oper->src_operands->item,\ oper->dst_operands->item);
+        printf("load %s => %s",	(char*)oper->src_operands->item,
+        												(char*)oper->dst_operands->item);
         break;
       case cload:
-        printf("cload %s => %s",oper->src_operands->item,\oper->dst_operands->item);
+        printf("cload %s => %s",(char*)oper->src_operands->item,
+        												(char*)oper->dst_operands->item);
         break;
       case i2i:
-        printf("i2i %s => %s",oper->src_operands->item,\oper->dst_operands->item);
+        printf("i2i %s => %s",(char*)oper->src_operands->item,
+        											(char*)oper->dst_operands->item);
         break;
       case i2c:
-        printf("i2c %s => %s",oper->src_operands->item,\oper->dst_operands->item);
+        printf("i2c %s => %s",(char*)oper->src_operands->item,
+        											(char*)oper->dst_operands->item);
         break;
       case c2i:
-        printf("c2i %s => %s",oper->src_operands->item,\oper->dst_operands->item);
+        printf("c2i %s => %s",(char*)oper->src_operands->item,
+        											(char*)oper->dst_operands->item);
         break;
       case c2c:
-        printf("c2c %s => %s",oper->src_operands->item,\oper->dst_operands->item);
+        printf("c2c %s => %s",(char*)oper->src_operands->item,
+    													(char*)oper->dst_operands->item);
         break;
 
     }
