@@ -191,9 +191,37 @@ void code_log_or(ast)(iks_tree_t **ast) {
 * Objective: 
 * Input:
 * Output:	
-******************************************************************************/			
-void code_comp_ne(ast)(iks_tree_t **ast) {
+******************************************************************************/
+void code_comp_eq(ast)(iks_tree_t **ast) {
+	iks_ast_node_value_t *B = (*ast)->item;
+	iks_tree_t *E1t = (*ast)->children->item;
+	iks_ast_node_value_t *E1 = E1t->item;
+	iks_tree_t *E2t = (*ast)->children->next->item;
+	iks_ast_node_value_t *E2 = E2t->item;
 
+	B->code = iks_list_concat(E1->code,E2->code);
+
+	B->temp.name = register_generator();
+
+	iks_list_t *comp_eq = new_iks_list();
+	iloc_t *cmp_eq = new_iloc(NULL, new_iloc_oper(cmp_EQ,	
+																								E1->temp.name,
+																								E2->temp.name,
+																								NULL,
+																								B->temp.name,
+																								NULL,
+																								NULL));	
+	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,
+																								B->temp.name,
+																								NULL,
+																								NULL,
+																								B->temp.b.t,
+																								B->temp.b.f,
+																								NULL));	
+	iks_list_append(comp_eq,cmp_eq);	
+	iks_list_append(comp_eq,_cbr);	
+
+	B->code = iks_list_concat(B->code,comp_eq);
 }
 
 
@@ -201,9 +229,37 @@ void code_comp_ne(ast)(iks_tree_t **ast) {
 * Objective: 
 * Input:
 * Output:	
-******************************************************************************/
-void code_comp_e(ast)(iks_tree_t **ast) {
+******************************************************************************/			
+void code_comp_ne(ast)(iks_tree_t **ast) {
+	iks_ast_node_value_t *B = (*ast)->item;
+	iks_tree_t *E1t = (*ast)->children->item;
+	iks_ast_node_value_t *E1 = E1t->item;
+	iks_tree_t *E2t = (*ast)->children->next->item;
+	iks_ast_node_value_t *E2 = E2t->item;
 
+	B->code = iks_list_concat(E1->code,E2->code);
+
+	B->temp.name = register_generator();
+
+	iks_list_t *comp_ne = new_iks_list();
+	iloc_t *cmp_ne = new_iloc(NULL, new_iloc_oper(cmp_NE,	
+																								E1->temp.name,
+																								E2->temp.name,
+																								NULL,
+																								B->temp.name,
+																								NULL,
+																								NULL));	
+	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,
+																								B->temp.name,
+																								NULL,
+																								NULL,
+																								B->temp.b.t,
+																								B->temp.b.f,
+																								NULL));	
+	iks_list_append(comp_ne,cmp_ne);	
+	iks_list_append(comp_ne,_cbr);	
+
+	B->code = iks_list_concat(B->code,comp_ne);
 }
 
 
@@ -213,7 +269,35 @@ void code_comp_e(ast)(iks_tree_t **ast) {
 * Output:	
 ******************************************************************************/
 void code_comp_le(ast)(iks_tree_t **ast) {
+	iks_ast_node_value_t *B = (*ast)->item;
+	iks_tree_t *E1t = (*ast)->children->item;
+	iks_ast_node_value_t *E1 = E1t->item;
+	iks_tree_t *E2t = (*ast)->children->next->item;
+	iks_ast_node_value_t *E2 = E2t->item;
 
+	B->code = iks_list_concat(E1->code,E2->code);
+
+	B->temp.name = register_generator();
+
+	iks_list_t *comp_le = new_iks_list();
+	iloc_t *cmp_le = new_iloc(NULL, new_iloc_oper(cmp_LE,	
+																								E1->temp.name,
+																								E2->temp.name,
+																								NULL,
+																								B->temp.name,
+																								NULL,
+																								NULL));	
+	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,
+																							B->temp.name,
+																							NULL,
+																							NULL,
+																							B->temp.b.t,
+																							B->temp.b.f,
+																							NULL));	
+	iks_list_append(comp_le,cmp_le);	
+	iks_list_append(comp_le,_cbr);	
+
+	B->code = iks_list_concat(B->code,comp_le);
 }		
 
 
@@ -223,16 +307,6 @@ void code_comp_le(ast)(iks_tree_t **ast) {
 * Output:	
 ******************************************************************************/
 void code_comp_ge(ast)(iks_tree_t **ast) {
-
-}	
-
-
-/******************************************************************************
-* Objective: 
-* Input:
-* Output:	
-******************************************************************************/
-void code_comp_l(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
@@ -243,7 +317,45 @@ void code_comp_l(iks_tree_t **ast) {
 
 	B->temp.name = register_generator();
 
-	iks_list_t *comp_l = new_iks_list();
+	iks_list_t *comp_ge = new_iks_list();
+	iloc_t *cmp_ge = new_iloc(NULL, new_iloc_oper(cmp_GE,	
+																								E1->temp.name,
+																								E2->temp.name,
+																								NULL,
+																								B->temp.name,
+																								NULL,
+																								NULL));	
+	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,
+																							B->temp.name,
+																							NULL,
+																							NULL,
+																							B->temp.b.t,
+																							B->temp.b.f,
+																							NULL));	
+	iks_list_append(comp_ge,cmp_ge);	
+	iks_list_append(comp_ge,_cbr);	
+
+	B->code = iks_list_concat(B->code,comp_ge);
+}	
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
+void code_comp_lt(iks_tree_t **ast) {
+	iks_ast_node_value_t *B = (*ast)->item;
+	iks_tree_t *E1t = (*ast)->children->item;
+	iks_ast_node_value_t *E1 = E1t->item;
+	iks_tree_t *E2t = (*ast)->children->next->item;
+	iks_ast_node_value_t *E2 = E2t->item;
+
+	B->code = iks_list_concat(E1->code,E2->code);
+
+	B->temp.name = register_generator();
+
+	iks_list_t *comp_lt = new_iks_list();
 	iloc_t *cmp_lt = new_iloc(NULL, new_iloc_oper(cmp_LT,	
 																								E1->temp.name,
 																								E2->temp.name,
@@ -251,16 +363,17 @@ void code_comp_l(iks_tree_t **ast) {
 																								B->temp.name,
 																								NULL,
 																								NULL));	
-	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,B->temp.name,
-																								NULL,
-																								NULL,
-																								B->temp.b.t,
-																								B->temp.b.f,
-																								NULL));	
-	iks_list_append(comp_l,cmp_lt);	
-	iks_list_append(comp_l,_cbr);	
+	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,
+																							B->temp.name,
+																							NULL,
+																							NULL,
+																							B->temp.b.t,
+																							B->temp.b.f,
+																							NULL));	
+	iks_list_append(comp_lt,cmp_lt);	
+	iks_list_append(comp_lt,_cbr);	
 
-	B->code = iks_list_concat(B->code,comp_l);
+	B->code = iks_list_concat(B->code,comp_lt);
 
 }
 
@@ -270,7 +383,7 @@ void code_comp_l(iks_tree_t **ast) {
 * Input:
 * Output:	
 ******************************************************************************/
-void code_comp_g(ast)(iks_tree_t **ast) {
+void code_comp_gt(ast)(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
@@ -281,7 +394,7 @@ void code_comp_g(ast)(iks_tree_t **ast) {
 
 	B->temp.name = register_generator();
 
-	iks_list_t *comp_g = new_iks_list();
+	iks_list_t *comp_gt = new_iks_list();
 	iloc_t *cmp_gt = new_iloc(NULL, new_iloc_oper(cmp_GT,	
 																								E1->temp.name,
 																								E2->temp.name,
@@ -289,16 +402,17 @@ void code_comp_g(ast)(iks_tree_t **ast) {
 																								B->temp.name,
 																								NULL,
 																								NULL));	
-	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,B->temp.name,
-																								NULL,
-																								NULL,
-																								B->temp.b.t,
-																								B->temp.b.f,
-																								NULL));	
-	iks_list_append(comp_g,cmp_gt);	
-	iks_list_append(comp_g,_cbr);	
+	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,
+																							B->temp.name,
+																							NULL,
+																							NULL,
+																							B->temp.b.t,
+																							B->temp.b.f,
+																							NULL));	
+	iks_list_append(comp_gt,cmp_gt);	
+	iks_list_append(comp_gt,_cbr);	
 
-	B->code = iks_list_concat(B->code,comp_g);
+	B->code = iks_list_concat(B->code,comp_gt);
 }
 
 
@@ -573,11 +687,11 @@ void code_generator(iks_tree_t **ast) {
 		case IKS_AST_LOGICO_OU:
 			code_log_or(ast);
 			break;
+		case IKS_AST_LOGICO_COMP_IGUAL:
+			code_comp_eq(ast);
+			break;
 		case IKS_AST_LOGICO_COMP_DIF:
 			code_comp_ne(ast);
-			break;
-		case IKS_AST_LOGICO_COMP_IGUAL:
-			code_comp_e(ast);
 			break;
 		case IKS_AST_LOGICO_COMP_LE:
 			code_comp_le(ast);		
@@ -586,10 +700,10 @@ void code_generator(iks_tree_t **ast) {
 			code_comp_ge(ast);	
 			break;	
 		case IKS_AST_LOGICO_COMP_L:
-			code_comp_l(ast);		
+			code_comp_lt(ast);		
 			break;
 		case IKS_AST_LOGICO_COMP_G:
-			code_comp_g(ast);
+			code_comp_gt(ast);
 			break;
 //		case IKS_AST_LOGICO_COMP_NEGACAO:
 		case IKS_AST_VETOR_INDEXADO:
