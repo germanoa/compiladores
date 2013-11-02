@@ -7,37 +7,42 @@
 #include "iks_list.h"
 #include "iks_tree.h"
 
+
 /*
 *
-* Definição da quantidade máxima de caracteres
-* que compõem o nome de registradores e de rótulos
+* Definition of maximum amount of characters that
+* build the registers name and labels name.
 *
 */
 #define LABEL_WIDTH 32
 #define REGISTER_WIDTH 32
+#define MAXMEM  10 //amount of digits for memory
 
 /*
 *
-* Declaração de variáveis que controlam a quantidade
-* de registradores e de rótulos criados
+* Variables declaration that control the
+* amount of registers and labels.
 *
 */
 int reg_ctrl;
 int label_ctrl;
 
+
 /*
 *
-* Declaração de lista de comandos iloc
-* iks_list_t->item não tem tipo definido
+* Iloc comands list declaration
+* iks_list_t->item has no type defined
 * program_iloc->item : iloc_t
 *
 */
 iks_list_t *program_iloc;
 
+
 /*
 *
-* Estrutura que define uma operação em iloc
-* Contém uma lista de operandos iloc
+* Structure that defines an iloc operation
+* Contains a iloc operands list
+* iks_list_t->item has no type defined
 * opers->item: iloc_oper_t
 *
 */
@@ -50,8 +55,8 @@ struct iloc_t {
 
 /*
 *
-* Declaração de constantes no espaço global de nomes
-* que representam as operações válidas em iloc
+* Constants declaration, in names global space, 
+* that represent valid operations
 *
 */
 typedef enum { 
@@ -70,9 +75,11 @@ typedef enum {
   	nop
  } opcode_t;
 
+
 /*
 *
-* Operandos compartilhando mesmo espaço físico de memória
+* Different data types of operands 
+* sharing the same memory space
 *
 */
 union operands {
@@ -81,11 +88,12 @@ union operands {
 	char *r;
 };
 
+
 /*
 *
-* Estrutura que define uma operação em iloc
-* Contém uma lista de operandos fonte
-* e uma lista de operandos destino
+* Struct that define an iloc operation
+* Contains a source operands list
+* and a destination operands list
 * src_operands->item: operands
 * dst_operands->item: operands
 *
@@ -99,16 +107,8 @@ struct iloc_oper_t {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
-******************************************************************************/
-char *int_to_char(int i);
-
-
-/******************************************************************************
 * Objective: generate a new label from global label controller
-* Input: empty
+* Input: none
 * Output: pointer to a new string to be used as label name	
 ******************************************************************************/
 char *label_generator();
@@ -116,72 +116,65 @@ char *label_generator();
 
 /******************************************************************************
 * Objective: generate a new register from global register controller
-* Input: empty
+* Input: none
 * Output: pointer to a new string to be used as register name
 ******************************************************************************/
 char *register_generator();
 
 
 /******************************************************************************
-* Objective: verify if label is valid
-* Input:
-* Output:	
+* Objective: Address value conversion from integer to string
+* Input: an integer value
+* Output: pointer to corresponding string
 ******************************************************************************/
-int label_is_valid(char *label);
-
-
-/******************************************************************************
-* Objective: verify if register is valid
-* Input:
-* Output:	
-******************************************************************************/
-int register_is_valid(char *label);
+char *int_to_char(int i);
 
 
 /****************************************************************************** 
-* Objective: iloc code generator
-* Input:
-* Output:		
+* Objective: main function for code generator
+* Input: ast
+* Output: none	
 ******************************************************************************/
 void code_generator(iks_tree_t **ast);
 
 
 /******************************************************************************
-* Objective: iloc label insert
-* Input:
-* Output:	
+* Objective: insert a label in iloc code list
+* Input: list of iloc operations and new label to insert.
+* Output: none
 ******************************************************************************/
 void label_insert(iks_list_t *code, char *label);
 
 
 /******************************************************************************
-* Objective: create a iloc instruction
-* Input:
-* Output:	
+* Objective: create an iloc code
+* Input: label of new iloc code, operands list
+* Output: pointer to a new iloc_t
 ******************************************************************************/
 iloc_t *new_iloc(char *label, iloc_oper_t *oper);
 
 
 /******************************************************************************
-* Objective: create a iloc operation
-* Input:
-* Output:
+* Objective: create an iloc operation
+* Input: type of iloc operation, three pointers to names of source operands  
+* 	and three pointers to names of destination operands. 
+* Output: pointer to a new iloc_oper_t
 ******************************************************************************/
 iloc_oper_t *new_iloc_oper(opcode_t opcode, char *s1, char *s2, char *s3, char *d1, char *d2, char *d3);
 
 
 /****************************************************************************** 
-* Objective: print a iloc operation
-* Input:
-* Output:
+* Objective: print operands of an iloc operation 
+* Input: operands list
+* Output: none
 ******************************************************************************/
 void iloc_oper_print(iks_list_t *opers);
 
 
 /****************************************************************************** 
-* Objective: print a iloc code line
-* Input:
-* Output:
+* Objective: print an iloc code
+* Input: code list
+* Output: none
 ******************************************************************************/
 void iloc_print(iks_list_t *code);
 
