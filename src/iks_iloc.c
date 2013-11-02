@@ -389,8 +389,8 @@ void code_generator(iks_tree_t **ast) {
 		case IKS_AST_LOGICO_COMP_LE:
 		case IKS_AST_LOGICO_COMP_GE:
 		case IKS_AST_LOGICO_COMP_L:
-		case IKS_AST_LOGICO_COMP_G:
 			code_comp_l(ast);
+		case IKS_AST_LOGICO_COMP_G:
 			break;
 //		case IKS_AST_LOGICO_COMP_NEGACAO:
 		case IKS_AST_VETOR_INDEXADO:
@@ -588,7 +588,7 @@ void iloc_oper_print(iks_list_t *opers) {
         printf("c2c %s => %s",(char*)oper->src_operands->item,
     													(char*)oper->dst_operands->item);
         break;
-			case default:
+			default:
 				fprintf(stderr,"error at iloc_oper_print\n");
     }
     printf("\n");
