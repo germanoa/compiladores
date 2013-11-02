@@ -25,6 +25,7 @@ void code_programa(iks_tree_t **ast) {
 void code_funcao(iks_tree_t **ast) {
 	iks_ast_node_value_t *F = (*ast)->item;
 	iks_tree_t *St = (*ast)->children->item;
+	
 	if (St) {
 		iks_ast_node_value_t *S = St->item;
 		F->code = iks_list_concat(F->code,S->code);
@@ -64,7 +65,8 @@ void code_id_lits(iks_tree_t **ast) {
 																								E->temp.name,
 																								NULL,
 																								NULL));
-			break;	
+			break;
+		
 		case IKS_CHAR:
 			_load = new_iloc(NULL, new_iloc_oper(cload,	reg_temp,
 																									NULL,
@@ -74,6 +76,7 @@ void code_id_lits(iks_tree_t **ast) {
 																									NULL));
 			break;	
 	}
+	
 	iks_list_append(E->code,_loadi);
 	iks_list_append(E->code,_load);
 }
@@ -87,6 +90,7 @@ void code_literal(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
 
   iloc_t *iloc;
+  
   switch(S->symbol->token_type) {
     case TK_LIT_TRUE:
       //gera(goto B.t)
@@ -268,7 +272,7 @@ void code_comp_l(iks_tree_t **ast) {
 
 	B->temp.name = register_generator();
 
-  	iks_list_t *comp_l = new_iks_list();
+	iks_list_t *comp_l = new_iks_list();
 	iloc_t *cmp_lt = new_iloc(NULL, new_iloc_oper(cmp_LT,	E1->temp.name,
 																												E2->temp.name,
 																												NULL,
@@ -304,20 +308,26 @@ void code_attr(iks_tree_t **ast) {
 
   iloc_t *attr;
 	opcode_t op;
+	
 	switch(E->iks_type) {
 		case IKS_INT:
-			if (S->iks_type==IKS_CHAR) { op=i2c; } 
-			else { op=i2i; } 
+			if (S->iks_type==IKS_CHAR)
+				op=i2c;
+			else op=i2i;
+			
 			attr = new_iloc(NULL, new_iloc_oper(op,	E->temp.name,
 																							NULL,
 																							NULL,
 																							S->temp.name,
 																							NULL,
 																							NULL));
-			break;	
+			break;
+		
 		case IKS_CHAR:
-			if (S->iks_type==IKS_INT) { op=c2i; } 
-			else { op=c2c; } 
+			if (S->iks_type==IKS_INT)
+				op=c2i;
+			else op=c2c;
+			
 			attr = new_iloc(NULL, new_iloc_oper(op,	E->temp.name,
 																							NULL,
 																							NULL,
@@ -326,6 +336,7 @@ void code_attr(iks_tree_t **ast) {
 																							NULL));
 			break;	
 	}
+	
 	iks_list_t *attr_code = new_iks_list();
 	iks_list_append(attr_code,attr);
 	S->code = iks_list_concat(E->code,attr_code);
@@ -392,7 +403,7 @@ void code_generator(iks_tree_t **ast) {
 			code_comp_l(ast);
 		case IKS_AST_LOGICO_COMP_G:
 			break;
-//		case IKS_AST_LOGICO_COMP_NEGACAO:
+		//case IKS_AST_LOGICO_COMP_NEGACAO:
 		case IKS_AST_VETOR_INDEXADO:
 		case IKS_AST_CHAMADA_DE_FUNCAO:
 		case IKS_AST_INDEFINIDO:
@@ -473,12 +484,10 @@ void label_insert(iks_list_t *code, char *label) {
   if(!iloc) {
     iloc_t *iloc = new_iloc(label, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));
     iks_list_append(code,(void*)iloc);
-  }
-  else {
+  } else {
     if(!iloc->label) {
       iloc->label = label;
-    }
-    else {
+    } else {
       iloc_t *iloc = new_iloc(label, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));
       iks_list_append(code,(void*)iloc);
     }
@@ -512,21 +521,25 @@ iloc_oper_t *new_iloc_oper(opcode_t opcode, char *s1, char *s2, char *s3, char *
   oper->dst_operands = new_iks_list();
   if (s1) {
     iks_list_append(oper->src_operands,(void*)s1);
+    
     if (s2) {
       iks_list_append(oper->src_operands,(void*)s2);
     }
-      if (s3) {
-        iks_list_append(oper->src_operands,(void*)s3);
-      }
+    
+    if (s3) {
+      iks_list_append(oper->src_operands,(void*)s3);
+    }
   }
   if (d1) {
     iks_list_append(oper->dst_operands,(void*)d1);
+    
     if (d2) {
       iks_list_append(oper->dst_operands,(void*)d2);
     }
-      if (d3) {
-        iks_list_append(oper->dst_operands,(void*)d3);
-      }
+    
+    if (d3) {
+      iks_list_append(oper->dst_operands,(void*)d3);
+    }
   }
   return oper;
 }
@@ -608,7 +621,8 @@ void iloc_print(iks_list_t *code) {
   do {
     iloc_t *iloc = it->item;
 
-    if (!iloc) break;
+    if (!iloc)
+    	break;
     if (iloc->label) {
       printf ("%s: ",iloc->label);
     }
