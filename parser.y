@@ -151,7 +151,7 @@ prog:
 				iks_ast_connect_nodes(ast,$func);
 			}
 			else {
-				iks_ast_connect_nodes($prog,$func);
+				iks_ast_connect_nodes($1,$func);
 			}
 			//symbol_table_print((iks_dict_t*)iks_stack_top(scope->st));
       $$ = $func;
@@ -180,7 +180,7 @@ array_decl_dimen:
 		array_decl_dimen '[' TK_LIT_INT ']'
 		{
 			//append to list of dimensions
-			iks_list_t *list = $array_decl_dimen;
+			iks_list_t *list = $1;
 			iks_grammar_symbol_t *lit = $TK_LIT_INT;
 			int size = atoi(lit->value);
 			
@@ -271,7 +271,7 @@ func:
 
 			$$ = ptr_function;
       code_generator(&($$));
-			ptr_function = NULL; //evita aceitar um return fora de uma função
+			ptr_function = NULL; //returns are unacceptable outside functions
 		}
 	;
 
@@ -302,7 +302,7 @@ command_block:
 		'{' command_seq '}'
 		{
 			iks_tree_t *bloco = iks_ast_new_node(IKS_AST_BLOCO,NULL);
-			if ($command_seq) { //because can command_seq <- command <- empty
+			if ($command_seq) { //because command_seq <- command <- empty is a possibility
 				iks_ast_connect_nodes(bloco,$command_seq);
 				iks_ast_node_value_t *S = $command_seq->item;
 				iks_ast_node_value_t *bloco_n = bloco->item;
@@ -316,8 +316,8 @@ command_seq:
 		command ';' command_seq
 		{
 			/* 3.A.10 */
-			if ($command_seq) { //because can command_seq <- command <- empty
-				iks_ast_connect_nodes($command,$command_seq);
+			if ($3) { //because command_seq <- command <- empty is a possibility
+				iks_ast_connect_nodes($command,$3);
 			}
 		}
 	| command
@@ -542,9 +542,9 @@ idv_dimen:
 			iks_ast_node_value_delete(int_treen); //removing temporary tree
 			iks_tree_delete(int_tree);
 			
-			iks_ast_connect_nodes($idv_dimen, $expr);
+			iks_ast_connect_nodes($1, $expr);
 			
-			$$ = $idv_dimen;
+			$$ = $1;
 		}
 	| '[' expr ']'
 		{
@@ -638,7 +638,7 @@ output_list:
 					break;
 			}
 
-			iks_ast_connect_nodes($expr,$output_list);
+			iks_ast_connect_nodes($expr,$3);
 		}
 	;
 
@@ -661,7 +661,7 @@ expr:
 	| terminal_value
 	| '(' expr ')'
 		{
-			$$ = $expr;
+			$$ = $2;
 		}
 	| func_call
 	| arim_expr
@@ -669,7 +669,7 @@ expr:
  ;
 
 arim_expr: 	
-	expr '+' expr
+		expr '+' expr
 		{
 			/* 3.A.12 */
 			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SOMA,NULL);
@@ -742,7 +742,7 @@ arim_expr:
   ;
 
 logic_expr:
-	expr '<' expr
+		expr '<' expr
 		{
 			$$ = iks_ast_new_node(IKS_AST_LOGICO_COMP_L,NULL);
 			iks_ast_node_value_t *oon = $$->item;
@@ -761,8 +761,6 @@ logic_expr:
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
 			code_generator(&($$));
-			
-
 		}
 	| expr '>' expr
 		{
@@ -1005,7 +1003,7 @@ param_list:
 		}
 	| expr ',' param_list
 		{
-			if ($param_list) { //because can command_seq <- command <- empty
+			if ($3) { //because can command_seq <- command <- empty
 				iks_ast_node_value_t *n;
 				n = $expr->item; 
 				iks_grammar_symbol_t *s;
@@ -1014,7 +1012,7 @@ param_list:
 				l = new_iks_list();
 				iks_list_set_item(l,(void*)s);     
 				iks_list_insert(args,l);
-				iks_ast_connect_nodes($expr,$param_list);
+				iks_ast_connect_nodes($expr,$3);
 			}
 		}
 	;
