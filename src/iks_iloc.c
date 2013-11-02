@@ -122,6 +122,164 @@ void code_literal(iks_tree_t **ast) {
 * Input:
 * Output:	
 ******************************************************************************/
+void code_arit_som(ast)(iks_tree_t **ast) {
+
+}
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
+void code_arit_sub(ast)(iks_tree_t **ast) {
+
+}
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
+void code_arit_mul(ast)(iks_tree_t **ast) {
+
+}
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
+void code_arit_div(ast)(iks_tree_t **ast) {
+
+}
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
+void code_log_inv(ast)(iks_tree_t **ast) {
+
+}
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
+void code_log_and(ast)(iks_tree_t **ast) {
+
+}
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
+void code_log_or(ast)(iks_tree_t **ast) {
+
+}
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/			
+void code_comp_ne(ast)(iks_tree_t **ast) {
+
+}
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
+void code_comp_e(ast)(iks_tree_t **ast) {
+
+}
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
+void code_comp_le(ast)(iks_tree_t **ast) {
+
+}		
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
+void code_comp_ge(ast)(iks_tree_t **ast) {
+
+}	
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
+void code_comp_l(iks_tree_t **ast) {
+	iks_ast_node_value_t *B = (*ast)->item;
+	iks_tree_t *E1t = (*ast)->children->item;
+	iks_ast_node_value_t *E1 = E1t->item;
+	iks_tree_t *E2t = (*ast)->children->next->item;
+	iks_ast_node_value_t *E2 = E2t->item;
+
+	B->code = iks_list_concat(E1->code,E2->code);
+
+	B->temp.name = register_generator();
+
+	iks_list_t *comp_l = new_iks_list();
+	iloc_t *cmp_lt = new_iloc(NULL, new_iloc_oper(cmp_LT,	
+																								E1->temp.name,
+																								E2->temp.name,
+																								NULL,
+																								B->temp.name,
+																								NULL,
+																								NULL));	
+	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,B->temp.name,
+																								NULL,
+																								NULL,
+																								B->temp.b.t,
+																								B->temp.b.f,
+																								NULL));	
+	iks_list_append(comp_l,cmp_lt);	
+	iks_list_append(comp_l,_cbr);	
+
+	B->code = iks_list_concat(B->code,comp_l);
+
+}
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
+void code_comp_g(ast)(iks_tree_t **ast) {
+
+}
+
+
+/******************************************************************************
+* Objective: 
+* Input:
+* Output:	
+******************************************************************************/
 void code_or(iks_tree_t **ast) {
 	iks_ast_node_value_t *or_n = (*ast)->item;
 	iks_tree_t *e1 = (*ast)->children->item;
@@ -270,44 +428,6 @@ void code_do_while(iks_tree_t **ast) {
 * Input:
 * Output:	
 ******************************************************************************/
-void code_comp_l(iks_tree_t **ast) {
-	iks_ast_node_value_t *B = (*ast)->item;
-	iks_tree_t *E1t = (*ast)->children->item;
-	iks_ast_node_value_t *E1 = E1t->item;
-	iks_tree_t *E2t = (*ast)->children->next->item;
-	iks_ast_node_value_t *E2 = E2t->item;
-
-	B->code = iks_list_concat(E1->code,E2->code);
-
-	B->temp.name = register_generator();
-
-	iks_list_t *comp_l = new_iks_list();
-	iloc_t *cmp_lt = new_iloc(NULL, new_iloc_oper(cmp_LT,	
-																								E1->temp.name,
-																								E2->temp.name,
-																								NULL,
-																								B->temp.name,
-																								NULL,
-																								NULL));	
-	iloc_t *_cbr = new_iloc(NULL, new_iloc_oper(cbr,B->temp.name,
-																								NULL,
-																								NULL,
-																								B->temp.b.t,
-																								B->temp.b.f,
-																								NULL));	
-	iks_list_append(comp_l,cmp_lt);	
-	iks_list_append(comp_l,_cbr);	
-
-	B->code = iks_list_concat(B->code,comp_l);
-
-}
-
-
-/******************************************************************************
-* Objective: 
-* Input:
-* Output:	
-******************************************************************************/
 void code_attr(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
 	iks_tree_t *IDt = (*ast)->children->item;
@@ -406,21 +526,43 @@ void code_generator(iks_tree_t **ast) {
 			code_literal(ast);
 			break;
 		case IKS_AST_ARIM_SOMA:
+			code_arit_som(ast);
+			break;
 		case IKS_AST_ARIM_SUBTRACAO:
+			code_arit_sub(ast);
+			break;
 		case IKS_AST_ARIM_MULTIPLICACAO:
+			code_arit_mul(ast);
+			break;
 		case IKS_AST_ARIM_DIVISAO:
+			code_arit_div(ast);
+			break;
 		case IKS_AST_ARIM_INVERSAO:
+			code_log_inv(ast);
+			break;
 		case IKS_AST_LOGICO_E:
+			code_log_and(ast);
+			break;
 		case IKS_AST_LOGICO_OU:
-			code_or(ast);
+			code_log_or(ast);
 			break;
 		case IKS_AST_LOGICO_COMP_DIF:
+			code_comp_ne(ast);
+			break;
 		case IKS_AST_LOGICO_COMP_IGUAL:
+			code_comp_e(ast);
+			break;
 		case IKS_AST_LOGICO_COMP_LE:
+			code_comp_le(ast);		
+			break;
 		case IKS_AST_LOGICO_COMP_GE:
+			code_comp_ge(ast);	
+			break;	
 		case IKS_AST_LOGICO_COMP_L:
+			code_comp_l(ast);		
+			break;
 		case IKS_AST_LOGICO_COMP_G:
-			code_comp_l(ast);
+			code_comp_g(ast);
 			break;
 //		case IKS_AST_LOGICO_COMP_NEGACAO:
 		case IKS_AST_VETOR_INDEXADO:
