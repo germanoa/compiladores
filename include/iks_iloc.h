@@ -60,7 +60,7 @@ struct iloc_t {
 *
 */
 typedef enum { 
-	add, sub, mult, _div,
+	add, sub, mult, div,
 	addI, subI, multI, divI, rdivI,
 	and, andI, or, orI, xor, xorI, 
 	lshift, rshift,
