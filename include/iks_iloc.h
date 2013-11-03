@@ -60,19 +60,19 @@ struct iloc_t {
 *
 */
 typedef enum { 
-	add, sub, mult, _div,
-	addI, subI, multI, divI, rdivI,
-	and, andI, or, orI, xor, xorI, 
-	lshift, rshift,
-	lshiftI, rshifI,
-	load, loadAI, loadA0, loadI,
-	cload, cloadAI, cloadA0,
-	store, storeAI, storeA0,
-	cstore, cstoreAI, cstoreA0,
-	i2i, c2c, c2i, i2c,
-	cmp_LT, cmp_LE, cmp_EQ, cmp_GE, cmp_GT, cmp_NE, cbr,
-	jump, jumpI,
-  	nop
+	op_add, op_sub, op_mult, op_div,
+	op_addI, op_subI, op_multI, op_divI, op_rdivI,
+	op_and, op_andI, op_or, op_orI, op_xor, op_xorI, 
+	op_lshift, op_rshift,
+	op_lshiftI, op_rshifI,
+	op_load, op_loadAI, op_loadA0, op_loadI,
+	op_cload, op_cloadAI, op_cloadA0,
+	op_store, op_storeAI, op_storeA0,
+	op_cstore, op_cstoreAI, op_cstoreA0,
+	op_i2i, op_c2c, op_c2i, op_i2c,
+	op_cmp_LT, op_cmp_LE, op_cmp_EQ, op_cmp_GE, op_cmp_GT, op_cmp_NE, op_cbr,
+	op_jump, op_jumpI,
+ 	op_nop
  } opcode_t;
 
 
