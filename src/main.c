@@ -35,13 +35,14 @@ int main (int argc, char **argv)
   //printf("\n\n\n%s\n\n\n\n", argv[0]);
   //printf("\n\n\n%s\n\n\n\n", argv[1]);
   //printf("\n\n\n%s\n\n\n\n", argv[2]);
-  gv_init("output/etapa3/saida.dot");
-  
-  int resultado = yyparse();
+  //gv_init("output/etapa3/saida.dot");
+  gv_init("ast_graph.dot");
+
+  int result = yyparse();
   
   gv_close();
 
   //symbol_table_print((iks_dict_t*)iks_stack_top(scope));
 
-  return resultado;
+  return result;
 }
