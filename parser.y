@@ -672,65 +672,85 @@ arim_expr:
 		expr '+' expr
 		{
 			/* 3.A.12 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SOMA,NULL);
-			iks_ast_node_value_t *oon = oo->item;
+			$$ = iks_ast_new_node(IKS_AST_ARIM_SOMA,NULL);
+			iks_ast_node_value_t *oon = $$->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
+			
 			int type = infer_type($1, $3);
 			if(type > 5) //erro de coerção
 				return type;
 			oon->iks_type = type;
-			iks_ast_connect_nodes(oo,$1);
-			iks_ast_connect_nodes(oo,$3);
-			$$ = oo;
+
+			iks_ast_connect_nodes($$,$1);
+			iks_ast_connect_nodes($$,$3);
+
+	  	reg_or_label *S = $<temp>0;
+     	ast_set_temp(TEMP_BT,S->b.t,&($$));
+     	ast_set_temp(TEMP_BF,S->b.f,&($$));
 			code_generator(&($$));
 		}
 	| expr '-' expr
 		{
 			/* 3.A.12 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_SUBTRACAO,NULL);
-			iks_ast_node_value_t *oon = oo->item;
+			$$ = iks_ast_new_node(IKS_AST_ARIM_SUBTRACAO,NULL);
+			iks_ast_node_value_t *oon = $$->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
+			
 			int type = infer_type($1, $3);
 			if(type > 5) //erro de coerção
 				return type;
 			oon->iks_type = type;
-			iks_ast_connect_nodes(oo,$1);
-			iks_ast_connect_nodes(oo,$3);
-			$$ = oo;
+
+			iks_ast_connect_nodes($$,$1);
+			iks_ast_connect_nodes($$,$3);
+
+	  	reg_or_label *S = $<temp>0;
+     	ast_set_temp(TEMP_BT,S->b.t,&($$));
+     	ast_set_temp(TEMP_BF,S->b.f,&($$));
 			code_generator(&($$));
 		}
 	| expr '*' expr
 		{
 			/* 3.A.12 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_MULTIPLICACAO,NULL);
-			iks_ast_node_value_t *oon = oo->item;
+			$$ = iks_ast_new_node(IKS_AST_ARIM_MULTIPLICACAO,NULL);
+			iks_ast_node_value_t *oon = $$->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
+			
 			int type = infer_type($1, $3);
 			if(type > 5) //erro de coerção
 				return type;
 			oon->iks_type = type;
-			iks_ast_connect_nodes(oo,$1);
-			iks_ast_connect_nodes(oo,$3);
-			$$ = oo;
+
+			iks_ast_connect_nodes($$,$1);
+			iks_ast_connect_nodes($$,$3);
+
+	  	reg_or_label *S = $<temp>0;
+     	ast_set_temp(TEMP_BT,S->b.t,&($$));
+     	ast_set_temp(TEMP_BF,S->b.f,&($$));
 			code_generator(&($$));
 		}
 	| expr '/' expr
 		{
 			/* 3.A.12 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_ARIM_DIVISAO,NULL);
-			iks_ast_node_value_t *oon = oo->item;
+			$$ = iks_ast_new_node(IKS_AST_ARIM_DIVISAO,NULL);
+			iks_ast_node_value_t *oon = $$->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
+			
 			int type = infer_type($1, $3);
 			if(type > 5) //erro de coerção
 				return type;
 			oon->iks_type = type;
-			iks_ast_connect_nodes(oo,$1);
-			iks_ast_connect_nodes(oo,$3);
-			$$ = oo;
+
+			iks_ast_connect_nodes($$,$1);
+			iks_ast_connect_nodes($$,$3);
+
+	  	reg_or_label *S = $<temp>0;
+     	ast_set_temp(TEMP_BT,S->b.t,&($$));
+     	ast_set_temp(TEMP_BF,S->b.f,&($$));
 			code_generator(&($$));
 		}
 	| '-' expr %prec INVERSAO
@@ -770,65 +790,79 @@ logic_expr:
 	| expr '>' expr
 		{
 			/* 3.A.14 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_G,NULL);
-			iks_ast_node_value_t *oon = oo->item;
+			$$ = iks_ast_new_node(IKS_AST_LOGICO_COMP_G,NULL);
+			iks_ast_node_value_t *oon = $$->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
-			
+
 			int type = infer_type($1, $3);
 			if(type > 5) //erro de coerção
 				return type;
 			oon->iks_type = type;
 
-			iks_ast_connect_nodes(oo,$1);
-			iks_ast_connect_nodes(oo,$3);
-			$$ = oo;
+			iks_ast_connect_nodes($$,$1);
+			iks_ast_connect_nodes($$,$3);
+
+		  reg_or_label *S = $<temp>0;
+     	ast_set_temp(TEMP_BT,S->b.t,&($$));
+     	ast_set_temp(TEMP_BF,S->b.f,&($$));
 			code_generator(&($$));
 		}
 	| expr TK_OC_LE expr
 		{
 			/* 3.A.14 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_LE,NULL);
-			iks_ast_node_value_t *oon = oo->item;
+			$$ = iks_ast_new_node(IKS_AST_LOGICO_COMP_LE,NULL);
+			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
-			iks_ast_connect_nodes(oo,$1);
-			iks_ast_connect_nodes(oo,$3);
-			$$ = oo;
+			iks_ast_connect_nodes($$,$1);
+			iks_ast_connect_nodes($$,$3);
+
+	  	reg_or_label *S = $<temp>0;
+     	ast_set_temp(TEMP_BT,S->b.t,&($$));
+     	ast_set_temp(TEMP_BF,S->b.f,&($$));
 			code_generator(&($$));
 		}
 	| expr TK_OC_GE expr
 		{
 			/* 3.A.14 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_GE,NULL);
-			iks_ast_node_value_t *oon = oo->item;
+			$$ = iks_ast_new_node(IKS_AST_LOGICO_COMP_GE,NULL);
+			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
-			iks_ast_connect_nodes(oo,$1);
-			iks_ast_connect_nodes(oo,$3);
-			$$ = oo;
+			iks_ast_connect_nodes($$,$1);
+			iks_ast_connect_nodes($$,$3);
+
+	  	reg_or_label *S = $<temp>0;
+     	ast_set_temp(TEMP_BT,S->b.t,&($$));
+     	ast_set_temp(TEMP_BF,S->b.f,&($$));
 			code_generator(&($$));
 		}
 	| expr TK_OC_EQ expr
 		{
 			/* 3.A.14 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_IGUAL,NULL);
-			iks_ast_node_value_t *oon = oo->item;
+			$$ = iks_ast_new_node(IKS_AST_LOGICO_COMP_IGUAL,NULL);
+			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
-			iks_ast_connect_nodes(oo,$1);
-			iks_ast_connect_nodes(oo,$3);
-			$$ = oo;
+			iks_ast_connect_nodes($$,$1);
+			iks_ast_connect_nodes($$,$3);
+
+	  	reg_or_label *S = $<temp>0;
+     	ast_set_temp(TEMP_BT,S->b.t,&($$));
+     	ast_set_temp(TEMP_BF,S->b.f,&($$));
 			code_generator(&($$));
 		}
 	| expr TK_OC_NE expr
 		{
 			/* 3.A.14 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_DIF,NULL);
-			iks_ast_node_value_t *oon = oo->item;
+			$$ = iks_ast_new_node(IKS_AST_LOGICO_COMP_DIF,NULL);
+			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
-			iks_ast_connect_nodes(oo,$1);
-			iks_ast_connect_nodes(oo,$3);
-			$$ = oo;
-			code_generator(&($$));
-		}
+			iks_ast_connect_nodes($$,$1);
+			iks_ast_connect_nodes($$,$3);
+			
+	  	reg_or_label *S = $<temp>0;
+     	ast_set_temp(TEMP_BT,S->b.t,&($$));
+     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+			code_generator(&($$));		}
 	| '!'
 		{
 			//buffer to short circuit
