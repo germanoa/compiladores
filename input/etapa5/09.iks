@@ -4,27 +4,11 @@ float:f;
 int:a;
 int:b;
 int: main() {
+		a = 0;
+		b = 2;
+
 		if (a==b) then {
 			b = 1;
 	 	}
 
-		if (a!=b) then {
-			b = 2;
-	 	}
-
-		if (a<b) then {
-			b = 3;
-	 	}
-
-		if (a>b) then {
-			b = 4;
-	 	}
-
-		if (a<=b) then {
-			b = 5;
-	 	}
-
-		if (a>=b) then {
-			b = 6;
-	 	}
 }

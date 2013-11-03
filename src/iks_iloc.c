@@ -18,9 +18,9 @@ void code_programa(iks_tree_t **ast) {
 }
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: generate code for a function
+* Input: pointer of pointer of iks_tree
+* Output:	none	
 ******************************************************************************/
 void code_funcao(iks_tree_t **ast) {
 	iks_ast_node_value_t *F = (*ast)->item;
@@ -33,9 +33,9 @@ void code_funcao(iks_tree_t **ast) {
 }
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: generate code for jump operation
+* Input: pointer of pointer of iks_tree
+* Output:	none	
 ******************************************************************************/
 void code_id_lits(iks_tree_t **ast) {
 	iks_ast_node_value_t *E = (*ast)->item;
@@ -86,9 +86,9 @@ void code_id_lits(iks_tree_t **ast) {
 }
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: generate code for jump operation
+* Input: pointer of pointer of iks_tree
+* Output:	none	
 ******************************************************************************/
 void code_literal(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
@@ -136,9 +136,9 @@ void code_literal(iks_tree_t **ast) {
 }
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Generate code to sum arithmetic operation
+* Input: pointer of pointer of iks_tree
+* Output:	none	
 ******************************************************************************/
 void code_arit_sum(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
@@ -169,9 +169,9 @@ void code_arit_sum(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Generate code to subtraction arithmetic operation
+* Input: pointer of pointer of iks_tree
+* Output:	none	
 ******************************************************************************/
 void code_arit_sub(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
@@ -202,9 +202,9 @@ void code_arit_sub(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Generate code to multiplication arithmetic operation
+* Input: pointer of pointer of iks_tree
+* Output:	none	
 ******************************************************************************/
 void code_arit_mul(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
@@ -235,9 +235,9 @@ void code_arit_mul(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Generate code to division arithmetic operation
+* Input: pointer of pointer of iks_tree
+* Output:	none	
 ******************************************************************************/
 void code_arit_div(iks_tree_t **ast) {
 	iks_ast_node_value_t *B = (*ast)->item;
@@ -268,18 +268,18 @@ void code_arit_div(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Generate code to inversion arithmetic operation
+* Input: pointer of pointer of iks_tree
+* Output:	none
 ******************************************************************************/
 void code_log_inv(iks_tree_t **ast) {
 }
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Generate code to and logic operation
+* Input: pointer of pointer of iks_tree
+* Output:	none	
 ******************************************************************************/
 void code_log_and(iks_tree_t **ast) {
 
@@ -287,9 +287,9 @@ void code_log_and(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: Generate code to or logic operation
+* Input: pointer of pointer of iks_tree
+* Output:	none
 ******************************************************************************/
 void code_log_or(iks_tree_t **ast) {
 
@@ -297,7 +297,7 @@ void code_log_or(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: Generate code to a equal comparison type
+* Objective: Generate code to equal comparison type
 * Input: pointer of pointer of iks_tree
 * Output:	none
 ******************************************************************************/
@@ -338,7 +338,7 @@ void code_comp_eq(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: Generate code to a not equal comparison type
+* Objective: Generate code to not equal comparison type
 * Input: pointer of pointer of iks_tree
 * Output:	none
 ******************************************************************************/			
@@ -379,7 +379,7 @@ void code_comp_ne(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: Generate code to a less or equal comparison type
+* Objective: Generate code to less or equal comparison
 * Input: pointer of pointer of iks_tree
 * Output:	none
 ******************************************************************************/
@@ -420,8 +420,8 @@ void code_comp_le(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: Generate code to a greater or equal comparison type
-* Input: pointer of pointer of iks_tree
+* Objective: Generate code to greater or equal comparison
+* Input: pointer of pointer of iks_tree ast
 * Output:	none
 ******************************************************************************/
 void code_comp_ge(iks_tree_t **ast) {
@@ -461,8 +461,8 @@ void code_comp_ge(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: Generate code to a less comparison type
-* Input: pointer of pointer of iks_tree
+* Objective: generate the code for less comparison
+* Input: pointer of pointer of iks_tree ast
 * Output:	none
 ******************************************************************************/
 void code_comp_lt(iks_tree_t **ast) {
@@ -503,8 +503,8 @@ void code_comp_lt(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: Generate code to a greater comparison type
-* Input: pointer of pointer of iks_tree
+* Objective: generate the code for greater comparison
+* Input: pointer of pointer of iks_tree ast
 * Output:	none
 ******************************************************************************/
 void code_comp_gt(iks_tree_t **ast) {
@@ -544,9 +544,9 @@ void code_comp_gt(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective:
-* Input:
-* Output:	
+* Objective: generate the code for or operation
+* Input: pointer of pointer of iks_tree ast
+* Output:	none
 ******************************************************************************/
 void code_or(iks_tree_t **ast) {
 	iks_ast_node_value_t *or_n = (*ast)->item;
@@ -569,9 +569,9 @@ void code_or(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: generate the code for if operation
+* Input: pointer of pointer of iks_tree ast
+* Output:	none
 ******************************************************************************/
 void code_if(iks_tree_t **ast){
 	iks_ast_node_value_t *S = (*ast)->item;
@@ -603,9 +603,9 @@ void code_if(iks_tree_t **ast){
 }
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: generate the code for if else operation
+* Input: pointer of pointer of iks_tree ast
+* Output:	none
 ******************************************************************************/
 void code_if_else(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
@@ -657,9 +657,9 @@ void code_if_else(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: generate the code for do operation
+* Input: pointer of pointer of iks_tree ast
+* Output:	none
 ******************************************************************************/
 void code_while_do(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
@@ -688,9 +688,9 @@ void code_while_do(iks_tree_t **ast) {
 }
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: generate the code for do while operation
+* Input: pointer of pointer of iks_tree ast
+* Output:	none
 ******************************************************************************/
 void code_do_while(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
@@ -714,9 +714,9 @@ void code_do_while(iks_tree_t **ast) {
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: generate the code for attribution operation
+* Input: pointer of pointer of iks_tree ast
+* Output:	none
 ******************************************************************************/
 void code_attr(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
@@ -774,8 +774,8 @@ void code_attr(iks_tree_t **ast) {
 
 /****************************************************************************** 
 * Objective: main function for code generator
-* Input: ast
-* Output: none	
+* Input: pointer of pointer of iks_tree ast
+* Output:	none
 ******************************************************************************/
 void code_generator(iks_tree_t **ast) {
 	iks_list_t *code;
@@ -1052,20 +1052,24 @@ void iloc_oper_print(iks_list_t *opers) {
 				break;
 			case op_add:
 				printf("add %s, %s -> %s",	(char*)oper->src_operands->item,
-																			(char*)oper->src_operands->next->item,
-																			(char*)oper->dst_operands->item);
+																		(char*)oper->src_operands->next->item,
+																		(char*)oper->dst_operands->item);
+				break;
 			case op_sub:
 				printf("sub %s, %s -> %s",	(char*)oper->src_operands->item,
-																			(char*)oper->src_operands->next->item,
-																			(char*)oper->dst_operands->item);
+																		(char*)oper->src_operands->next->item,
+																		(char*)oper->dst_operands->item);
+				break;
 			case op_mult:
 				printf("mult %s, %s -> %s",	(char*)oper->src_operands->item,
-																			(char*)oper->src_operands->next->item,
-																			(char*)oper->dst_operands->item);
+																		(char*)oper->src_operands->next->item,
+																		(char*)oper->dst_operands->item);
+				break;
 			case op_div:
 				printf("div %s, %s -> %s",	(char*)oper->src_operands->item,
-																			(char*)oper->src_operands->next->item,
-																			(char*)oper->dst_operands->item);
+																		(char*)oper->src_operands->next->item,
+																		(char*)oper->dst_operands->item);
+				break;
 			case op_jumpI:
 				printf("jumpI -> %s",(char*)oper->dst_operands->item);
 				break;
