@@ -101,7 +101,7 @@ void code_literal(iks_tree_t **ast) {
 																					"1",
 																					NULL,
 																					NULL,
-																					S->temp.nome,
+																					S->temp.name,
 																					NULL,
 																					NULL));
       iks_list_append(S->code, (void*)iloc);
@@ -111,7 +111,7 @@ void code_literal(iks_tree_t **ast) {
 																					"0",
 																					NULL,
 																					NULL,
-																					S->temp.nome,
+																					S->temp.name,
 																					NULL,
 																					NULL));
       iks_list_append(S->code, (void*)iloc);

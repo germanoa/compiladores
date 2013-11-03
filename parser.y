@@ -1080,7 +1080,7 @@ ctrl_flow:
 			// tipo switch-case de C.
 			// o resultado quando temos ctrl_flows encadeados eh
 			// uma pilha final de labels, trazendo o efeito necessario
-			iloc_t *iloc = new_iloc(NULL, new_iloc_oper(nop,
+			iloc_t *iloc = new_iloc(NULL, new_iloc_oper(op_nop,
 																									NULL,
 																									NULL,
 																									NULL,
