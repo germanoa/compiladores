@@ -1044,6 +1044,22 @@ void iloc_oper_print(iks_list_t *opers) {
 		switch(oper->opcode) {
 			case op_nop:
 				break;
+			case op_add:
+				printf("add %s, %s -> %s",	(char*)oper->src_operands->item,
+																			(char*)oper->src_operands->next->item,
+																			(char*)oper->dst_operands->item);
+			case op_sub:
+				printf("sub %s, %s -> %s",	(char*)oper->src_operands->item,
+																			(char*)oper->src_operands->next->item,
+																			(char*)oper->dst_operands->item);
+			case op_mult:
+				printf("mult %s, %s -> %s",	(char*)oper->src_operands->item,
+																			(char*)oper->src_operands->next->item,
+																			(char*)oper->dst_operands->item);
+			case op_div:
+				printf("div %s, %s -> %s",	(char*)oper->src_operands->item,
+																			(char*)oper->src_operands->next->item,
+																			(char*)oper->dst_operands->item);
 			case op_jumpI:
 				printf("jumpI -> %s",(char*)oper->dst_operands->item);
 				break;
