@@ -290,7 +290,27 @@ void code_log_and(iks_tree_t **ast) {
 * Output:	
 ******************************************************************************/
 void code_log_or(iks_tree_t **ast) {
+	iks_ast_node_value_t *S = (*ast)->item;
+	
+	iks_tree_t *E1t = (*ast)->children->item;
+	iks_ast_node_value_t *E1 = E1t->item;
 
+	iks_tree_t *E2t = (*ast)->children->next->item;
+	iks_ast_node_value_t *E2 = E2t->item;
+
+	S->code = iks_list_concat(E1->code,E2->code);
+	
+  iloc_t *iloc;
+  
+  iloc = new_iloc(NULL, new_iloc_oper(op_or,
+																			E1->temp.name,
+																			E2->temp.name,
+																			NULL,
+																			S->temp.name,
+																			NULL,
+																			NULL));
+	
+  iks_list_append(S->code, (void*)iloc);
 }
 
 
@@ -539,32 +559,6 @@ void code_comp_gt(iks_tree_t **ast) {
 
 	B->code = iks_list_concat(B->code,comp_gt);
 }
-
-
-/******************************************************************************
-* Objective:
-* Input:
-* Output:	
-******************************************************************************/
-void code_or(iks_tree_t **ast) {
-	iks_ast_node_value_t *or_n = (*ast)->item;
-	iks_tree_t *e1 = (*ast)->children->item;
-	iks_ast_node_value_t *e1_n = e1->item;
-	iks_tree_t *e2 = (*ast)->children->next->item;
-	iks_ast_node_value_t *e2_n = e2->item;
-	
-	e1_n->temp.b.t = or_n->temp.b.t;
-	e1_n->temp.b.f = label_generator();
-
-	e2_n->temp.b.t = or_n->temp.b.t;
-	e2_n->temp.b.f = or_n->temp.b.f;
-
-	label_insert(e2_n->code,e1_n->temp.b.f);
-	e1_n->code = iks_list_concat(e1_n->code,e2_n->code);	
-
-	or_n->code = e1_n->code;
-}
-
 
 /******************************************************************************
 * Objective: 

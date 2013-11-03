@@ -685,9 +685,7 @@ arim_expr:
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 
-	  	reg_or_label *S = $<temp>0;
-     	ast_set_temp(TEMP_BT,S->b.t,&($$));
-     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+	  	ast_set_temp(TEMP_NAME,register_generator(),&($$));
 			code_generator(&($$));
 		}
 	| expr '-' expr
@@ -706,9 +704,7 @@ arim_expr:
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 
-	  	reg_or_label *S = $<temp>0;
-     	ast_set_temp(TEMP_BT,S->b.t,&($$));
-     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+	  	ast_set_temp(TEMP_NAME,register_generator(),&($$));
 			code_generator(&($$));
 		}
 	| expr '*' expr
@@ -727,9 +723,7 @@ arim_expr:
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 
-	  	reg_or_label *S = $<temp>0;
-     	ast_set_temp(TEMP_BT,S->b.t,&($$));
-     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+	  	ast_set_temp(TEMP_NAME,register_generator(),&($$));
 			code_generator(&($$));
 		}
 	| expr '/' expr
@@ -748,9 +742,7 @@ arim_expr:
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 
-	  	reg_or_label *S = $<temp>0;
-     	ast_set_temp(TEMP_BT,S->b.t,&($$));
-     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+	  	ast_set_temp(TEMP_NAME,register_generator(),&($$));
 			code_generator(&($$));
 		}
 	| '-' expr %prec INVERSAO
@@ -781,9 +773,7 @@ logic_expr:
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 
-		  reg_or_label *S = $<temp>0;
-     	ast_set_temp(TEMP_BT,S->b.t,&($$));
-     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+		  ast_set_temp(TEMP_NAME,register_generator(),&($$));
 			code_generator(&($$));
 		}
 	| expr '>' expr
@@ -802,9 +792,7 @@ logic_expr:
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 
-		  reg_or_label *S = $<temp>0;
-     	ast_set_temp(TEMP_BT,S->b.t,&($$));
-     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+		  ast_set_temp(TEMP_NAME,register_generator(),&($$));
 			code_generator(&($$));
 		}
 	| expr TK_OC_LE expr
@@ -817,9 +805,7 @@ logic_expr:
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 
-	  	reg_or_label *S = $<temp>0;
-     	ast_set_temp(TEMP_BT,S->b.t,&($$));
-     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+	  	ast_set_temp(TEMP_NAME,register_generator(),&($$));
 			code_generator(&($$));
 
 		}
@@ -833,9 +819,7 @@ logic_expr:
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 
-	  	reg_or_label *S = $<temp>0;
-     	ast_set_temp(TEMP_BT,S->b.t,&($$));
-     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+	  	ast_set_temp(TEMP_NAME,register_generator(),&($$));
 			code_generator(&($$));
 		}
 	| expr TK_OC_EQ expr
@@ -848,9 +832,7 @@ logic_expr:
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 
-	  	reg_or_label *S = $<temp>0;
-     	ast_set_temp(TEMP_BT,S->b.t,&($$));
-     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+	  	ast_set_temp(TEMP_NAME,register_generator(),&($$));
 			code_generator(&($$));
 		}
 	| expr TK_OC_NE expr
@@ -863,20 +845,11 @@ logic_expr:
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 			
-	  	reg_or_label *S = $<temp>0;
-     	ast_set_temp(TEMP_BT,S->b.t,&($$));
-     	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));		
+	  	ast_set_temp(TEMP_NAME,register_generator(),&($$));
+			code_generator(&($$));	
 	}
 
-	| '!'
-		{
-			//buffer to short circuit
-			$<nt>$ = iks_ast_new_node(0,NULL);
-			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BF,&($<nt>0)),&($<nt>$));
-			ast_set_temp(TEMP_BF,ast_get_temp(TEMP_BT,&($<nt>0)),&($<nt>$));
-		}
-    expr
+	| '!' expr
 		{
 			/* 3.A.15 */
 			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_COMP_NEGACAO,NULL);
@@ -884,13 +857,10 @@ logic_expr:
 			oon->iks_type = IKS_BOOL;
 			iks_ast_connect_nodes(oo,$3);
 
-		  //using and freeing buffer to short circuit
-			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>2)),&($expr));
-			ast_set_temp(TEMP_BF,ast_get_temp(TEMP_BF,&($<nt>2)),&($expr));
-			//CRIAR AST DELETE, pois TREE DELETE precisa ser customizada
-			//iks_ast_delete($<nt>2);
-
 			$$ = oo;
+			
+			ast_set_temp(TEMP_NAME,register_generator(),&($$));
+			code_generator(&($$));
 		}
 	| expr TK_OC_AND expr
 		{
@@ -901,16 +871,11 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			
+			ast_set_temp(TEMP_NAME,register_generator(),&($$));
+			code_generator(&($$));
 		}
-	| expr
-    TK_OC_OR
-		{
-			//buffer to short circuit
-			$<nt>$ = iks_ast_new_node(0,NULL);
-			ast_set_temp(TEMP_BT,ast_get_temp(TEMP_BT,&($<nt>0)),&($<nt>$));
-			ast_set_temp(TEMP_BF,ast_get_temp(TEMP_BF,&($<nt>0)),&($<nt>$));
-		}
-    expr
+	| expr TK_OC_OR expr
 		{
 			$$ = iks_ast_new_node(IKS_AST_LOGICO_OU,NULL);
 			iks_ast_node_value_t *oon = $$->item;
@@ -918,7 +883,8 @@ logic_expr:
 
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$4);
-
+			
+			ast_set_temp(TEMP_NAME,register_generator(),&($$));
 			code_generator(&($$));
 		}
 	;
@@ -992,7 +958,7 @@ terminal_value:
 
 			gv_declare(IKS_AST_LITERAL,$$,"false");
 			
-     	ast_set_temp(TEMP_BT,register_generator(),&($$));
+     	ast_set_temp(TEMP_NAME,register_generator(),&($$));
 			code_generator(&($$));
 		}
 	| TK_LIT_TRUE
@@ -1009,7 +975,7 @@ terminal_value:
 
 			gv_declare(IKS_AST_LITERAL,$$,"true");
 
-		  ast_set_temp(TEMP_BT,register_generator(),&($$));
+		  ast_set_temp(TEMP_NAME,register_generator(),&($$));
 			code_generator(&($$));
 		}
 	| TK_LIT_CHAR
