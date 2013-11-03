@@ -119,8 +119,14 @@ void code_literal(iks_tree_t **ast) {
       iks_list_append(S->code, (void*)iloc);
       break;
     case TK_LIT_INT:
+    	
+    	break;
     case TK_LIT_FLOAT:
+    	
+    	break;
     case TK_LIT_CHAR:
+    	
+    	break;
     case TK_LIT_STRING:
 			code_id_lits(ast);
 			break;

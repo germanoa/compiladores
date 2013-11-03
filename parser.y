@@ -31,24 +31,24 @@ DECLARATIONS
 /* Declaração dos tokens da gramática da Linguagem IKS */
 %token TK_PR_INT		256		
 %token TK_PR_FLOAT	257
-%token TK_PR_BOOL		258
-%token TK_PR_CHAR		259
+%token TK_PR_BOOL	258
+%token TK_PR_CHAR	259
 %token TK_PR_STRING	260
-%token TK_PR_IF			261
-%token TK_PR_THEN		262
-%token TK_PR_ELSE		263
+%token TK_PR_IF		261
+%token TK_PR_THEN	262
+%token TK_PR_ELSE	263
 %token TK_PR_WHILE	264
-%token TK_PR_DO			265
+%token TK_PR_DO		265
 %token TK_PR_INPUT	267
 %token TK_PR_OUTPUT	268
 %token TK_PR_RETURN	269
 
-%token TK_OC_LE			270
-%token TK_OC_GE			271
-%token TK_OC_EQ			272	
-%token TK_OC_NE			273
-%token TK_OC_AND		274
-%token TK_OC_OR			275
+%token TK_OC_LE		270
+%token TK_OC_GE		271
+%token TK_OC_EQ		272	
+%token TK_OC_NE		273
+%token TK_OC_AND	274
+%token TK_OC_OR		275
 
 %union {
 	int type;
@@ -58,13 +58,13 @@ DECLARATIONS
 	struct reg_or_label *temp;
 }
 
-%token<symbol> TK_LIT_INT				280
-%token<symbol> TK_LIT_FLOAT			281
-%token<symbol> TK_LIT_FALSE			282
-%token<symbol> TK_LIT_TRUE			283
-%token<symbol> TK_LIT_CHAR			284	
-%token<symbol> TK_LIT_STRING		285
-%token<symbol> TK_IDENTIFICADOR	286
+%token<symbol> TK_LIT_INT		280
+%token<symbol> TK_LIT_FLOAT		281
+%token<symbol> TK_LIT_FALSE		282
+%token<symbol> TK_LIT_TRUE		283
+%token<symbol> TK_LIT_CHAR		284	
+%token<symbol> TK_LIT_STRING	285
+%token<symbol> TK_IDENTIFICADOR 286
 
 %token TOKEN_ERRO	290
 
@@ -762,7 +762,6 @@ arim_expr:
 			oon->iks_type = exprn->iks_type;
 			iks_ast_connect_nodes(oo,$expr);
 			$$ = oo;
-			code_generator(&($$));
 		}
   ;
 
@@ -814,6 +813,7 @@ logic_expr:
 			$$ = iks_ast_new_node(IKS_AST_LOGICO_COMP_LE,NULL);
 			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
+
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 
@@ -821,6 +821,7 @@ logic_expr:
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
 			code_generator(&($$));
+
 		}
 	| expr TK_OC_GE expr
 		{
@@ -828,6 +829,7 @@ logic_expr:
 			$$ = iks_ast_new_node(IKS_AST_LOGICO_COMP_GE,NULL);
 			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
+
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 
@@ -842,6 +844,7 @@ logic_expr:
 			$$ = iks_ast_new_node(IKS_AST_LOGICO_COMP_IGUAL,NULL);
 			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
+
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 
@@ -856,13 +859,16 @@ logic_expr:
 			$$ = iks_ast_new_node(IKS_AST_LOGICO_COMP_DIF,NULL);
 			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
+
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$3);
 			
 	  	reg_or_label *S = $<temp>0;
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));		}
+			code_generator(&($$));		
+	}
+
 	| '!'
 		{
 			//buffer to short circuit
@@ -930,8 +936,7 @@ func_call:
 				xn->iks_type = n->iks_type;
 				iks_ast_connect_nodes(x,$id);
 				ptr_function_call=x;
-			} 
-			else {
+			} else {
 				return iks_error(s,IKS_ERROR_USE);
 			}
 			args = new_iks_list();
@@ -1079,7 +1084,7 @@ ctrl_flow:
 			// tipo switch-case de C.
 			// o resultado quando temos ctrl_flows encadeados eh
 			// uma pilha final de labels, trazendo o efeito necessario
-			iloc_t *iloc = new_iloc(NULL, new_iloc_oper(op_nop,
+			iloc_t *iloc = new_iloc(NULL, new_iloc_oper(nop,
 																									NULL,
 																									NULL,
 																									NULL,
