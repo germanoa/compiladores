@@ -10,7 +10,5 @@ int: main() {
 	b = 2;
 
 	x = a + b;
-	y = a - b;
-	w = a * b;
-	z = a / b;	
+
 }

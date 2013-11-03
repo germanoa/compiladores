@@ -783,94 +783,123 @@ void code_generator(iks_tree_t **ast) {
 
 	iks_ast_node_value_t *n;
 	n = (*ast)->item;
+	
 	switch(n->type) {
 		case IKS_AST_PROGRAMA:
+			printf("\nIKS_AST_PROGRAMA", n->type);
 			code_programa(ast);
 			break;
 		case IKS_AST_FUNCAO:
+			printf("\nIKS_AST_FUNCAO", n->type);
 			code_funcao(ast);
 			break;
 		case IKS_AST_IF:
+			printf("\nIKS_AST_IF", n->type);
 			code_if(ast);
 			break;
 		case IKS_AST_IF_ELSE:
+			printf("\nIKS_AST_IF_ELSE", n->type);
 			code_if_else(ast);
 			break;
 		case IKS_AST_DO_WHILE:
+			printf("\nIKS_AST_DO_WHILE", n->type);
 			code_do_while(ast);
 			break;
 		case IKS_AST_WHILE_DO:
+			printf("\nIKS_AST_WHILE_DO", n->type);
 			code_while_do(ast);
 			break;
 		case IKS_AST_INPUT:
 			/* in progress */
+			printf("\nIKS_AST_INPUT", n->type);
 			break;
 		case IKS_AST_OUTPUT:
 			/* in progress */
+			printf("\nIKS_AST_OUTPUT", n->type);
 			break;
 		case IKS_AST_ATRIBUICAO:
+			printf("\nIKS_AST_ATRIBUICAO", n->type);
 			code_attr(ast);
 			break;
 		case IKS_AST_RETURN:
 			/* in progress */
+			printf("\nIKS_AST_RETURN", n->type);
 			break;
 		case IKS_AST_BLOCO:
 			/* in progress */
+			printf("\nIKS_AST_BLOCO", n->type);
 			break;
 		case IKS_AST_IDENTIFICADOR:
+			printf("\nIKS_AST_IDENTIFICADOR", n->type);
 			code_id_lits(ast);
 			break;
 		case IKS_AST_LITERAL:
+			printf("\nIKS_AST_LITERAL", n->type);
 			code_literal(ast);
 			break;
 		case IKS_AST_ARIM_SOMA:
+			printf("\nIKS_AST_ARIM_SOMA", n->type);
 			code_arit_sum(ast);
 			break;
 		case IKS_AST_ARIM_SUBTRACAO:
+			printf("\nIKS_AST_ARIM_SUBTRACAO", n->type);
 			code_arit_sub(ast);
 			break;
 		case IKS_AST_ARIM_MULTIPLICACAO:
+			printf("\nIKS_AST_ARIM_MULTIPLICACAO", n->type);
 			code_arit_mul(ast);
 			break;
 		case IKS_AST_ARIM_DIVISAO:
+			printf("\nIKS_AST_ARIM_DIVISAO", n->type);
 			code_arit_div(ast);
 			break;
 		case IKS_AST_ARIM_INVERSAO:
+			printf("\nIKS_AST_ARIM_INVERSAO", n->type);
 			code_log_inv(ast);
 			break;
 		case IKS_AST_LOGICO_E:
+			printf("\nIKS_AST_LOGICO_E", n->type);
 			code_log_and(ast);
 			break;
 		case IKS_AST_LOGICO_OU:
+			printf("\nIKS_AST_LOGICO_OU", n->type);
 			code_log_or(ast);
 			break;
 		case IKS_AST_LOGICO_COMP_IGUAL:
+			printf("\nIKS_AST_LOGICO_COMP_IGUAL", n->type);
 			code_comp_eq(ast);
 			break;
 		case IKS_AST_LOGICO_COMP_DIF:
+			printf("\nIKS_AST_LOGICO_COMP_DIF", n->type);
 			code_comp_ne(ast);
 			break;
 		case IKS_AST_LOGICO_COMP_LE:
+			printf("\nIKS_AST_LOGICO_COMP_LE", n->type);
 			code_comp_le(ast);		
 			break;
 		case IKS_AST_LOGICO_COMP_GE:
+			printf("\nIKS_AST_LOGICO_COMP_GE", n->type);
 			code_comp_ge(ast);	
 			break;	
 		case IKS_AST_LOGICO_COMP_L:
+			printf("\nIKS_AST_LOGICO_COMP_L", n->type);
 			code_comp_lt(ast);		
 			break;
 		case IKS_AST_LOGICO_COMP_G:
+			printf("\nIKS_AST_LOGICO_COMP_G", n->type);
 			code_comp_gt(ast);
 			break;
 		//case IKS_AST_LOGICO_COMP_NEGACAO:
 		case IKS_AST_VETOR_INDEXADO:
-			
+			printf("\nIKS_AST_VETOR_INDEXADO", n->type);			
 			break;
 		case IKS_AST_CHAMADA_DE_FUNCAO:
-			
+			/* in progress */
+			printf("\nIKS_AST_CHAMADA_DE_FUNCAO", n->type);	
 			break;
-		
 		case IKS_AST_INDEFINIDO:
+			/* in progress */
+			printf("\nIKS_AST_INDEFINIDO", n->type);	
 		default:
 			fprintf(stderr,"error at code_generator\n");
 			break;
