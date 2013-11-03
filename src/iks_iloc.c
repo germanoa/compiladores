@@ -156,15 +156,7 @@ void code_arit_sum(iks_tree_t **ast) {
 																									NULL,
 																									NULL));	
 
-	iloc_t *cbr = new_iloc(NULL, new_iloc_oper(op_cbr,
-																							B->temp.name,
-																							NULL,
-																							NULL,
-																							B->temp.b.t,
-																							B->temp.b.f,
-																							NULL));	
 	iks_list_append(arit_sum,art_sum);	
-	iks_list_append(arit_sum,cbr);	
  
 	B->code = iks_list_concat(B->code,arit_sum);	
 }
@@ -197,15 +189,7 @@ void code_arit_sub(iks_tree_t **ast) {
 																								NULL,
 																								NULL));	
 
-	iloc_t *cbr = new_iloc(NULL, new_iloc_oper(op_cbr,
-																							B->temp.name,
-																							NULL,
-																							NULL,
-																							B->temp.b.t,
-																							B->temp.b.f,
-																							NULL));	
 	iks_list_append(arit_sub,art_sub);	
-	iks_list_append(arit_sub,cbr);	
  
 	B->code = iks_list_concat(B->code,arit_sub);
 }
@@ -238,15 +222,7 @@ void code_arit_mul(iks_tree_t **ast) {
 																								NULL,
 																								NULL));	
 
-	iloc_t *cbr = new_iloc(NULL, new_iloc_oper(op_cbr,
-																							B->temp.name,
-																							NULL,
-																							NULL,
-																							B->temp.b.t,
-																							B->temp.b.f,
-																							NULL));	
 	iks_list_append(arit_mul, art_mul);	
-	iks_list_append(arit_mul, cbr);	
  
 	B->code = iks_list_concat(B->code,arit_mul);	
 }
@@ -279,15 +255,7 @@ void code_arit_div(iks_tree_t **ast) {
 																								NULL,
 																								NULL));	
 
-	iloc_t *cbr = new_iloc(NULL, new_iloc_oper(op_cbr,
-																							B->temp.name,
-																							NULL,
-																							NULL,
-																							B->temp.b.t,
-																							B->temp.b.f,
-																							NULL));	
 	iks_list_append(arit_div, art_div);	
-	iks_list_append(arit_div, cbr);	
  
 	B->code = iks_list_concat(B->code,arit_div);	
 }
@@ -299,7 +267,6 @@ void code_arit_div(iks_tree_t **ast) {
 * Output:	
 ******************************************************************************/
 void code_log_inv(iks_tree_t **ast) {
-
 }
 
 

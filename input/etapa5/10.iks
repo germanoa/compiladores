@@ -1,0 +1,16 @@
+int:x;
+int:y;
+int:w;
+int:z;
+float:f;
+int:a;
+int:b;
+int: main() {
+	a = 10;
+	b = 2;
+
+	x = a + b;
+	y = a - b;
+	w = a * b;
+	z = a / b;	
+}
