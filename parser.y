@@ -29,26 +29,26 @@ DECLARATIONS
 */
 
 /* Declaração dos tokens da gramática da Linguagem IKS */
-%token TK_PR_INT	256		
+%token TK_PR_INT		256		
 %token TK_PR_FLOAT	257
-%token TK_PR_BOOL	258
-%token TK_PR_CHAR	259
+%token TK_PR_BOOL		258
+%token TK_PR_CHAR		259
 %token TK_PR_STRING	260
-%token TK_PR_IF		261
-%token TK_PR_THEN	262
-%token TK_PR_ELSE	263
+%token TK_PR_IF			261
+%token TK_PR_THEN		262
+%token TK_PR_ELSE		263
 %token TK_PR_WHILE	264
-%token TK_PR_DO		265
+%token TK_PR_DO			265
 %token TK_PR_INPUT	267
 %token TK_PR_OUTPUT	268
 %token TK_PR_RETURN	269
 
-%token TK_OC_LE		270
-%token TK_OC_GE		271
-%token TK_OC_EQ		272	
-%token TK_OC_NE		273
-%token TK_OC_AND	274
-%token TK_OC_OR		275
+%token TK_OC_LE			270
+%token TK_OC_GE			271
+%token TK_OC_EQ			272	
+%token TK_OC_NE			273
+%token TK_OC_AND		274
+%token TK_OC_OR			275
 
 %union {
 	int type;
@@ -58,13 +58,13 @@ DECLARATIONS
 	struct reg_or_label *temp;
 }
 
-%token<symbol> TK_LIT_INT		280
-%token<symbol> TK_LIT_FLOAT		281
-%token<symbol> TK_LIT_FALSE		282
-%token<symbol> TK_LIT_TRUE		283
-%token<symbol> TK_LIT_CHAR		284	
-%token<symbol> TK_LIT_STRING	285
-%token<symbol> TK_IDENTIFICADOR 286
+%token<symbol> TK_LIT_INT				280
+%token<symbol> TK_LIT_FLOAT			281
+%token<symbol> TK_LIT_FALSE			282
+%token<symbol> TK_LIT_TRUE			283
+%token<symbol> TK_LIT_CHAR			284	
+%token<symbol> TK_LIT_STRING		285
+%token<symbol> TK_IDENTIFICADOR	286
 
 %token TOKEN_ERRO	290
 
@@ -683,6 +683,7 @@ arim_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr '-' expr
 		{
@@ -698,6 +699,7 @@ arim_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr '*' expr
 		{
@@ -713,6 +715,7 @@ arim_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr '/' expr
 		{
@@ -728,6 +731,7 @@ arim_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| '-' expr %prec INVERSAO
 		{
@@ -738,6 +742,7 @@ arim_expr:
 			oon->iks_type = exprn->iks_type;
 			iks_ast_connect_nodes(oo,$expr);
 			$$ = oo;
+			code_generator(&($$));
 		}
   ;
 
@@ -769,13 +774,16 @@ logic_expr:
 			iks_ast_node_value_t *oon = oo->item;
 			iks_ast_node_value_t *n1 = $1->item;
 			iks_ast_node_value_t *n2 = $3->item;
+			
 			int type = infer_type($1, $3);
 			if(type > 5) //erro de coerção
 				return type;
 			oon->iks_type = type;
+
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr TK_OC_LE expr
 		{
@@ -786,6 +794,7 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr TK_OC_GE expr
 		{
@@ -796,6 +805,7 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr TK_OC_EQ expr
 		{
@@ -806,6 +816,7 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| expr TK_OC_NE expr
 		{
@@ -816,6 +827,7 @@ logic_expr:
 			iks_ast_connect_nodes(oo,$1);
 			iks_ast_connect_nodes(oo,$3);
 			$$ = oo;
+			code_generator(&($$));
 		}
 	| '!'
 		{
@@ -884,7 +896,8 @@ func_call:
 				xn->iks_type = n->iks_type;
 				iks_ast_connect_nodes(x,$id);
 				ptr_function_call=x;
-			} else {
+			} 
+			else {
 				return iks_error(s,IKS_ERROR_USE);
 			}
 			args = new_iks_list();
@@ -1032,7 +1045,14 @@ ctrl_flow:
 			// tipo switch-case de C.
 			// o resultado quando temos ctrl_flows encadeados eh
 			// uma pilha final de labels, trazendo o efeito necessario
-			iloc_t *iloc = new_iloc(NULL, new_iloc_oper(nop,NULL,NULL,NULL,NULL,NULL,NULL));  iks_list_t *gambi = new_iks_list();
+			iloc_t *iloc = new_iloc(NULL, new_iloc_oper(nop,
+																									NULL,
+																									NULL,
+																									NULL,
+																									NULL,
+																									NULL,
+																									NULL));  
+			iks_list_t *gambi = new_iks_list();
 			iks_list_append(gambi,(void*)iloc);
 			reg_or_label *S = $<temp>1;
 			label_insert(gambi,S->next);
