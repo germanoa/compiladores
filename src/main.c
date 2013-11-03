@@ -32,7 +32,8 @@ void iks_init() {
 int main (int argc, char **argv)
 {
   iks_init();  
-  //printf("\n\n\n%s\n\n\n\n", argv[0]);
+	//printf("\n%d", argc);  
+	//printf("\n\n\n%s\n\n\n\n", argv[0]);
   //printf("\n\n\n%s\n\n\n\n", argv[1]);
   //printf("\n\n\n%s\n\n\n\n", argv[2]);
   //gv_init("output/etapa3/saida.dot");
