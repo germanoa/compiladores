@@ -991,10 +991,8 @@ terminal_value:
 
 
 			gv_declare(IKS_AST_LITERAL,$$,"false");
-
-		  reg_or_label *S = $<temp>0;
-     	ast_set_temp(TEMP_BT,S->b.t,&($$));
-     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+			
+     	ast_set_temp(TEMP_BT,register_generator(),&($$));
 			code_generator(&($$));
 		}
 	| TK_LIT_TRUE
@@ -1011,9 +1009,7 @@ terminal_value:
 
 			gv_declare(IKS_AST_LITERAL,$$,"true");
 
-		  reg_or_label *S = $<temp>0;
-     	ast_set_temp(TEMP_BT,S->b.t,&($$));
-     	ast_set_temp(TEMP_BF,S->b.f,&($$));
+		  ast_set_temp(TEMP_BT,register_generator(),&($$));
 			code_generator(&($$));
 		}
 	| TK_LIT_CHAR

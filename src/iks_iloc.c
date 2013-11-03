@@ -97,23 +97,21 @@ void code_literal(iks_tree_t **ast) {
   
   switch(S->symbol->token_type) {
     case TK_LIT_TRUE:
-      //gera(goto B.t)
       iloc = new_iloc(NULL, new_iloc_oper(op_jumpI,
+																					"1",
 																					NULL,
 																					NULL,
-																					NULL,
-																					S->temp.b.t,
+																					S->temp.nome,
 																					NULL,
 																					NULL));
       iks_list_append(S->code, (void*)iloc);
       break;
     case TK_LIT_FALSE:
-      //gera(goto B.f)
       iloc = new_iloc(NULL, new_iloc_oper(op_jumpI,
+																					"0",
 																					NULL,
 																					NULL,
-																					NULL,
-																					S->temp.b.f,
+																					S->temp.nome,
 																					NULL,
 																					NULL));
       iks_list_append(S->code, (void*)iloc);
