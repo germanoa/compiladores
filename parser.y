@@ -157,7 +157,7 @@ prog:
       $$ = $func;
 			iks_ast_node_value_t *program = $$->item;
       program_iloc = program->code;
-      iloc_print(program_iloc);
+      //iloc_print(program_iloc);
 		}
 	| /* empty */ {}
 	;
