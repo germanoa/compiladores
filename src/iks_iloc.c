@@ -83,6 +83,8 @@ void code_id_lits(iks_tree_t **ast) {
 	
 	iks_list_append(E->code, loadi);
 	iks_list_append(E->code, load);
+
+	iloc_print(E->code);
 }
 
 /******************************************************************************
@@ -133,6 +135,8 @@ void code_literal(iks_tree_t **ast) {
     default:
       fprintf(stderr,"error at code_literal\n");
   }
+
+	iloc_print(S->code);
 }
 
 /******************************************************************************
@@ -154,6 +158,7 @@ void code_arit_sum(iks_tree_t **ast) {
 
 	iks_list_t *arit_sum = new_iks_list();
 
+
 	iloc_t *art_sum = new_iloc(NULL, new_iloc_oper(op_add,	
 																									E1->temp.name,
 																									E2->temp.name,
@@ -165,6 +170,8 @@ void code_arit_sum(iks_tree_t **ast) {
 	iks_list_append(arit_sum,art_sum);	
  
 	B->code = iks_list_concat(B->code,arit_sum);	
+
+	iloc_print(B->code);
 }
 
 
@@ -198,6 +205,8 @@ void code_arit_sub(iks_tree_t **ast) {
 	iks_list_append(arit_sub,art_sub);	
  
 	B->code = iks_list_concat(B->code,arit_sub);
+
+	iloc_print(B->code);
 }
 
 
@@ -229,8 +238,10 @@ void code_arit_mul(iks_tree_t **ast) {
 																								NULL));	
 
 	iks_list_append(arit_mul, art_mul);	
- 
-	B->code = iks_list_concat(B->code,arit_mul);	
+
+	B->code = iks_list_concat(B->code,arit_mul);
+
+	iloc_print(B->code);	
 }
 
 
@@ -264,6 +275,8 @@ void code_arit_div(iks_tree_t **ast) {
 	iks_list_append(arit_div, art_div);	
  
 	B->code = iks_list_concat(B->code,arit_div);	
+
+	iloc_print(B->code);
 }
 
 
@@ -273,6 +286,28 @@ void code_arit_div(iks_tree_t **ast) {
 * Output:	none
 ******************************************************************************/
 void code_log_inv(iks_tree_t **ast) {
+	iks_ast_node_value_t *B = (*ast)->item;
+	
+	iks_tree_t *E1t = (*ast)->children->item;
+	iks_ast_node_value_t *E1 = E1t->item;
+
+	B->temp.name = register_generator();
+
+	iks_list_t *arit_inv = new_iks_list();
+
+	iloc_t *art_inv = new_iloc(NULL, new_iloc_oper(op_inv,	
+																								E1->temp.name,
+																								NULL,
+																								NULL,
+																								B->temp.name,
+																								NULL,
+																								NULL));	
+
+	iks_list_append(arit_inv, art_inv);	
+ 
+	B->code = iks_list_concat(B->code,arit_inv);	
+
+	iloc_print(B->code);
 }
 
 
@@ -334,6 +369,9 @@ void code_comp_eq(iks_tree_t **ast) {
 	iks_list_append(comp_eq,cbr);	
 
 	B->code = iks_list_concat(B->code,comp_eq);
+
+	iloc_print(B->code);
+
 }
 
 
@@ -375,6 +413,8 @@ void code_comp_ne(iks_tree_t **ast) {
 	iks_list_append(comp_ne,cbr);	
 
 	B->code = iks_list_concat(B->code,comp_ne);
+
+	iloc_print(B->code);
 }
 
 
@@ -416,6 +456,8 @@ void code_comp_le(iks_tree_t **ast) {
 	iks_list_append(comp_le,cbr);	
 
 	B->code = iks_list_concat(B->code,comp_le);
+
+	iloc_print(B->code);
 }		
 
 
@@ -457,6 +499,8 @@ void code_comp_ge(iks_tree_t **ast) {
 	iks_list_append(comp_ge,cbr);	
 
 	B->code = iks_list_concat(B->code,comp_ge);
+
+	iloc_print(B->code);
 }	
 
 
@@ -495,10 +539,11 @@ void code_comp_lt(iks_tree_t **ast) {
 																							B->temp.b.f,
 																							NULL));	
 	iks_list_append(comp_lt,cmp_lt);	
-	iks_list_append(comp_lt,cbr);	
+	iks_list_append(comp_lt,cbr);
 
 	B->code = iks_list_concat(B->code,comp_lt);
 
+	iloc_print(B->code);
 }
 
 
@@ -540,6 +585,8 @@ void code_comp_gt(iks_tree_t **ast) {
 	iks_list_append(comp_gt,cbr);	
 
 	B->code = iks_list_concat(B->code,comp_gt);
+
+	iloc_print(B->code);
 }
 
 
@@ -565,6 +612,9 @@ void code_or(iks_tree_t **ast) {
 	e1_n->code = iks_list_concat(e1_n->code,e2_n->code);	
 
 	or_n->code = e1_n->code;
+
+	iloc_print(or_n->code);
+
 }
 
 
@@ -600,6 +650,8 @@ void code_if(iks_tree_t **ast){
 	iks_list_append(gambi,(void*)B_f);
 	label_insert(gambi,B->temp.b.f);
 	S->code = iks_list_concat(S->code,gambi);
+
+	iloc_print(S->code);
 }
 
 /******************************************************************************
@@ -653,6 +705,8 @@ void code_if_else(iks_tree_t **ast) {
 	iks_list_append(gambi,(void*)goto_S2_next);
 	label_insert(gambi,S2->temp.next);
 	S->code = iks_list_concat(S->code,gambi);
+
+	iloc_print(S->code);
 }
 
 
@@ -685,6 +739,8 @@ void code_while_do(iks_tree_t **ast) {
 																											NULL,
 																											NULL));
   iks_list_append(S->code,(void*)goto_S_begin);
+
+	iloc_print(S->code);
 }
 
 /******************************************************************************
@@ -710,6 +766,8 @@ void code_do_while(iks_tree_t **ast) {
 	//iks_list_append(gambi,(void*)B_f);
 	//label_insert(gambi,B->temp.b.f);
 	//S->code = iks_list_concat(S->code,gambi);
+
+	iloc_print(S->code);
 }
 
 
@@ -769,12 +827,14 @@ void code_attr(iks_tree_t **ast) {
 	iks_list_append(attr_code,attr);
 	S->code = iks_list_concat(E->code,attr_code);
 
+	iloc_print(S->code);
+
 }
 
 
 /****************************************************************************** 
 * Objective: main function for code generator
-* Input: pointer of pointer of iks_tree ast
+* Input: pointer of pointer of ast node
 * Output:	none
 ******************************************************************************/
 void code_generator(iks_tree_t **ast) {
@@ -786,120 +846,120 @@ void code_generator(iks_tree_t **ast) {
 	
 	switch(n->type) {
 		case IKS_AST_PROGRAMA:
-			printf("\nIKS_AST_PROGRAMA", n->type);
+			//printf("\nIKS_AST_PROGRAMA", n->type);
 			code_programa(ast);
 			break;
 		case IKS_AST_FUNCAO:
-			printf("\nIKS_AST_FUNCAO", n->type);
+			//printf("\nIKS_AST_FUNCAO", n->type);
 			code_funcao(ast);
 			break;
 		case IKS_AST_IF:
-			printf("\nIKS_AST_IF", n->type);
+			//printf("\nIKS_AST_IF", n->type);
 			code_if(ast);
 			break;
 		case IKS_AST_IF_ELSE:
-			printf("\nIKS_AST_IF_ELSE", n->type);
+			//printf("\nIKS_AST_IF_ELSE", n->type);
 			code_if_else(ast);
 			break;
 		case IKS_AST_DO_WHILE:
-			printf("\nIKS_AST_DO_WHILE", n->type);
+			//printf("\nIKS_AST_DO_WHILE", n->type);
 			code_do_while(ast);
 			break;
 		case IKS_AST_WHILE_DO:
-			printf("\nIKS_AST_WHILE_DO", n->type);
+			//printf("\nIKS_AST_WHILE_DO", n->type);
 			code_while_do(ast);
 			break;
 		case IKS_AST_INPUT:
 			/* in progress */
-			printf("\nIKS_AST_INPUT", n->type);
+			//printf("\nIKS_AST_INPUT", n->type);
 			break;
 		case IKS_AST_OUTPUT:
 			/* in progress */
-			printf("\nIKS_AST_OUTPUT", n->type);
+			//printf("\nIKS_AST_OUTPUT", n->type);
 			break;
 		case IKS_AST_ATRIBUICAO:
-			printf("\nIKS_AST_ATRIBUICAO", n->type);
+			//printf("\nIKS_AST_ATRIBUICAO", n->type);
 			code_attr(ast);
 			break;
 		case IKS_AST_RETURN:
 			/* in progress */
-			printf("\nIKS_AST_RETURN", n->type);
+			//printf("\nIKS_AST_RETURN", n->type);
 			break;
 		case IKS_AST_BLOCO:
 			/* in progress */
-			printf("\nIKS_AST_BLOCO", n->type);
+			//printf("\nIKS_AST_BLOCO", n->type);
 			break;
 		case IKS_AST_IDENTIFICADOR:
-			printf("\nIKS_AST_IDENTIFICADOR", n->type);
+			//printf("\nIKS_AST_IDENTIFICADOR", n->type);
 			code_id_lits(ast);
 			break;
 		case IKS_AST_LITERAL:
-			printf("\nIKS_AST_LITERAL", n->type);
+			//printf("\nIKS_AST_LITERAL", n->type);
 			code_literal(ast);
 			break;
 		case IKS_AST_ARIM_SOMA:
-			printf("\nIKS_AST_ARIM_SOMA", n->type);
+			//printf("\nIKS_AST_ARIM_SOMA", n->type);
 			code_arit_sum(ast);
 			break;
 		case IKS_AST_ARIM_SUBTRACAO:
-			printf("\nIKS_AST_ARIM_SUBTRACAO", n->type);
+			//printf("\nIKS_AST_ARIM_SUBTRACAO", n->type);
 			code_arit_sub(ast);
 			break;
 		case IKS_AST_ARIM_MULTIPLICACAO:
-			printf("\nIKS_AST_ARIM_MULTIPLICACAO", n->type);
+			//printf("\nIKS_AST_ARIM_MULTIPLICACAO", n->type);
 			code_arit_mul(ast);
 			break;
 		case IKS_AST_ARIM_DIVISAO:
-			printf("\nIKS_AST_ARIM_DIVISAO", n->type);
+			//printf("\nIKS_AST_ARIM_DIVISAO", n->type);
 			code_arit_div(ast);
 			break;
 		case IKS_AST_ARIM_INVERSAO:
-			printf("\nIKS_AST_ARIM_INVERSAO", n->type);
+			//printf("\nIKS_AST_ARIM_INVERSAO", n->type);
 			code_log_inv(ast);
 			break;
 		case IKS_AST_LOGICO_E:
-			printf("\nIKS_AST_LOGICO_E", n->type);
+			//printf("\nIKS_AST_LOGICO_E", n->type);
 			code_log_and(ast);
 			break;
 		case IKS_AST_LOGICO_OU:
-			printf("\nIKS_AST_LOGICO_OU", n->type);
+			//printf("\nIKS_AST_LOGICO_OU", n->type);
 			code_log_or(ast);
 			break;
 		case IKS_AST_LOGICO_COMP_IGUAL:
-			printf("\nIKS_AST_LOGICO_COMP_IGUAL", n->type);
+			//printf("\nIKS_AST_LOGICO_COMP_IGUAL", n->type);
 			code_comp_eq(ast);
 			break;
 		case IKS_AST_LOGICO_COMP_DIF:
-			printf("\nIKS_AST_LOGICO_COMP_DIF", n->type);
+			//printf("\nIKS_AST_LOGICO_COMP_DIF", n->type);
 			code_comp_ne(ast);
 			break;
 		case IKS_AST_LOGICO_COMP_LE:
-			printf("\nIKS_AST_LOGICO_COMP_LE", n->type);
+			//printf("\nIKS_AST_LOGICO_COMP_LE", n->type);
 			code_comp_le(ast);		
 			break;
 		case IKS_AST_LOGICO_COMP_GE:
-			printf("\nIKS_AST_LOGICO_COMP_GE", n->type);
+			//printf("\nIKS_AST_LOGICO_COMP_GE", n->type);
 			code_comp_ge(ast);	
 			break;	
 		case IKS_AST_LOGICO_COMP_L:
-			printf("\nIKS_AST_LOGICO_COMP_L", n->type);
+			//printf("\nIKS_AST_LOGICO_COMP_L", n->type);
 			code_comp_lt(ast);		
 			break;
 		case IKS_AST_LOGICO_COMP_G:
-			printf("\nIKS_AST_LOGICO_COMP_G", n->type);
+			//printf("\nIKS_AST_LOGICO_COMP_G", n->type);
 			code_comp_gt(ast);
 			break;
 		//case IKS_AST_LOGICO_COMP_NEGACAO:
 		case IKS_AST_VETOR_INDEXADO:
-			printf("\nIKS_AST_VETOR_INDEXADO", n->type);			
+			//printf("\nIKS_AST_VETOR_INDEXADO", n->type);			
 			break;
 		case IKS_AST_CHAMADA_DE_FUNCAO:
 			/* in progress */
-			printf("\nIKS_AST_CHAMADA_DE_FUNCAO", n->type);	
+			//printf("\nIKS_AST_CHAMADA_DE_FUNCAO", n->type);	
 			break;
 		case IKS_AST_INDEFINIDO:
 			/* in progress */
-			printf("\nIKS_AST_INDEFINIDO", n->type);	
+			//printf("\nIKS_AST_INDEFINIDO", n->type);	
 		default:
 			fprintf(stderr,"error at code_generator\n");
 			break;
@@ -1075,27 +1135,27 @@ void iloc_oper_print(iks_list_t *opers) {
 
 		if (!oper) break;
 		printf("\t");
-		
+		//printf("\n%i\n", oper->opcode);
 		switch(oper->opcode) {
 			case op_nop:
 				break;
 			case op_add:
-				printf("add %s, %s -> %s",	(char*)oper->src_operands->item,
+				printf("add %s, %s => %s",	(char*)oper->src_operands->item,
 																		(char*)oper->src_operands->next->item,
 																		(char*)oper->dst_operands->item);
 				break;
 			case op_sub:
-				printf("sub %s, %s -> %s",	(char*)oper->src_operands->item,
+				printf("sub %s, %s => %s",	(char*)oper->src_operands->item,
 																		(char*)oper->src_operands->next->item,
 																		(char*)oper->dst_operands->item);
 				break;
 			case op_mult:
-				printf("mult %s, %s -> %s",	(char*)oper->src_operands->item,
+				printf("mult %s, %s => %s",	(char*)oper->src_operands->item,
 																		(char*)oper->src_operands->next->item,
 																		(char*)oper->dst_operands->item);
 				break;
 			case op_div:
-				printf("div %s, %s -> %s",	(char*)oper->src_operands->item,
+				printf("div %s, %s => %s",	(char*)oper->src_operands->item,
 																		(char*)oper->src_operands->next->item,
 																		(char*)oper->dst_operands->item);
 				break;
