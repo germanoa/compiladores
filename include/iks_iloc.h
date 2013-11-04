@@ -60,7 +60,7 @@ struct iloc_t {
 *
 */
 typedef enum { 
-	op_add, op_sub, op_mult, op_div,
+	op_add, op_sub, op_mult, op_div, op_inv,
 	op_addI, op_subI, op_multI, op_divI, op_rdivI,
 	op_and, op_andI, op_or, op_orI, op_xor, op_xorI, 
 	op_lshift, op_rshift,
