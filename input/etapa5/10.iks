@@ -6,9 +6,16 @@ float:f;
 int:a;
 int:b;
 int: main() {
-	a = 10;
-	b = 2;
+	a = 1;
+	b = 10;
 
 	x = a + b;
+	y = b - a;
+	w = a * b;
+	z = b / a;
+
+	if(a == b) then {
+			x = 1;		
+	}
 
 }
