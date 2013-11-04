@@ -10,3 +10,6 @@ https://github.com/germanoa/compiladores
 
 Para compilar a partir do diretório raiz:
 $scripts/compila.sh
+
+Para executar programa a partir do diretório raiz:
+$build/main < input/etapaX/input.iks > output.iloc
