@@ -155,8 +155,8 @@ prog:
 			}
 			//symbol_table_print((iks_dict_t*)iks_stack_top(scope->st));
       $$ = $func;
-			iks_ast_node_value_t *program = $$->item;
-      program_iloc = program->code;
+			//iks_ast_node_value_t *program = $$->item;
+      //program_iloc = program->code;
       //iloc_print(program_iloc);
 		}
 	| /* empty */ {}
@@ -270,7 +270,7 @@ func:
 
 
 			$$ = ptr_function;
-      code_generator(&($$));
+      //code_generator(&($$));
 			ptr_function = NULL; //returns are unacceptable outside functions
 		}
 	;
@@ -385,7 +385,7 @@ commands:
 			iks_ast_connect_nodes($$,$id);
 			iks_ast_connect_nodes($$,$expr);
 
-			code_generator(&($$));
+			//code_generator(&($$));
 
 		}
 	| idv '=' expr
@@ -495,7 +495,7 @@ id:
 				iks_ast_node_value_t *idn = $$->item;
 				idn->iks_type = s->iks_type;
 
-				code_generator(&($$));
+				//code_generator(&($$));
 
 			} else {
 				fprintf(stderr,"identificador não declarado\n");
@@ -688,7 +688,7 @@ arim_expr:
 	  	reg_or_label *S = $<temp>0;
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	| expr '-' expr
 		{
@@ -709,7 +709,7 @@ arim_expr:
 	  	reg_or_label *S = $<temp>0;
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	| expr '*' expr
 		{
@@ -730,7 +730,7 @@ arim_expr:
 	  	reg_or_label *S = $<temp>0;
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	| expr '/' expr
 		{
@@ -751,7 +751,7 @@ arim_expr:
 	  	reg_or_label *S = $<temp>0;
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	| '-' expr %prec INVERSAO
 		{
@@ -784,7 +784,7 @@ logic_expr:
 		  reg_or_label *S = $<temp>0;
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	| expr '>' expr
 		{
@@ -805,7 +805,7 @@ logic_expr:
 		  reg_or_label *S = $<temp>0;
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	| expr TK_OC_LE expr
 		{
@@ -820,7 +820,7 @@ logic_expr:
 	  	reg_or_label *S = $<temp>0;
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));
+			//code_generator(&($$));
 
 		}
 	| expr TK_OC_GE expr
@@ -836,7 +836,7 @@ logic_expr:
 	  	reg_or_label *S = $<temp>0;
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	| expr TK_OC_EQ expr
 		{
@@ -851,7 +851,7 @@ logic_expr:
 	  	reg_or_label *S = $<temp>0;
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	| expr TK_OC_NE expr
 		{
@@ -866,7 +866,7 @@ logic_expr:
 	  	reg_or_label *S = $<temp>0;
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));		
+			//code_generator(&($$));		
 	}
 
 	| '!'
@@ -919,7 +919,7 @@ logic_expr:
 			iks_ast_connect_nodes($$,$1);
 			iks_ast_connect_nodes($$,$4);
 
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	;
 
@@ -966,7 +966,7 @@ terminal_value:
 			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $TK_LIT_INT->iks_type;
 			
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	| TK_LIT_FLOAT
 		{
@@ -975,7 +975,7 @@ terminal_value:
 			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $TK_LIT_FLOAT->iks_type;
 			
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	| TK_LIT_FALSE
 		{
@@ -995,7 +995,7 @@ terminal_value:
 		  reg_or_label *S = $<temp>0;
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	| TK_LIT_TRUE
 		{
@@ -1014,7 +1014,7 @@ terminal_value:
 		  reg_or_label *S = $<temp>0;
      	ast_set_temp(TEMP_BT,S->b.t,&($$));
      	ast_set_temp(TEMP_BF,S->b.f,&($$));
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	| TK_LIT_CHAR
 		{
@@ -1023,7 +1023,7 @@ terminal_value:
 			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $TK_LIT_CHAR->iks_type;
 			
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	| TK_LIT_STRING
 		{
@@ -1032,7 +1032,7 @@ terminal_value:
 			iks_ast_node_value_t *litn = $$->item;
 			litn->iks_type = $TK_LIT_STRING->iks_type;
 			
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	;
 
@@ -1112,7 +1112,7 @@ ctrl_flow2:
 		  reg_or_label *S = $<temp>5;
 			ast_set_temp(TEMP_BEGIN,S->begin,&($$));
 
-			code_generator(&($$));
+			//code_generator(&($$));
 
 		}
 	| TK_PR_DO shrt_crct_before_do_while_cmd commands TK_PR_WHILE '(' shrt_crct_before_do_while_b expr ')' 
@@ -1124,7 +1124,7 @@ ctrl_flow2:
 		  reg_or_label *S = $<temp>2;
 			ast_set_temp(TEMP_BEGIN,S->begin,&($$));
 
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	|	TK_PR_IF '(' shrt_crct_before_if_b expr shrt_crct_after_if_b ')' TK_PR_THEN commands TK_PR_ELSE shrt_crct_after_else commands {
 
@@ -1133,7 +1133,7 @@ ctrl_flow2:
 			iks_ast_connect_nodes($$,$8);
 			iks_ast_connect_nodes($$,$11);
 
-			code_generator(&($$));
+			//code_generator(&($$));
 		}
 	|	TK_PR_IF '(' shrt_crct_before_if_b expr shrt_crct_after_if_b ')' TK_PR_THEN commands {
 
@@ -1141,7 +1141,7 @@ ctrl_flow2:
 			iks_ast_connect_nodes($$,$expr);
 			iks_ast_connect_nodes($$,$commands);
 
-			code_generator(&($$));
+			//code_generator(&($$));
 			//delete_reg_or_label(&($<temp>-3)); // ..._after_if_b
 		}
 	;

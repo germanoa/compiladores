@@ -178,5 +178,4 @@ void iloc_oper_print(iks_list_t *opers);
 ******************************************************************************/
 void iloc_print(iks_list_t *code);
 
-
 #endif /* __IKS_ILOC_H__ */

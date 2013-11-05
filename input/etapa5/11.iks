@@ -1,0 +1,9 @@
+int:a;
+float:b;
+int:c;
+
+int: main() {
+	a=1;
+	b=1.0;
+	c=1;
+}

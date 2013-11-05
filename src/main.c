@@ -40,7 +40,11 @@ int main (int argc, char **argv)
   gv_init("ast_graph.dot");
 
   int result = yyparse();
-  
+
+	code_generator(&ast);
+	iks_ast_node_value_t *program = ast->item;
+	iloc_print(program->code);  
+
   gv_close();
 
   //symbol_table_print((iks_dict_t*)iks_stack_top(scope));
