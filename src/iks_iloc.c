@@ -796,16 +796,24 @@ void code_do_while(iks_tree_t **ast) {
 ******************************************************************************/
 void code_attr(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
-
-	iks_tree_t *Et = (*ast)->children->next->item;
-	iks_ast_node_value_t *E = Et->item;
-	code_generator(&Et);
-
+	
+	iks_list_t *first_child_in_list = (*ast)->children;
+	iks_list_t *second_child_in_list = first_child_in_list->next;
+	iks_list_t *third_child_in_list = second_child_in_list->next;
+	
 	iks_tree_t *IDt = (*ast)->children->item;
 	iks_ast_node_value_t *ID = IDt->item;
 	//code_generator(&IDt); //no need to call this since we're simply writing in ID, not using its value
 
-	S->temp.name = register_generator();
+	iks_tree_t *Et = (*ast)->children->next->item;
+	iks_ast_node_value_t *E = Et->item;
+	code_generator(&Et);
+	if(E->code) {
+		printf("aham\n");
+	}
+	S->code = iks_list_concat(S->code,E->code);
+
+	//S->temp.name = register_generator();
 
 	iloc_t *attr;
 	opcode_t op;
@@ -819,12 +827,19 @@ void code_attr(iks_tree_t **ast) {
 																			"rarp",
 																			addr,
 																			NULL));
-
+	
 	iks_list_t *attr_code = new_iks_list();
 	iks_list_append(attr_code,attr);
-	S->code = iks_list_concat(E->code,ID->code);
 	S->code = iks_list_concat(S->code,attr_code);
-
+	
+	if(third_child_in_list != first_child_in_list) { //there's a command after this attribution
+		printf("going for it\n");
+		code_generator((iks_tree_t**)&third_child_in_list->item);
+		printf("didit\n");
+		iks_tree_t *next_command_tree = (iks_tree_t *)third_child_in_list->item;
+		S->code = iks_list_concat(S->code,((iks_ast_node_value_t *)next_command_tree->item)->code);
+	}
+	
 	//iloc_print(S->code);
 
 }
