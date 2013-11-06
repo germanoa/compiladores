@@ -214,7 +214,7 @@ int decl_symbol(iks_grammar_symbol_t *s,int iks_type, int decl_type, scope_t *sc
       s->iks_size=1;
       break;
   }
-	s->addr_offset = scope->base_addr + scope->next_addr;
+	s->addr_offset = scope->next_addr;
 	scope->next_addr += s->iks_size;
  
   s->decl_type = decl_type;
