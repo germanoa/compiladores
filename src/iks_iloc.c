@@ -808,16 +808,14 @@ void code_attr(iks_tree_t **ast) {
 	iks_tree_t *Et = (*ast)->children->next->item;
 	iks_ast_node_value_t *E = Et->item;
 	code_generator(&Et);
-	if(E->code) {
-		printf("aham\n");
-	}
+	
 	S->code = iks_list_concat(S->code,E->code);
 
 	//S->temp.name = register_generator();
 
 	iloc_t *attr;
 	opcode_t op;
-	char *addr = int_to_char(E->symbol->addr_offset);
+	char *addr = int_to_char(ID->symbol->addr_offset);
 	
 	op = op_storeAI;
 	attr = new_iloc(NULL, new_iloc_oper(op,
@@ -833,11 +831,11 @@ void code_attr(iks_tree_t **ast) {
 	S->code = iks_list_concat(S->code,attr_code);
 	
 	if(third_child_in_list != first_child_in_list) { //there's a command after this attribution
-		printf("going for it\n");
 		code_generator((iks_tree_t**)&third_child_in_list->item);
-		printf("didit\n");
-		iks_tree_t *next_command_tree = (iks_tree_t *)third_child_in_list->item;
-		S->code = iks_list_concat(S->code,((iks_ast_node_value_t *)next_command_tree->item)->code);
+		
+		iks_ast_node_value_t *next_command_tree = ((iks_tree_t *)third_child_in_list->item)->item;
+		
+		S->code = iks_list_concat(S->code,next_command_tree->code);
 	}
 	
 	//iloc_print(S->code);
