@@ -130,19 +130,35 @@ void code_literal(iks_tree_t **ast) {
       iks_list_append(S->code, (void*)iloc);
       break;
     case TK_LIT_INT:
-    	
+    	S->temp.name = register_generator();
+    	iloc = new_iloc(NULL, new_iloc_oper(op_loadI,
+																					S->symbol->value,
+																					NULL,
+																					NULL,
+																					S->temp.name,
+																					NULL,
+																					NULL));
+      iks_list_append(S->code, (void*)iloc);
     	break;
     case TK_LIT_FLOAT:
-    	
+    	printf("code_literal para TK_LIT_FLOAT não implementado\n");
     	break;
     case TK_LIT_CHAR:
-    	
+    	S->temp.name = register_generator();
+    	iloc = new_iloc(NULL, new_iloc_oper(op_loadI,
+																					S->symbol->value,
+																					NULL,
+																					NULL,
+																					S->temp.name,
+																					NULL,
+																					NULL));
+      iks_list_append(S->code, (void*)iloc);
     	break;
     case TK_LIT_STRING:
 			code_id_lits(ast);
 			break;
     default:
-      fprintf(stderr,"error at code_literal\n");
+      fprintf(stderr,"error at code_literal: token type: %d\n",S->symbol->token_type);
   }
 
 	//iloc_print(S->code);
@@ -793,14 +809,15 @@ void code_attr(iks_tree_t **ast) {
 
 	iloc_t *attr;
 	opcode_t op;
+	char *addr = int_to_char(E->symbol->addr_offset);
 	
-	op = op_store;
+	op = op_storeAI;
 	attr = new_iloc(NULL, new_iloc_oper(op,
 																			E->temp.name,
 																			NULL,
 																			NULL,
-																			S->temp.name,
-																			NULL,
+																			"rarp",
+																			addr,
 																			NULL));
 
 	iks_list_t *attr_code = new_iks_list();
@@ -1211,8 +1228,13 @@ void iloc_oper_print(iks_list_t *opers) {
         printf("c2c %s => %s",(char*)oper->src_operands->item,
     													(char*)oper->dst_operands->item);
         break;
+      case op_storeAI:
+      	printf("storeAI %s => %s, %s",(char*)oper->src_operands->item,
+																			(char*)oper->dst_operands->item,
+																			(char*)oper->dst_operands->next->item);
+				break;
 			default:
-				fprintf(stderr,"error at iloc_oper_print\n");
+				fprintf(stderr,"error at iloc_oper_print: op code: %d\n",oper->opcode);
     }
     
     printf("\n");
