@@ -787,47 +787,21 @@ void code_attr(iks_tree_t **ast) {
 
 	iks_tree_t *IDt = (*ast)->children->item;
 	iks_ast_node_value_t *ID = IDt->item;
-	code_generator(&IDt);
+	//code_generator(&IDt); //no need to call this since we're simply writing in ID, not using its value
 
 	S->temp.name = register_generator();
 
 	iloc_t *attr;
 	opcode_t op;
 	
-	switch(E->iks_type) {
-		case IKS_INT:
-			if (S->iks_type==IKS_CHAR) { 
-				op = op_i2c; 
-			} 
-			else { 
-				op = op_i2i; 
-			} 
-			
-			attr = new_iloc(NULL, new_iloc_oper(op,	
-																					E->temp.name,
-																					NULL,
-																					NULL,
-																					S->temp.name,
-																					NULL,
-																					NULL));
-			break;	
-		case IKS_CHAR:
-			if (S->iks_type==IKS_INT) { 
-				op = op_c2i; 
-			} 
-			else { 
-				op = op_c2c; 
-			} 
-
-			attr = new_iloc(NULL, new_iloc_oper(op,	
-																					E->temp.name,
-																					NULL,
-																					NULL,
-																					S->temp.name,
-																					NULL,
-																					NULL));
-			break;	
-	}
+	op = op_store;
+	attr = new_iloc(NULL, new_iloc_oper(op,
+																			E->temp.name,
+																			NULL,
+																			NULL,
+																			S->temp.name,
+																			NULL,
+																			NULL));
 
 	iks_list_t *attr_code = new_iks_list();
 	iks_list_append(attr_code,attr);
