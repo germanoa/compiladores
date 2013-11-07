@@ -679,12 +679,7 @@ void code_if(iks_tree_t **ast){
 	iks_ast_node_value_t *B = Bt->item;
 	B->temp.b.t = label_generator();
 	B->temp.b.f = S->temp.next;
-	if (B->need_coercion>0) {
-		printf ("%s need coercion: %d\n",B->symbol->value,B->need_coercion);
-	}
 	code_generator(&Bt);
-
-
 
 	iks_tree_t *S1t = (*ast)->children->next->item;
 	iks_ast_node_value_t *S1 = S1t->item;
@@ -697,7 +692,13 @@ void code_if(iks_tree_t **ast){
 	// S.code = B.code || X
 	S->code = iks_list_concat(B->code,S1->code);
 
-	//iloc_print(S->code);
+	//if there is next command
+	if(iks_list_size((*ast)->children)>2) {
+		iks_tree_t *Stnext = (*ast)->children->next->next->item;
+		code_generator(&Stnext);
+		iks_ast_node_value_t *Snext = Stnext->item;
+		S->code = iks_list_concat(S->code,Snext->code);
+	}
 }
 
 /******************************************************************************
@@ -746,7 +747,13 @@ void code_if_else(iks_tree_t **ast) {
 	// S.code = S.code || Y
 	S->code = iks_list_concat(S->code,S2->code);
 
-	//iloc_print(S->code);
+	//if there is next command
+	if(iks_list_size((*ast)->children)>3) {
+		iks_tree_t *Stnext = (*ast)->children->next->next->item;
+		code_generator(&Stnext);
+		iks_ast_node_value_t *Snext = Stnext->item;
+		S->code = iks_list_concat(S->code,Snext->code);
+	}
 }
 
 
@@ -757,10 +764,18 @@ void code_if_else(iks_tree_t **ast) {
 ******************************************************************************/
 void code_while_do(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
+
 	iks_tree_t *Bt = (*ast)->children->item;
 	iks_ast_node_value_t *B = Bt->item;
+	B->temp.b.t = label_generator();
+	B->temp.b.f = S->temp.next;
+	code_generator(&Bt);
+
 	iks_tree_t *S1t = (*ast)->children->next->item;
 	iks_ast_node_value_t *S1 = S1t->item;
+	S->temp.begin = label_generator();
+	S1->temp.next = S->temp.begin;
+	code_generator(&S1t);
 
 	// S.code = X = gera(S.begin) || B.code
   label_insert(B->code,S->temp.begin);
@@ -780,7 +795,13 @@ void code_while_do(iks_tree_t **ast) {
 																											NULL));
   iks_list_append(S->code,(void*)goto_S_begin);
 
-	//iloc_print(S->code);
+	//if there is next command
+	if(iks_list_size((*ast)->children)>2) {
+		iks_tree_t *Stnext = (*ast)->children->next->next->item;
+		code_generator(&Stnext);
+		iks_ast_node_value_t *Snext = Stnext->item;
+		S->code = iks_list_concat(S->code,Snext->code);
+	}
 }
 
 /******************************************************************************
@@ -790,24 +811,34 @@ void code_while_do(iks_tree_t **ast) {
 ******************************************************************************/
 void code_do_while(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
-	iks_tree_t *S1t = (*ast)->children->item;
-	iks_ast_node_value_t *S1 = S1t->item;
-	iks_tree_t *Bt = (*ast)->children->next->item;
-	iks_ast_node_value_t *B = Bt->item;
 
-	// S.code = X = gera(S.begin) || S1.code || B.code
-	label_insert(S1->code,S->temp.begin);
+	iks_tree_t *S1t = (*ast)->children->next->item;
+	iks_ast_node_value_t *S1 = S1t->item;
+	S->temp.begin = label_generator();
+	S1->temp.next = label_generator();
+	code_generator(&S1t);
+
+	iks_tree_t *Bt = (*ast)->children->item;
+	iks_ast_node_value_t *B = Bt->item;
+	B->temp.b.t = S->temp.begin;
+	B->temp.b.f = S->temp.next;
+	code_generator(&Bt);
+
+	// S.code = X = gera(S.begin) || S1.code
+  label_insert(S1->code,S->temp.begin);
 	S->code = iks_list_concat(S->code,S1->code);
+
+	// S.code = Y = X || gera(S1.next) || B.code
+  label_insert(B->code,S1->temp.next);
 	S->code = iks_list_concat(S->code,B->code);
 
-	////S.code = X || gera(B.f)
-	//iloc_t *B_f = new_iloc(NULL, new_iloc_oper(op_nop,NULL,NULL,NULL,NULL,NULL,NULL));
-	//iks_list_t *gambi = new_iks_list();
-	//iks_list_append(gambi,(void*)B_f);
-	//label_insert(gambi,B->temp.b.f);
-	//S->code = iks_list_concat(S->code,gambi);
-
-	//iloc_print(S->code);
+	//if there is next command
+	if(iks_list_size((*ast)->children)>2) {
+		iks_tree_t *Stnext = (*ast)->children->next->next->item;
+		code_generator(&Stnext);
+		iks_ast_node_value_t *Snext = Stnext->item;
+		S->code = iks_list_concat(S->code,Snext->code);
+	}
 }
 
 
