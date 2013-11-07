@@ -145,6 +145,12 @@ void code_generator(iks_tree_t **ast);
 ******************************************************************************/
 void label_insert(iks_list_t *code, char *label);
 
+/******************************************************************************
+* Objective: append a label in iloc code list
+* Input: list of iloc operations and new label to insert.
+* Output: none
+******************************************************************************/
+void label_append(iks_list_t *code, char *label);
 
 /******************************************************************************
 * Objective: create an iloc code
