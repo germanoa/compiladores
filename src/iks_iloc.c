@@ -674,6 +674,7 @@ void code_comp_gt(iks_tree_t **ast) {
 ******************************************************************************/
 void code_if(iks_tree_t **ast){
 	iks_ast_node_value_t *S = (*ast)->item;
+	S->temp.next = label_generator();
 
 	iks_tree_t *Bt = (*ast)->children->item;
 	iks_ast_node_value_t *B = Bt->item;
@@ -692,6 +693,8 @@ void code_if(iks_tree_t **ast){
 	// S.code = B.code || X
 	S->code = iks_list_concat(B->code,S1->code);
 
+	label_append(S->code,S->temp.next);
+
 	//if there is next command
 	if(iks_list_size((*ast)->children)>2) {
 		iks_tree_t *Stnext = (*ast)->children->next->next->item;
@@ -708,6 +711,7 @@ void code_if(iks_tree_t **ast){
 ******************************************************************************/
 void code_if_else(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
+	S->temp.next = label_generator();
 
 	iks_tree_t *Bt = (*ast)->children->item;
 	iks_ast_node_value_t *B = Bt->item;
@@ -747,6 +751,8 @@ void code_if_else(iks_tree_t **ast) {
 	// S.code = S.code || Y
 	S->code = iks_list_concat(S->code,S2->code);
 
+	label_append(S->code,S->temp.next);
+
 	//if there is next command
 	if(iks_list_size((*ast)->children)>3) {
 		iks_tree_t *Stnext = (*ast)->children->next->next->item;
@@ -764,6 +770,7 @@ void code_if_else(iks_tree_t **ast) {
 ******************************************************************************/
 void code_while_do(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
+	S->temp.next = label_generator();
 
 	iks_tree_t *Bt = (*ast)->children->item;
 	iks_ast_node_value_t *B = Bt->item;
@@ -795,6 +802,8 @@ void code_while_do(iks_tree_t **ast) {
 																											NULL));
   iks_list_append(S->code,(void*)goto_S_begin);
 
+	label_append(S->code,S->temp.next);
+
 	//if there is next command
 	if(iks_list_size((*ast)->children)>2) {
 		iks_tree_t *Stnext = (*ast)->children->next->next->item;
@@ -811,14 +820,15 @@ void code_while_do(iks_tree_t **ast) {
 ******************************************************************************/
 void code_do_while(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
+	S->temp.next = label_generator();
 
-	iks_tree_t *S1t = (*ast)->children->next->item;
+	iks_tree_t *S1t = (*ast)->children->item;
 	iks_ast_node_value_t *S1 = S1t->item;
 	S->temp.begin = label_generator();
 	S1->temp.next = label_generator();
 	code_generator(&S1t);
 
-	iks_tree_t *Bt = (*ast)->children->item;
+	iks_tree_t *Bt = (*ast)->children->next->item;
 	iks_ast_node_value_t *B = Bt->item;
 	B->temp.b.t = S->temp.begin;
 	B->temp.b.f = S->temp.next;
@@ -831,6 +841,8 @@ void code_do_while(iks_tree_t **ast) {
 	// S.code = Y = X || gera(S1.next) || B.code
   label_insert(B->code,S1->temp.next);
 	S->code = iks_list_concat(S->code,B->code);
+
+	label_append(S->code,S->temp.next);
 
 	//if there is next command
 	if(iks_list_size((*ast)->children)>2) {
@@ -849,6 +861,7 @@ void code_do_while(iks_tree_t **ast) {
 ******************************************************************************/
 void code_attr(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
+	S->temp.next = label_generator();
 	
 	iks_list_t *first_child_in_list = (*ast)->children;
 	iks_list_t *second_child_in_list = first_child_in_list->next;
@@ -882,6 +895,9 @@ void code_attr(iks_tree_t **ast) {
 	iks_list_t *attr_code = new_iks_list();
 	iks_list_append(attr_code,attr);
 	S->code = iks_list_concat(S->code,attr_code);
+
+	label_append(S->code,S->temp.next);
+
 	
 	if(third_child_in_list != first_child_in_list) { //there's a command after this attribution
 		code_generator((iks_tree_t**)&third_child_in_list->item);
@@ -1126,6 +1142,23 @@ void label_insert(iks_list_t *code, char *label) {
 		}
 	}
 }
+
+/******************************************************************************
+* Objective: append a label in iloc code list
+* Input: list of iloc operations and new label to append.
+* Output: none
+******************************************************************************/
+void label_append(iks_list_t *code, char *label) {
+		iloc_t *iloc = new_iloc(label, new_iloc_oper(op_nop,
+																									NULL,
+																									NULL,
+																									NULL,
+																									NULL,
+																									NULL,
+																									NULL));
+		iks_list_append(code,(void*)iloc);
+}
+
 
 /******************************************************************************
 * Objective: create an iloc code
