@@ -40,7 +40,7 @@ int main (int argc, char **argv)
   gv_init("ast_graph.dot");
 	
   int result = yyparse();
-	
+	fprintf(stderr,"chegando no close\n");
   gv_close();
   
 	code_generator(&ast);
