@@ -861,6 +861,7 @@ void code_do_while(iks_tree_t **ast) {
 ******************************************************************************/
 void code_attr(iks_tree_t **ast) {
 	iks_ast_node_value_t *S = (*ast)->item;
+	S->temp.next = label_generator();
 	
 	iks_list_t *first_child_in_list = (*ast)->children;
 	iks_list_t *second_child_in_list = first_child_in_list->next;
@@ -894,6 +895,9 @@ void code_attr(iks_tree_t **ast) {
 	iks_list_t *attr_code = new_iks_list();
 	iks_list_append(attr_code,attr);
 	S->code = iks_list_concat(S->code,attr_code);
+
+	label_append(S->code,S->temp.next);
+
 	
 	if(third_child_in_list != first_child_in_list) { //there's a command after this attribution
 		code_generator((iks_tree_t**)&third_child_in_list->item);
