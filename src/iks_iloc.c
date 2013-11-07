@@ -42,6 +42,23 @@ void code_funcao(iks_tree_t **ast) {
 }
 
 /******************************************************************************
+* Objective: code for bloco 
+* Input: pointer of pointer ast
+* Output:	
+******************************************************************************/
+void code_bloco(iks_tree_t **ast) {
+	iks_ast_node_value_t *P = (*ast)->item;
+	iks_tree_t *Ft = (*ast)->children->item;
+
+	if(Ft) { //because program can be empty
+		iks_ast_node_value_t *F = Ft->item;
+		code_generator(&Ft);
+		P->code = F->code;
+	}
+	
+}
+
+/******************************************************************************
 * Objective: generate code for jump operation
 * Input: pointer of pointer of iks_tree ast
 * Output:	none	
@@ -662,7 +679,12 @@ void code_if(iks_tree_t **ast){
 	iks_ast_node_value_t *B = Bt->item;
 	B->temp.b.t = label_generator();
 	B->temp.b.f = S->temp.next;
+	if (B->need_coercion>0) {
+		printf ("%s need coercion: %d\n",B->symbol->value,B->need_coercion);
+	}
 	code_generator(&Bt);
+
+
 
 	iks_tree_t *S1t = (*ast)->children->next->item;
 	iks_ast_node_value_t *S1 = S1t->item;
@@ -899,6 +921,7 @@ void code_generator(iks_tree_t **ast) {
 		case IKS_AST_BLOCO:
 			/* in progress */
 			//printf("\nIKS_AST_BLOCO", n->type);
+			code_bloco(ast);
 			break;
 		case IKS_AST_IDENTIFICADOR:
 			//printf("\nIKS_AST_IDENTIFICADOR", n->type);

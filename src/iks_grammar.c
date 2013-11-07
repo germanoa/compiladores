@@ -83,7 +83,6 @@ void symbol_table_delete(iks_dict_t *dict) {
         do {
             temp = temp->next;
 						if (temp->prev->item) {
-							printf("apaga!!!!!!!!!!!!!!\n");
 							iks_grammar_symbol_delete((iks_grammar_symbol_t*)temp->prev->item);					
 						}    
             free(temp->prev);
@@ -214,11 +213,14 @@ int decl_symbol(iks_grammar_symbol_t *s,int iks_type, int decl_type, scope_t *sc
       s->iks_size=1;
       break;
   }
-	s->addr_offset = scope->next_addr;
-	scope->next_addr += s->iks_size;
  
   s->decl_type = decl_type;
   s->symbol_table = (iks_dict_t*)symbol_table;
+
+	if (s->decl_type==IKS_DECL_VAR) {
+		s->addr_offset = scope->next_addr;
+		scope->next_addr += s->iks_size;
+	}
   
   if (!exist_symbol_local(s,s->symbol_table)) {
     symbol_table_append(s->value,s,s->symbol_table);
