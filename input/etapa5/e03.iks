@@ -1,7 +1,0 @@
-/* local variable with offset */
-int:main()
-int:x;
-int:y;
-{
-  y = 0;
-}

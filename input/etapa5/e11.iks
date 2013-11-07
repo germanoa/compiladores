@@ -1,7 +1,0 @@
-int:x;
-int:main()
-{
-  do {
-    x = 0;
-  }while (x);
-}

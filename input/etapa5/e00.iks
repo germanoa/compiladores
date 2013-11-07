@@ -1,6 +1,0 @@
-/* global variable */
-int:x;
-int:main()
-{
-  x = 0;
-}
