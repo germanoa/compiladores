@@ -1,0 +1,7 @@
+/* global variable */
+int:x[10][10];
+int:y;
+int:main()
+{
+  y = 0;
+}

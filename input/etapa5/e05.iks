@@ -1,0 +1,8 @@
+/* global arranjo with expression */
+int:x;
+int:y[10];
+int:main()
+{
+  y[x+1] = 0;
+  y[x*x] = 0;
+}

@@ -1,0 +1,8 @@
+/* global arranjo */
+int:x;
+int:y[10];
+int:main()
+{
+  y[0] = 0;
+  y[1] = 0;
+}
