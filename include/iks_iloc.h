@@ -6,6 +6,7 @@
 
 #include "iks_list.h"
 #include "iks_tree.h"
+#include "iks_ast.h"
 
 
 /*
@@ -183,5 +184,13 @@ void iloc_oper_print(iks_list_t *opers);
 * Output: none
 ******************************************************************************/
 void iloc_print(iks_list_t *code);
+
+/****************************************************************************** 
+* Objective: get coercion code
+* Input: ast
+* Output: none
+******************************************************************************/
+iks_list_t *get_coercion_code(iks_ast_node_value_t *n);
+
 
 #endif /* __IKS_ILOC_H__ */

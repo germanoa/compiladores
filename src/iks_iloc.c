@@ -202,7 +202,6 @@ void code_arit_sum(iks_tree_t **ast) {
 
 	iks_list_t *arit_sum = new_iks_list();
 
-
 	iloc_t *art_sum = new_iloc(NULL, new_iloc_oper(op_add,	
 																									E1->temp.name,
 																									E2->temp.name,
@@ -682,6 +681,10 @@ void code_if(iks_tree_t **ast){
 	B->temp.b.f = S->temp.next;
 	code_generator(&Bt);
 
+	if(B->need_coercion>0) {
+		B->code = iks_list_concat(B->code,get_coercion_code(B));
+	}
+
 	iks_tree_t *S1t = (*ast)->children->next->item;
 	iks_ast_node_value_t *S1 = S1t->item;
 	S1->temp.next = S->temp.next;
@@ -718,6 +721,10 @@ void code_if_else(iks_tree_t **ast) {
 	B->temp.b.t = label_generator();
 	B->temp.b.f = label_generator();
 	code_generator(&Bt);
+
+	if(B->need_coercion>0) {
+		B->code = iks_list_concat(B->code,get_coercion_code(B));
+	}
 
 	iks_tree_t *S1t = (*ast)->children->next->item;
 	iks_ast_node_value_t *S1 = S1t->item;
@@ -778,6 +785,10 @@ void code_while_do(iks_tree_t **ast) {
 	B->temp.b.f = S->temp.next;
 	code_generator(&Bt);
 
+	if(B->need_coercion>0) {
+		B->code = iks_list_concat(B->code,get_coercion_code(B));
+	}
+
 	iks_tree_t *S1t = (*ast)->children->next->item;
 	iks_ast_node_value_t *S1 = S1t->item;
 	S->temp.begin = label_generator();
@@ -833,6 +844,10 @@ void code_do_while(iks_tree_t **ast) {
 	B->temp.b.t = S->temp.begin;
 	B->temp.b.f = S->temp.next;
 	code_generator(&Bt);
+
+	if(B->need_coercion>0) {
+		B->code = iks_list_concat(B->code,get_coercion_code(B));
+	}
 
 	// S.code = X = gera(S.begin) || S1.code
   label_insert(S1->code,S->temp.begin);
@@ -1364,4 +1379,49 @@ void iloc_print(iks_list_t *code) {
 		it = it->next; 
    
   } while(it != code);
+}
+
+iks_list_t *get_coercion_code(iks_ast_node_value_t *S) {
+	iks_list_t *ret;
+	iks_list_t *coercion_code = new_iks_list();
+	switch(S->need_coercion) {
+
+		case IKS_COERCION_INT_TO_BOOL:
+			S->temp.local = register_generator();
+
+			iloc_t *cmp_ge = new_iloc(NULL, new_iloc_oper(op_cmp_GE,	
+																										S->temp.name,
+																										"1",
+																										NULL,
+																										S->temp.local,
+																										NULL,
+																										NULL));	
+
+			iloc_t *cbr = new_iloc(NULL, new_iloc_oper(op_cbr,
+																									S->temp.local,
+																									NULL,
+																									NULL,
+																									S->temp.b.t,
+																									S->temp.b.f,
+																									NULL));	
+			iks_list_append(coercion_code,cmp_ge);	
+			iks_list_append(coercion_code,cbr);
+			ret = coercion_code;	
+			break;
+		case IKS_COERCION_INT_TO_FLOAT:
+			break;
+		case IKS_COERCION_FLOAT_TO_INT:
+			break;
+		case IKS_COERCION_FLOAT_TO_BOOL:
+			break;
+		case IKS_COERCION_BOOL_TO_INT:
+			break;
+		case IKS_COERCION_BOOL_TO_FLOAT:
+			break;
+		default:
+      fprintf(stderr,"ops at get_coercion_code\n");
+			break;
+
+	}
+	return ret;
 }
