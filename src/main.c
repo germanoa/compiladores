@@ -38,14 +38,15 @@ int main (int argc, char **argv)
   //printf("\n\n\n%s\n\n\n\n", argv[2]);
   //gv_init("output/etapa3/saida.dot");
   gv_init("ast_graph.dot");
-
+	
   int result = yyparse();
-
+	
+  gv_close();
+  
 	code_generator(&ast);
 	iks_ast_node_value_t *program = ast->item;
 	iloc_print(program->code);  
 
-  gv_close();
 
   //symbol_table_print((iks_dict_t*)iks_stack_top(scope));
 

@@ -64,7 +64,9 @@ iks_tree_t *iks_ast_new_node(int type, iks_grammar_symbol_t *symbol) {
     gv_declare(type,t,symbol->value);
   }
   else {
-    gv_declare(type,t,NULL);
+  	if(type != IKS_AST_INDEFINIDO) { //no need to draw undefined nodes
+    	gv_declare(type,t,NULL);
+  	}
   }
   return t;
 }
