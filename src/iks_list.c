@@ -5,8 +5,8 @@
 
 static inline void __iks_list_init(iks_list_t *list) {
 	list->item = NULL; 
-    list->prev = list;
-    list->next = list;
+  list->prev = list;
+  list->next = list;
 }
 
 int iks_list_is_empty(iks_list_t *list) {

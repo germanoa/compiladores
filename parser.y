@@ -89,7 +89,7 @@ DECLARATIONS
 %type<nt> terminal_value
 %type<nt> id
 %type<nt> idv
-%type<nt> idv_dimen
+%type<list> idv_dimen
 %type<nt> func_call
 %type<type> type
 
@@ -496,9 +496,8 @@ id:
 idv:
 		id idv_dimen
 		{
-			fprintf(stderr,"inside idv\n");
 			iks_ast_node_value_t *idn;
-			idn = $id->item; 
+			idn = $id->item;
 			iks_grammar_symbol_t *ids;
 			ids = idn->symbol;
 			
@@ -506,7 +505,12 @@ idv:
 				iks_tree_t *vet = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
 				
 				iks_ast_connect_nodes(vet,$id);
-				iks_ast_connect_nodes(vet,$idv_dimen);
+				
+				iks_list_t *list_of_dimens = $idv_dimen;
+				do { //all dimension nodes will be children of the vector node
+					iks_ast_connect_nodes(vet,(iks_tree_t *)list_of_dimens->item);
+					list_of_dimens = list_of_dimens->next;
+				} while(list_of_dimens != $idv_dimen);
 				
 				iks_ast_node_value_t *vetn = vet->item;
 				vetn->iks_type = idn->iks_type; //type of this ast node is that of the id
@@ -532,7 +536,7 @@ idv_dimen:
 			iks_ast_node_value_delete(int_treen); //removing temporary tree
 			iks_tree_delete(int_tree);
 			
-			iks_ast_connect_nodes($1, $expr);
+			iks_list_append($1,$expr);
 			
 			$$ = $1;
 		}
@@ -549,7 +553,10 @@ idv_dimen:
 			iks_ast_node_value_delete(int_treen); //removing temporary tree
 			iks_tree_delete(int_tree);
 			
-			$$ = $expr;
+			iks_list_t *list_of_dimens = new_iks_list();
+			iks_list_append(list_of_dimens,$expr);
+			
+			$$ = list_of_dimens;
 		}
 	;
 

@@ -198,8 +198,6 @@ void gv_declare (const int tipo, const void *pointer, char *name)
     abort();
   }
 	
-	
-	fprintf(stderr,"inside gv_declare\n");
   fprintf (fp, "node_%p [label=\"%s\"]\n", pointer, description);
   fflush(fp);
 }
