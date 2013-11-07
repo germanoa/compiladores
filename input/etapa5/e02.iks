@@ -1,0 +1,8 @@
+/* global variable with offset */
+int:x;
+int:y;
+int:main()
+{
+y = 0;
+}
+

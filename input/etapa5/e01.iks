@@ -1,0 +1,7 @@
+/* local variable */
+int:main()
+int:x;
+{
+x = 0;
+}
+

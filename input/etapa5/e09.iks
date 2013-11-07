@@ -1,0 +1,8 @@
+int:x;
+int:main()
+{
+if (x) then {
+x = 0;
+}
+}
+
