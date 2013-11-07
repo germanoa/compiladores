@@ -386,17 +386,17 @@ commands:
 			/* 3.A.8 */
 			iks_list_t *id_child;
 			id_child =  $idv->children;
+			
 			iks_tree_t *id_tree;
 			id_tree = id_child->next->item;
+			
 			iks_ast_node_value_t *idn,*exprn;
 			idn = (iks_ast_node_value_t*)id_tree->item;
 			exprn = (iks_ast_node_value_t*)$expr->item;
+			
 			iks_grammar_symbol_t *ids,*exprs;
 			ids = idn->symbol;
 			exprs = exprn->symbol;
-			if(!symbol_is_decl_type(ids,IKS_DECL_VECTOR)) {
-				return iks_error(ids,IKS_ERROR_USE);
-			}
 
 			iks_tree_t *e;
 			e=$expr;
@@ -426,7 +426,6 @@ commands:
 			iks_ast_connect_nodes(atribuicao,$idv);
 			iks_ast_connect_nodes(atribuicao,$expr);
 			$$ = atribuicao;
-
 		}
 	| TK_PR_OUTPUT output_list
 		{
