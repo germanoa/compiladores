@@ -496,7 +496,7 @@ id:
 idv:
 		id idv_dimen
 		{
-			printf("test");
+			fprintf(stderr,"inside idv\n");
 			iks_ast_node_value_t *idn;
 			idn = $id->item; 
 			iks_grammar_symbol_t *ids;

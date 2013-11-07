@@ -107,6 +107,7 @@ void gv_init (const char *filename)
     fp = stderr;    
   }
   fprintf (fp, "digraph G {\n");
+  fflush(fp);
 }
 
 /**
@@ -196,8 +197,11 @@ void gv_declare (const int tipo, const void *pointer, char *name)
     fprintf (stderr, "%s: unknow tipo provided\n", __FUNCTION__);
     abort();
   }
-
+	
+	
+	fprintf(stderr,"inside gv_declare\n");
   fprintf (fp, "node_%p [label=\"%s\"]\n", pointer, description);
+  fflush(fp);
 }
 
 /**
@@ -215,4 +219,5 @@ void gv_connect (const void *p1, const void *p2)
   __gv_test_valid_ast_pointer (__FUNCTION__, p2);
 
   fprintf(fp, "node_%p -> node_%p\n", p1, p2);
+  fflush(fp);
 }
