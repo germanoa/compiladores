@@ -223,6 +223,7 @@ int decl_symbol(iks_grammar_symbol_t *s,int iks_type, int decl_type, scope_t *sc
  
   s->decl_type = decl_type;
   s->symbol_table = (iks_dict_t*)symbol_table;
+	s->scope_type = scope->type;
 
 	if (s->decl_type==IKS_DECL_VAR) {
 		s->addr_offset = scope->next_addr;

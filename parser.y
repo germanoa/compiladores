@@ -126,6 +126,7 @@ p:
 			//scope->st = iks_stack_push(scope->st,(void*)symbol_table_global);
 			scope_t *scope = new_scope();
 			scope->st = symbol_table_global;
+			scope->type=IKS_SCOPE_GLOBAL;
 			scopes = new_iks_stack();
 			scopes = iks_stack_push(scopes,(void*)scope);
 			// just the first function is child of ast
@@ -255,6 +256,7 @@ func:
 			funcaon->iks_type = $type;
 			scope_t *scope = new_scope();
 			scope->st = symbol_table_local;
+			scope->type=IKS_SCOPE_LOCAL;
 			scopes = iks_stack_push(scopes,(void*)scope);
 			//scope->st = iks_stack_push(scope->st,(void*)symbol_table_local);
 			ptr_function=funcao;

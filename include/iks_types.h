@@ -60,6 +60,9 @@
 #define IKS_COERCION_BOOL_TO_INT 	5
 #define IKS_COERCION_BOOL_TO_FLOAT 	6
 
+#define IKS_SCOPE_LOCAL 	1
+#define IKS_SCOPE_GLOBAL 	2
+
 /* stack of symbol_tables(scope) */
 //iks_stack_t *scope; 
 iks_stack_t *scopes; 
@@ -67,6 +70,7 @@ typedef struct scope_t scope_t;
 struct scope_t {
 	//iks_stack_t *st; //symbol tables 
 	iks_dict_t *st; //symbol tables 
+	int type;	
 	int base_addr;	
 	int next_addr;	
 };

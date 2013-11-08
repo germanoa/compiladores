@@ -76,8 +76,16 @@ void code_id_lits(iks_tree_t **ast) {
 
 	iloc_t *load,*loadAI;
 
+	char *offset_reg;
+	if (E->symbol->scope_type==IKS_SCOPE_LOCAL) {
+		offset_reg="rarp";
+	}
+	else {
+		offset_reg="bss";
+	}
+
 	loadAI = new_iloc(NULL, new_iloc_oper(op_loadAI,
-																				"rarp",
+																				offset_reg,
 																				addr,
 																				NULL,
 																				reg_temp,
@@ -897,13 +905,21 @@ void code_attr(iks_tree_t **ast) {
 	iloc_t *attr;
 	opcode_t op;
 	char *addr = int_to_char(ID->symbol->addr_offset);
+
+	char *offset_reg;
+	if (ID->symbol->scope_type==IKS_SCOPE_LOCAL) {
+		offset_reg="rarp";
+	}
+	else {
+		offset_reg="bss";
+	}
 	
 	op = op_storeAI;
 	attr = new_iloc(NULL, new_iloc_oper(op,
 																			E->temp.name,
 																			NULL,
 																			NULL,
-																			"rarp",
+																			offset_reg,
 																			addr,
 																			NULL));
 	

@@ -31,6 +31,7 @@ struct iks_grammar_symbol_t {
     int iks_type;
     int iks_size;
     iks_dict_t *symbol_table;
+    int scope_type;
     iks_list_t *params; //used only with functions
 		int addr_offset; //offset of base addr from scope
 		int base;
