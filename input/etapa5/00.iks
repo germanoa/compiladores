@@ -1,7 +1,8 @@
 int:a;
-int: main() {
-  if(true) then {
-		if(false) then {
-		}
-	};
+int: main()
+int:b;
+
+{
+a=1;
+b=2;
 }

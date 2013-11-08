@@ -1408,35 +1408,13 @@ iks_list_t *get_coercion_code(iks_ast_node_value_t *S) {
 			iks_list_append(coercion_code,cbr);
 			ret = coercion_code;	
 			break;
-		case IKS_COERCION_INT_TO_FLOAT:
-			break;
-		case IKS_COERCION_FLOAT_TO_INT:
-			break;
-		case IKS_COERCION_FLOAT_TO_BOOL:
-			S->temp.local = register_generator();
-
-			iloc_t *cmp_ge = new_iloc(NULL, new_iloc_oper(op_cmp_GE,	
-																										S->temp.name,
-																										"1",
-																										NULL,
-																										S->temp.local,
-																										NULL,
-																										NULL));	
-
-			iloc_t *cbr = new_iloc(NULL, new_iloc_oper(op_cbr,
-																									S->temp.local,
-																									NULL,
-																									NULL,
-																									S->temp.b.t,
-																									S->temp.b.f,
-																									NULL));	
-			iks_list_append(coercion_code,cmp_ge);	
-			iks_list_append(coercion_code,cbr);
-			ret = coercion_code;	
-			break;
 		case IKS_COERCION_BOOL_TO_INT:
 			break;
+		case IKS_COERCION_INT_TO_FLOAT:
+		case IKS_COERCION_FLOAT_TO_INT:
+		case IKS_COERCION_FLOAT_TO_BOOL:
 		case IKS_COERCION_BOOL_TO_FLOAT:
+			//does not supported at iloc
 			break;
 		default:
       fprintf(stderr,"ops at get_coercion_code\n");

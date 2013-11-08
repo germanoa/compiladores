@@ -24,7 +24,7 @@
 /* Código de retorno para erros semânticos */
 
 /* Verficação de declarações */
-#define IKS_ERROR_UNDECLARED 	999	 //identificador não declarado
+#define IKS_ERROR_UNDECLARED 	1	 //identificador não declarado
 #define IKS_ERROR_DECLARED 		2 //identificador já declarado
 
 /* Uso correto de identificadores */
@@ -62,9 +62,11 @@
 
 /* stack of symbol_tables(scope) */
 //iks_stack_t *scope; 
+iks_stack_t *scopes; 
 typedef struct scope_t scope_t;
 struct scope_t {
-	iks_stack_t *st; //symbol tables 
+	//iks_stack_t *st; //symbol tables 
+	iks_dict_t *st; //symbol tables 
 	int base_addr;	
 	int next_addr;	
 };

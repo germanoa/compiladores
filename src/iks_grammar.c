@@ -126,15 +126,21 @@ iks_grammar_symbol_t *search_symbol_global(iks_grammar_symbol_t *symbol, iks_sta
     iks_grammar_symbol_t *ret=NULL;
     iks_stack_t *it_scope;
     it_scope = scope;
+		scope_t *scp;
+    iks_dict_t *symbol_table;
     do {
-      iks_dict_t *symbol_table;
-      symbol_table = iks_stack_top(it_scope);
+      //symbol_table = iks_stack_top(it_scope);
+      scp = iks_stack_top(it_scope);
+			symbol_table = scp->st;
       //printf("global looking for %s at: %X\n",symbol->value,symbol_table);
       ret = search_symbol_local(symbol,symbol_table); 
       it_scope = it_scope->below;
     } while ((ret==NULL) && (it_scope != it_scope->below)); 
     if (ret==NULL) { //look at global
-      ret = search_symbol_local(symbol,iks_stack_top(it_scope)); 
+      //ret = search_symbol_local(symbol,iks_stack_top(it_scope)); 
+      scp = iks_stack_top(it_scope);
+			symbol_table = scp->st;
+      ret = search_symbol_local(symbol,symbol_table); 
     }
     return ret;
 }
@@ -194,7 +200,8 @@ int decl_symbol(iks_grammar_symbol_t *s,int iks_type, int decl_type, scope_t *sc
   int ret=1;
   s->iks_type = iks_type;
   
-	iks_dict_t *symbol_table = (iks_dict_t*) iks_stack_top(scope->st);
+	//iks_dict_t *symbol_table = (iks_dict_t*) iks_stack_top(scope->st);
+	iks_dict_t *symbol_table = scope->st;
 
   switch (iks_type) {
     case IKS_INT:

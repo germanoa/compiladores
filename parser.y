@@ -123,7 +123,11 @@ p:
 			function_with_param=NULL;
 			iks_dict_t *symbol_table_global;
 			symbol_table_global = new_iks_dict();
-			scope->st = iks_stack_push(scope->st,(void*)symbol_table_global);
+			//scope->st = iks_stack_push(scope->st,(void*)symbol_table_global);
+			scope_t *scope = new_scope();
+			scope->st = symbol_table_global;
+			scopes = new_iks_stack();
+			scopes = iks_stack_push(scopes,(void*)scope);
 			// just the first function is child of ast
 			iks_ast_node_value_t *v;
 			v = new_iks_ast_node_value();
@@ -202,7 +206,8 @@ decl:
 		type ':' TK_IDENTIFICADOR
 		{
 			//if (!decl_symbol($3,$1,IKS_DECL_VAR,iks_stack_top(scope->st),function_with_param)) {
-			if (!decl_symbol($TK_IDENTIFICADOR,$type,IKS_DECL_VAR,scope,function_with_param)) {
+			//if (!decl_symbol($TK_IDENTIFICADOR,$type,IKS_DECL_VAR,scope,function_with_param)) {
+			if (!decl_symbol($3,$1,IKS_DECL_VAR,iks_stack_top(scopes),function_with_param)) {
 				return(IKS_ERROR_DECLARED); //was already declared before
 			}
 			$$ = $TK_IDENTIFICADOR;
@@ -236,7 +241,8 @@ type:
 func:
 		type ':' TK_IDENTIFICADOR {
 			//if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,iks_stack_top(scope->st),function_with_param)) {
-			if (!decl_symbol($TK_IDENTIFICADOR,$type,IKS_DECL_FUNCTION,scope,function_with_param)) {
+			//if (!decl_symbol($TK_IDENTIFICADOR,$type,IKS_DECL_FUNCTION,scope,function_with_param)) {
+			if (!decl_symbol($3,$1,IKS_DECL_FUNCTION,iks_stack_top(scopes),function_with_param)) {
 				return(IKS_ERROR_DECLARED);
 			}
 			
@@ -247,7 +253,10 @@ func:
 			iks_tree_t *funcao = iks_ast_new_node(IKS_AST_FUNCAO,$3);
 			iks_ast_node_value_t *funcaon = funcao->item;
 			funcaon->iks_type = $type;
-			scope->st = iks_stack_push(scope->st,(void*)symbol_table_local);
+			scope_t *scope = new_scope();
+			scope->st = symbol_table_local;
+			scopes = iks_stack_push(scopes,(void*)scope);
+			//scope->st = iks_stack_push(scope->st,(void*)symbol_table_local);
 			ptr_function=funcao;
 			function_with_param=$TK_IDENTIFICADOR; //begin params decl
 		} '(' func_param_decl_list ')' {
@@ -261,8 +270,10 @@ func:
 			
       //iks_dict_t *st = (iks_dict_t*) iks_stack_top(scope->st);
       //iks_dict_delete(st);
-			symbol_table_delete(scope->st->item);
-			scope->st = iks_stack_pop(scope->st);
+			//symbol_table_delete(scope->st->item);
+			//scope->st = iks_stack_pop(scope->st);
+			symbol_table_delete(scope->st);
+			scopes = iks_stack_pop(scopes);
 
 
 			$$ = ptr_function;
@@ -481,7 +492,8 @@ id:
 		TK_IDENTIFICADOR
 		{
 			iks_grammar_symbol_t *s;
-			s = search_symbol_global($1,scope->st);
+			//s = search_symbol_global($1,scope->st);
+			s = search_symbol_global($1,scopes);
 			if (s) {
 				$$ = iks_ast_new_node(IKS_AST_IDENTIFICADOR,s);
 				iks_ast_node_value_t *idn = $$->item;
