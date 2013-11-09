@@ -348,94 +348,35 @@ commands:
 	| id '=' expr
 		{
 			/* 3.A.8 */
-			iks_ast_node_value_t *idn,*exprn;
-			idn = $id->item;
-			exprn = $expr->item;
-
-			iks_grammar_symbol_t *ids,*exprs;
-			ids = idn->symbol;
-			exprs = exprn->symbol;
+			iks_ast_node_value_t *idn = $id->item;
+			iks_grammar_symbol_t *ids = idn->symbol;
 
 			if(!symbol_is_decl_type(ids,IKS_DECL_VAR)) { //was symbol declared?
 				return iks_error(ids,IKS_ERROR_USE);
 			}
 
-			if(ids->iks_type == IKS_STRING) {
-				//na verdade, acho que isso tem que ser tratado na regra idv '=' expr
-				//update_vector_symbol(...);
-			}
-
-			iks_tree_t *e;
-			e=$expr;
-			if(exprn->type==IKS_AST_CHAMADA_DE_FUNCAO) {
-				iks_list_t *expr_child;
-				expr_child =  $expr->children;
-				e = expr_child->next->item;
-				iks_ast_node_value_t *en;
-				en = (iks_ast_node_value_t*)e->item;
-				exprs = en->symbol;
-			}            
-			if (exprs) {
-				if(ids->iks_type!=exprs->iks_type) {
-					int coercion=verify_coercion($id,e);
-					if (coercion) { //if coercion is invalid
-						return coercion;
-					} else { //attribute id type to attribution
-						
-					}
-				}
-			}
-
 			$$ = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
 			iks_ast_node_value_t *atrn = $$->item;
-			atrn->iks_type = ids->iks_type;
-
+			
+			int type = infer_type($id, $expr);
+			if(type > 5) //erro de coerção
+				return type;
+			atrn->iks_type = type;
+			
 			iks_ast_connect_nodes($$,$id);
 			iks_ast_connect_nodes($$,$expr);
-
 		}
 	| idv '=' expr
 		{
 			/* 3.A.8 */
-			iks_list_t *id_child;
-			id_child =  $idv->children;
-			
-			iks_tree_t *id_tree;
-			id_tree = id_child->next->item;
-			
-			iks_ast_node_value_t *idn,*exprn;
-			idn = (iks_ast_node_value_t*)id_tree->item;
-			exprn = (iks_ast_node_value_t*)$expr->item;
-			
-			iks_grammar_symbol_t *ids,*exprs;
-			ids = idn->symbol;
-			exprs = exprn->symbol;
-
-			iks_tree_t *e;
-			e=$expr;
-			if(exprn->type==IKS_AST_CHAMADA_DE_FUNCAO) {
-				iks_list_t *expr_child;
-				expr_child =  $expr->children;
-				e = expr_child->next->item;
-				iks_ast_node_value_t *en;
-				en = (iks_ast_node_value_t*)e->item;
-				exprs = en->symbol;
-			}
-			if (exprs) {
-				if(ids->iks_type!=exprs->iks_type) {
-					int coercion=verify_coercion(id_tree,e);
-					if (coercion) { //if coercion is invalid
-						return coercion;
-					} else { //attribute id type to attribution
-						
-					}
-				}
-			}
-
 			iks_tree_t *atribuicao = iks_ast_new_node(IKS_AST_ATRIBUICAO,NULL);
 			iks_ast_node_value_t *atrn = atribuicao->item;
-			iks_ast_node_value_t *idvn = $idv->item;
-			atrn->iks_type = idvn->iks_type;
+			
+			int type = infer_type($idv, $expr);
+			if(type > 5) //erro de coerção
+				return type;
+			atrn->iks_type = type;
+			
 			iks_ast_connect_nodes(atribuicao,$idv);
 			iks_ast_connect_nodes(atribuicao,$expr);
 			$$ = atribuicao;
@@ -510,10 +451,8 @@ id:
 idv:
 		id idv_dimen
 		{
-			iks_ast_node_value_t *idn;
-			idn = $id->item;
-			iks_grammar_symbol_t *ids;
-			ids = idn->symbol;
+			iks_ast_node_value_t *idn = $id->item;
+			iks_grammar_symbol_t *ids = idn->symbol;
 			
 			if(symbol_is_decl_type(ids,IKS_DECL_VECTOR)) { //is id a vector?
 				iks_tree_t *vet = iks_ast_new_node(IKS_AST_VETOR_INDEXADO,NULL);
