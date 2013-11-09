@@ -876,6 +876,14 @@ void code_do_while(iks_tree_t **ast) {
 	}
 }
 
+/******************************************************************************
+* Objective: calculate vector element address
+* Input: tree containing the vector node
+* Output:	register which contains the address
+******************************************************************************/
+char *get_addr_reg(iks_tree_t *IDV) {
+	
+}
 
 /******************************************************************************
 * Objective: generate the code for attribution operation
@@ -883,6 +891,7 @@ void code_do_while(iks_tree_t **ast) {
 * Output:	none
 ******************************************************************************/
 void code_attr(iks_tree_t **ast) {
+	fprintf(stderr,"attr\n");
 	iks_ast_node_value_t *S = (*ast)->item;
 	S->temp.next = label_generator();
 	
@@ -890,9 +899,8 @@ void code_attr(iks_tree_t **ast) {
 	iks_list_t *second_child_in_list = first_child_in_list->next;
 	iks_list_t *third_child_in_list = second_child_in_list->next;
 	
-	iks_tree_t *IDt = (*ast)->children->item;
-	iks_ast_node_value_t *ID = IDt->item;
-	//code_generator(&IDt); //no need to call this since we're simply writing in ID, not using its value
+	iks_tree_t *IDorIDV_tree = first_child_in_list->item; //IDorIDV: this could be a vector attribution
+	iks_ast_node_value_t *IDorIDV = IDorIDV_tree->item;
 
 	iks_tree_t *Et = (*ast)->children->next->item;
 	iks_ast_node_value_t *E = Et->item;
@@ -904,24 +912,48 @@ void code_attr(iks_tree_t **ast) {
 
 	iloc_t *attr;
 	opcode_t op;
-	char *addr = int_to_char(ID->symbol->addr_offset);
-
-	char *offset_reg;
-	if (ID->symbol->scope_type==IKS_SCOPE_LOCAL) {
-		offset_reg="rarp";
+	if(IDorIDV->type == IKS_AST_VETOR_INDEXADO) { //this is a vector attribution
+		iks_ast_node_value_t *ID = (iks_ast_node_value_t *)IDorIDV_tree->children->item;
+		char *addr = get_addr_reg(IDorIDV_tree);
+		
+		char *offset_reg;
+		if (ID->symbol->scope_type==IKS_SCOPE_LOCAL) {
+			offset_reg="rarp";
+		}
+		else {
+			offset_reg="bss";
+		}
+		
+		op = op_storeAI;
+		attr = new_iloc(NULL, new_iloc_oper(op,
+																				E->temp.name,
+																				NULL,
+																				NULL,
+																				offset_reg,
+																				addr,
+																				NULL));
 	}
-	else {
-		offset_reg="bss";
+	else { //this is not a vector attribution
+		iks_ast_node_value_t *ID = IDorIDV;
+		char *addr = int_to_char(ID->symbol->addr_offset);
+		
+		char *offset_reg;
+		if (ID->symbol->scope_type==IKS_SCOPE_LOCAL) {
+			offset_reg="rarp";
+		}
+		else {
+			offset_reg="bss";
+		}
+		
+		op = op_storeAI;
+		attr = new_iloc(NULL, new_iloc_oper(op,
+																				E->temp.name,
+																				NULL,
+																				NULL,
+																				offset_reg,
+																				addr,
+																				NULL));
 	}
-	
-	op = op_storeAI;
-	attr = new_iloc(NULL, new_iloc_oper(op,
-																			E->temp.name,
-																			NULL,
-																			NULL,
-																			offset_reg,
-																			addr,
-																			NULL));
 	
 	iks_list_t *attr_code = new_iks_list();
 	iks_list_append(attr_code,attr);

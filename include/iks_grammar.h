@@ -34,7 +34,6 @@ struct iks_grammar_symbol_t {
     int scope_type;
     iks_list_t *params; //used only with functions
 		int addr_offset; //offset of base addr from scope
-		int base;
 		unsigned int num_dimen; //number of dimensions the vector has
 		iks_list_t *dimens; //list of dimension sizes
 };

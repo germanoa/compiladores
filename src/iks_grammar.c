@@ -16,7 +16,6 @@ static inline void __iks_grammar_symbol_init(iks_grammar_symbol_t *grammar_symbo
     grammar_symbol->symbol_table = NULL;
     grammar_symbol->params = new_iks_list();
     grammar_symbol->addr_offset = 0;
-    grammar_symbol->base = 0;
     grammar_symbol->num_dimen = 0;
     grammar_symbol->dimens = new_iks_list();
     
