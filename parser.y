@@ -183,9 +183,10 @@ array_decl_dimen:
 			//append to list of dimensions
 			iks_list_t *list = $1;
 			iks_grammar_symbol_t *lit = $TK_LIT_INT;
-			int size = atoi(lit->value);
+			int *size = malloc(sizeof(int));
+			*size = atoi(lit->value);
 			
-			iks_list_append(list, (void*)&size);
+			iks_list_append(list, (void*)size);
 			
 			dimen_counter++;
 			$$ = list;
@@ -194,9 +195,10 @@ array_decl_dimen:
 		{
 			//create list of dimensions
 			iks_grammar_symbol_t *lit = $TK_LIT_INT;
-			int size = atoi(lit->value);
+			int *size = malloc(sizeof(int));
+			*size = atoi(lit->value);
 			iks_list_t *dimen = new_iks_list();
-			iks_list_set_item(dimen,(void*)&size);
+			iks_list_set_item(dimen,(void*)size);
 			
 			dimen_counter++;
 			$$ = dimen;

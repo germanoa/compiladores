@@ -877,12 +877,139 @@ void code_do_while(iks_tree_t **ast) {
 }
 
 /******************************************************************************
-* Objective: calculate vector element address
-* Input: tree containing the vector node
-* Output:	register which contains the address
+* Objective: recursively calculate dk (used in e = base + dk*w)
+* Input: pointer to pointer to tree containing the vector node
+				 current dimension
+				 list of iloc codes
+* Output:	string containing register containing dk
 ******************************************************************************/
-char *get_addr_reg(iks_tree_t *IDV) {
+char *get_dk_reg(iks_tree_t *ast, unsigned int current_dimen, iks_list_t **code) {
+	if(current_dimen == 1) {
+		iks_tree_t *first_dimen_t = ast->children->next->item;
+		code_generator(&first_dimen_t);
+		
+		iks_ast_node_value_t *first_dimen_n = first_dimen_t->item;
+		*code = iks_list_concat(*code,first_dimen_n->code);
+		
+		return first_dimen_n->temp.name;
+	}
+	else {
+		char *prev_dk_reg = get_dk_reg(ast, --current_dimen, code);
+		
+		iks_ast_node_value_t *IDn = ((iks_tree_t *)ast->children->item)->item;
+		iks_grammar_symbol_t *IDs = IDn->symbol;
+		
+		iks_list_t *n_dimen = IDs->dimens;
+		iks_list_t *i_dimen = ast->children->next; //starts on next since first child is ID
+		
+		int i = 1;
+		for(i = 1; i < current_dimen; i++) {
+			n_dimen = n_dimen->next; //runs through symbol's dimensions to get nk
+			i_dimen = i_dimen->next; //runs through node's dimensions to get ik
+		}
+		
+		//getting nk
+		char *nk = int_to_char(*(int *)n_dimen->item);
+		
+		char *nk_reg = register_generator();
+		iloc_t *nk_load = new_iloc(NULL, new_iloc_oper(	op_loadI,
+																										nk,
+																										NULL,
+																										NULL,
+																										nk_reg,
+																										NULL,
+																										NULL));
+		//free(nk); //can I free this right now or is it used inside iloc_t?
+		iks_list_append(*code,nk_load);
+		
+		//dk-1*nk
+		iloc_t *multiply = new_iloc(NULL, new_iloc_oper(op_mult,
+																										prev_dk_reg,
+																										nk_reg,
+																										NULL,
+																										prev_dk_reg,
+																										NULL,
+																										NULL));
+		iks_list_append(*code,multiply);
+		
+		iks_tree_t *ik_tree = i_dimen->item;
+		code_generator(&ik_tree);
+		
+		iks_ast_node_value_t *ik_node = ik_tree->item;
+		*code = iks_list_concat(*code,ik_node->code);
+		
+		//(dk-1*nk) + ik
+		iloc_t *add = new_iloc(NULL, new_iloc_oper(	op_add,
+																								prev_dk_reg,
+																								ik_node->temp.name,
+																								NULL,
+																								prev_dk_reg,
+																								NULL,
+																								NULL));
+		iks_list_append(*code,add);
+		
+		return prev_dk_reg;
+	}
+}
+
+/******************************************************************************
+* Objective: calculate vector element address
+* Input: pointer to pointer to tree containing the vector node
+* Output:	none
+******************************************************************************/
+void code_vector(iks_tree_t **ast) {
+	iks_ast_node_value_t *IDn = ((iks_tree_t *)(*ast)->children->item)->item;
+	iks_grammar_symbol_t *IDs = IDn->symbol;
 	
+	iks_list_t *vector_code = new_iks_list();
+	
+	char *dk_reg = get_dk_reg(*ast, IDs->num_dimen, &vector_code);
+	
+	char *w = int_to_char(IDs->iks_size);
+	char *w_reg = register_generator();
+	iloc_t *w_load = new_iloc(NULL, new_iloc_oper(op_loadI,
+																								w,
+																								NULL,
+																								NULL,
+																								w_reg,
+																								NULL,
+																								NULL));
+	iks_list_append(vector_code,w_load);
+	
+	//dk*w
+	iloc_t *multiply = new_iloc(NULL, new_iloc_oper(op_mult,
+																									dk_reg,
+																									w_reg,
+																									NULL,
+																									dk_reg,
+																									NULL,
+																									NULL));
+	iks_list_append(vector_code,multiply);
+	
+	char *base = int_to_char(IDs->addr_offset);
+	char *base_reg = register_generator();
+	iloc_t *base_load = new_iloc(NULL, new_iloc_oper(	op_loadI,
+																										base,
+																										NULL,
+																										NULL,
+																										base_reg,
+																										NULL,
+																										NULL));
+	iks_list_append(vector_code,base_load);
+	
+	//base + (dk*w)
+	iloc_t *add = new_iloc(NULL, new_iloc_oper(	op_add,
+																							base_reg,
+																							dk_reg,
+																							NULL,
+																							dk_reg,
+																							NULL,
+																							NULL));
+	iks_list_append(vector_code,add);
+	
+	iks_ast_node_value_t *IDVn = (*ast)->item;
+	IDVn->code = vector_code;
+	IDVn->temp.name = dk_reg;
 }
 
 /******************************************************************************
@@ -891,7 +1018,6 @@ char *get_addr_reg(iks_tree_t *IDV) {
 * Output:	none
 ******************************************************************************/
 void code_attr(iks_tree_t **ast) {
-	fprintf(stderr,"attr\n");
 	iks_ast_node_value_t *S = (*ast)->item;
 	S->temp.next = label_generator();
 	
@@ -910,13 +1036,14 @@ void code_attr(iks_tree_t **ast) {
 
 	//S->temp.name = register_generator();
 
-	iloc_t *attr;
-	opcode_t op;
+	iloc_t *attr = NULL;
+	opcode_t op = op_storeAI;
 	if(IDorIDV->type == IKS_AST_VETOR_INDEXADO) { //this is a vector attribution
 		iks_ast_node_value_t *ID = (iks_ast_node_value_t *)IDorIDV_tree->children->item;
-		char *addr = get_addr_reg(IDorIDV_tree);
+		code_generator(&IDorIDV_tree);
+		S->code = iks_list_concat(S->code,IDorIDV->code);
 		
-		char *offset_reg;
+		char *offset_reg = NULL;
 		if (ID->symbol->scope_type==IKS_SCOPE_LOCAL) {
 			offset_reg="rarp";
 		}
@@ -924,20 +1051,19 @@ void code_attr(iks_tree_t **ast) {
 			offset_reg="bss";
 		}
 		
-		op = op_storeAI;
 		attr = new_iloc(NULL, new_iloc_oper(op,
 																				E->temp.name,
 																				NULL,
 																				NULL,
 																				offset_reg,
-																				addr,
+																				IDorIDV->temp.name,
 																				NULL));
 	}
 	else { //this is not a vector attribution
 		iks_ast_node_value_t *ID = IDorIDV;
 		char *addr = int_to_char(ID->symbol->addr_offset);
 		
-		char *offset_reg;
+		char *offset_reg = NULL;
 		if (ID->symbol->scope_type==IKS_SCOPE_LOCAL) {
 			offset_reg="rarp";
 		}
@@ -945,7 +1071,6 @@ void code_attr(iks_tree_t **ast) {
 			offset_reg="bss";
 		}
 		
-		op = op_storeAI;
 		attr = new_iloc(NULL, new_iloc_oper(op,
 																				E->temp.name,
 																				NULL,
@@ -1095,7 +1220,8 @@ void code_generator(iks_tree_t **ast) {
 			break;
 		//case IKS_AST_LOGICO_COMP_NEGACAO:
 		case IKS_AST_VETOR_INDEXADO:
-			//printf("\nIKS_AST_VETOR_INDEXADO", n->type);			
+			//printf("\nIKS_AST_VETOR_INDEXADO", n->type);
+			code_vector(ast);
 			break;
 		case IKS_AST_CHAMADA_DE_FUNCAO:
 			/* in progress */
