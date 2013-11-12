@@ -9,9 +9,9 @@
 
 
 /******************************************************************************
-* Objective: 
-* Input:
-* Output:	
+* Objective: generate code for general program
+* Input: pointer of pointer of iks_tree
+* Output:	none
 ******************************************************************************/
 void code_programa(iks_tree_t **ast) {
 	iks_ast_node_value_t *P = (*ast)->item;
@@ -44,7 +44,7 @@ void code_funcao(iks_tree_t **ast) {
 /******************************************************************************
 * Objective: code for bloco 
 * Input: pointer of pointer ast
-* Output:	
+* Output:	none
 ******************************************************************************/
 void code_bloco(iks_tree_t **ast) {
 	iks_ast_node_value_t *P = (*ast)->item;
@@ -1242,11 +1242,9 @@ void code_generator(iks_tree_t **ast) {
 			code_while_do(ast);
 			break;
 		case IKS_AST_INPUT:
-			/* in progress */
 			//printf("\nIKS_AST_INPUT", n->type);
 			break;
 		case IKS_AST_OUTPUT:
-			/* in progress */
 			//printf("\nIKS_AST_OUTPUT", n->type);
 			break;
 		case IKS_AST_ATRIBUICAO:
@@ -1254,11 +1252,9 @@ void code_generator(iks_tree_t **ast) {
 			code_attr(ast);
 			break;
 		case IKS_AST_RETURN:
-			/* in progress */
 			//printf("\nIKS_AST_RETURN", n->type);
 			break;
 		case IKS_AST_BLOCO:
-			/* in progress */
 			//printf("\nIKS_AST_BLOCO", n->type);
 			code_bloco(ast);
 			break;
@@ -1330,11 +1326,9 @@ void code_generator(iks_tree_t **ast) {
 			code_vector(ast);
 			break;
 		case IKS_AST_CHAMADA_DE_FUNCAO:
-			/* in progress */
 			//printf("\nIKS_AST_CHAMADA_DE_FUNCAO", n->type);	
 			break;
 		case IKS_AST_INDEFINIDO:
-			/* in progress */
 			//printf("\nIKS_AST_INDEFINIDO", n->type);	
 		default:
 			fprintf(stderr,"error at code_generator\n");
