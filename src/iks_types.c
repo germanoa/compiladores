@@ -31,7 +31,6 @@ int verify_coercion(iks_tree_t *id, iks_tree_t *expr) {
 	
 	if(idn->iks_type != exprn->iks_type) {
 		if((idn->iks_type == IKS_INT)&&(exprn->iks_type == IKS_BOOL)) {
-		  //printf("coercion int to bool\n");
 		  idn->need_coercion=IKS_COERCION_INT_TO_BOOL;
 		} else if((idn->iks_type == IKS_INT)&&(exprn->iks_type == IKS_FLOAT)) {
 		  //printf("coercion int to float\n");

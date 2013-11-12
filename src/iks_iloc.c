@@ -342,7 +342,7 @@ void code_arit_div(iks_tree_t **ast) {
 * Input: pointer of pointer of iks_tree ast
 * Output:	none
 ******************************************************************************/
-void code_log_inv(iks_tree_t **ast) {
+void code_arim_inv(iks_tree_t **ast) {
 	
 	iks_tree_t *E1t = (*ast)->children->item;
 	iks_ast_node_value_t *E1 = E1t->item;
@@ -370,12 +370,60 @@ void code_log_inv(iks_tree_t **ast) {
 
 
 /******************************************************************************
+* Objective: Generate code to neg bool operation
+* Input: pointer of pointer of iks_tree ast
+* Output:	none
+******************************************************************************/
+void code_log_neg(iks_tree_t **ast) {
+	iks_ast_node_value_t *B = (*ast)->item;
+
+	
+	iks_tree_t *E1t = (*ast)->children->item;
+	iks_ast_node_value_t *E1 = E1t->item;
+	E1->temp.b.t = B->temp.b.f;
+	E1->temp.b.f = B->temp.b.t;
+	code_generator(&E1t);
+
+	if(E1->need_coercion>0) {
+		E1->code = iks_list_concat(E1->code,get_coercion_code(E1));
+	}
+
+	B->code = E1->code;	
+
+	//iloc_print(B->code);
+}
+
+
+/******************************************************************************
 * Objective: Generate code to and logic operation
 * Input: pointer of pointer of iks_tree ast
 * Output:	none	
 ******************************************************************************/
 void code_log_and(iks_tree_t **ast) {
+	iks_ast_node_value_t *B = (*ast)->item;
 
+	iks_tree_t *E1t = (*ast)->children->item;
+	iks_ast_node_value_t *E1 = E1t->item;
+	E1->temp.b.t = label_generator();
+	E1->temp.b.f = B->temp.b.f;
+	code_generator(&E1t);
+
+	if(E1->need_coercion>0) {
+		E1->code = iks_list_concat(E1->code,get_coercion_code(E1));
+	}
+
+	iks_tree_t *E2t = (*ast)->children->next->item;
+	iks_ast_node_value_t *E2 = E2t->item;
+	E2->temp.b.t = B->temp.b.t;
+	E2->temp.b.f = B->temp.b.f;
+	code_generator(&E2t);
+
+	if(E2->need_coercion>0) {
+		E2->code = iks_list_concat(E2->code,get_coercion_code(E2));
+	}
+
+	label_insert(E2->code,E1->temp.b.t);
+	B->code = iks_list_concat(E1->code,E2->code);
 }
 
 
@@ -393,11 +441,19 @@ void code_log_or(iks_tree_t **ast) {
 	E1->temp.b.f = label_generator();
 	code_generator(&E1t);
 
+	if(E1->need_coercion>0) {
+		E1->code = iks_list_concat(E1->code,get_coercion_code(E1));
+	}
+
 	iks_tree_t *E2t = (*ast)->children->next->item;
 	iks_ast_node_value_t *E2 = E2t->item;
 	E2->temp.b.t = B->temp.b.t;
 	E2->temp.b.f = B->temp.b.f;
 	code_generator(&E2t);
+
+	if(E2->need_coercion>0) {
+		E2->code = iks_list_concat(E2->code,get_coercion_code(E2));
+	}
 
 	label_insert(E2->code,E1->temp.b.f);
 	B->code = iks_list_concat(E1->code,E2->code);
@@ -415,9 +471,17 @@ void code_comp_eq(iks_tree_t **ast) {
 	iks_ast_node_value_t *E1 = E1t->item;
 	code_generator(&E1t);
 
+	if(E1->need_coercion>0) {
+		E1->code = iks_list_concat(E1->code,get_coercion_code(E1));
+	}
+
 	iks_tree_t *E2t = (*ast)->children->next->item;
 	iks_ast_node_value_t *E2 = E2t->item;
 	code_generator(&E2t);
+
+	if(E2->need_coercion>0) {
+		E2->code = iks_list_concat(E2->code,get_coercion_code(E2));
+	}
 
 	iks_ast_node_value_t *B = (*ast)->item;
 	B->code = iks_list_concat(E1->code,E2->code);
@@ -461,9 +525,17 @@ void code_comp_ne(iks_tree_t **ast) {
 	iks_ast_node_value_t *E1 = E1t->item;
 	code_generator(&E1t);
 
+	if(E1->need_coercion>0) {
+		E1->code = iks_list_concat(E1->code,get_coercion_code(E1));
+	}
+
 	iks_tree_t *E2t = (*ast)->children->next->item;
 	iks_ast_node_value_t *E2 = E2t->item;
 	code_generator(&E2t);
+
+	if(E2->need_coercion>0) {
+		E2->code = iks_list_concat(E2->code,get_coercion_code(E2));
+	}
 
 	iks_ast_node_value_t *B = (*ast)->item;
 	B->code = iks_list_concat(E1->code,E2->code);
@@ -506,9 +578,17 @@ void code_comp_le(iks_tree_t **ast) {
 	iks_ast_node_value_t *E1 = E1t->item;
 	code_generator(&E1t);
 
+	if(E1->need_coercion>0) {
+		E1->code = iks_list_concat(E1->code,get_coercion_code(E1));
+	}
+
 	iks_tree_t *E2t = (*ast)->children->next->item;
 	iks_ast_node_value_t *E2 = E2t->item;
 	code_generator(&E2t);
+
+	if(E2->need_coercion>0) {
+		E2->code = iks_list_concat(E2->code,get_coercion_code(E2));
+	}
 
 	iks_ast_node_value_t *B = (*ast)->item;
 	B->code = iks_list_concat(E1->code,E2->code);
@@ -551,9 +631,17 @@ void code_comp_ge(iks_tree_t **ast) {
 	iks_ast_node_value_t *E1 = E1t->item;
 	code_generator(&E1t);
 
+	if(E1->need_coercion>0) {
+		E1->code = iks_list_concat(E1->code,get_coercion_code(E1));
+	}
+
 	iks_tree_t *E2t = (*ast)->children->next->item;
 	iks_ast_node_value_t *E2 = E2t->item;
 	code_generator(&E2t);
+
+	if(E2->need_coercion>0) {
+		E2->code = iks_list_concat(E2->code,get_coercion_code(E2));
+	}
 
 	iks_ast_node_value_t *B = (*ast)->item;
 	B->code = iks_list_concat(E1->code,E2->code);
@@ -596,9 +684,17 @@ void code_comp_lt(iks_tree_t **ast) {
 	iks_ast_node_value_t *E1 = E1t->item;
 	code_generator(&E1t);
 
+	if(E1->need_coercion>0) {
+		E1->code = iks_list_concat(E1->code,get_coercion_code(E1));
+	}
+
 	iks_tree_t *E2t = (*ast)->children->next->item;
 	iks_ast_node_value_t *E2 = E2t->item;
 	code_generator(&E2t);
+
+	if(E2->need_coercion>0) {
+		E2->code = iks_list_concat(E2->code,get_coercion_code(E2));
+	}
 
 	iks_ast_node_value_t *B = (*ast)->item;
 	B->code = iks_list_concat(E1->code,E2->code);
@@ -641,9 +737,17 @@ void code_comp_gt(iks_tree_t **ast) {
 	iks_ast_node_value_t *E1 = E1t->item;
 	code_generator(&E1t);
 
+	if(E1->need_coercion>0) {
+		E1->code = iks_list_concat(E1->code,get_coercion_code(E1));
+	}
+
 	iks_tree_t *E2t = (*ast)->children->next->item;
 	iks_ast_node_value_t *E2 = E2t->item;
 	code_generator(&E2t);
+
+	if(E2->need_coercion>0) {
+		E2->code = iks_list_concat(E2->code,get_coercion_code(E2));
+	}
 
 	iks_ast_node_value_t *B = (*ast)->item;
 	B->code = iks_list_concat(E1->code,E2->code);
@@ -1184,7 +1288,7 @@ void code_generator(iks_tree_t **ast) {
 			break;
 		case IKS_AST_ARIM_INVERSAO:
 			//printf("\nIKS_AST_ARIM_INVERSAO", n->type);
-			code_log_inv(ast);
+			code_arim_inv(ast);
 			break;
 		case IKS_AST_LOGICO_E:
 			//printf("\nIKS_AST_LOGICO_E", n->type);
@@ -1218,7 +1322,9 @@ void code_generator(iks_tree_t **ast) {
 			//printf("\nIKS_AST_LOGICO_COMP_G", n->type);
 			code_comp_gt(ast);
 			break;
-		//case IKS_AST_LOGICO_COMP_NEGACAO:
+		case IKS_AST_LOGICO_COMP_NEGACAO:
+			code_log_neg(ast);
+			break;
 		case IKS_AST_VETOR_INDEXADO:
 			//printf("\nIKS_AST_VETOR_INDEXADO", n->type);
 			code_vector(ast);

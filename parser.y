@@ -21,6 +21,7 @@ http://www.gnu.org/software/bison/manual/bison.html#Prologue
 	iks_grammar_symbol_t *function_with_param;
 	iks_list_t *args;
 	unsigned int dimen_counter;
+	int coercion;
 	
 %}
 
@@ -419,7 +420,7 @@ commands:
 			fs = fn->symbol;
 			
 			if(exprn->iks_type != fn->iks_type) {
-				int coercion = verify_coercion(ptr_function, $expr);
+				coercion = verify_coercion(ptr_function, $expr);
 				if(coercion) {
 					fprintf(stderr, "return: tipo %d deveria ser %d\n", exprn->iks_type, fn->iks_type);
 					return iks_error(exprs,IKS_ERROR_WRONG_PAR_RETURN);
@@ -714,7 +715,16 @@ logic_expr:
 				return type;
 			oon->iks_type = type;
 
+			coercion=verify_coercion($1,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$1);
+
+			coercion=verify_coercion($3,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$3);
 
 		}
@@ -731,7 +741,16 @@ logic_expr:
 				return type;
 			oon->iks_type = type;
 
+			coercion=verify_coercion($1,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$1);
+
+			coercion=verify_coercion($3,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$3);
 
 		}
@@ -742,7 +761,16 @@ logic_expr:
 			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
 
+			coercion=verify_coercion($1,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$1);
+
+			coercion=verify_coercion($3,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$3);
 
 		}
@@ -753,7 +781,16 @@ logic_expr:
 			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
 
+			coercion=verify_coercion($1,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$1);
+
+			coercion=verify_coercion($3,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$3);
 		}
 	| expr TK_OC_EQ expr
@@ -763,7 +800,16 @@ logic_expr:
 			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
 
+			coercion=verify_coercion($1,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$1);
+
+			coercion=verify_coercion($3,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$3);
 		}
 	| expr TK_OC_NE expr
@@ -773,7 +819,16 @@ logic_expr:
 			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
 
+			coercion=verify_coercion($1,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$1);
+
+			coercion=verify_coercion($3,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$3);
 	}
 
@@ -783,17 +838,31 @@ logic_expr:
 			$$ = iks_ast_new_node(IKS_AST_LOGICO_COMP_NEGACAO,NULL);
 			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
+
+			coercion=verify_coercion($2,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$2);
 		}
 	| expr TK_OC_AND expr
 		{
 			/* 3.A.14 */
-			iks_tree_t *oo = iks_ast_new_node(IKS_AST_LOGICO_E,NULL);
-			iks_ast_node_value_t *oon = oo->item;
+			$$ = iks_ast_new_node(IKS_AST_LOGICO_E,NULL);
+			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
-			iks_ast_connect_nodes(oo,$1);
-			iks_ast_connect_nodes(oo,$3);
-			$$ = oo;
+
+			coercion=verify_coercion($1,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
+			iks_ast_connect_nodes($$,$1);
+
+			coercion=verify_coercion($3,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
+			iks_ast_connect_nodes($$,$3);
 		}
 	| expr TK_OC_OR expr
 		{
@@ -801,7 +870,16 @@ logic_expr:
 			iks_ast_node_value_t *oon = $$->item;
 			oon->iks_type = IKS_BOOL;
 
+			coercion=verify_coercion($1,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$1);
+
+			coercion=verify_coercion($3,$$);
+			if (coercion) { //if coercion is invalid
+				return coercion;
+			}
 			iks_ast_connect_nodes($$,$3);
 		}
 	;
@@ -948,7 +1026,7 @@ ctrl_flow:
 					iks_tree_t *bool_tree = iks_ast_new_node(IKS_AST_INDEFINIDO,NULL); //temporary tree so infer_type can infer between IKS_INT and expr
       		iks_ast_node_value_t *bool_treen = bool_tree->item;
       		bool_treen->iks_type = IKS_BOOL; //index of vector should be an integer
-					int coercion=verify_coercion($expr,bool_tree);
+					coercion=verify_coercion($expr,bool_tree);
 					if (coercion) { //if coercion is invalid
 						return coercion;
 					}
@@ -967,7 +1045,7 @@ ctrl_flow:
 					iks_tree_t *bool_tree = iks_ast_new_node(IKS_AST_INDEFINIDO,NULL); //temporary tree so infer_type can infer between IKS_INT and expr
       		iks_ast_node_value_t *bool_treen = bool_tree->item;
       		bool_treen->iks_type = IKS_BOOL; //index of vector should be an integer
-					int coercion=verify_coercion($expr,bool_tree);
+					coercion=verify_coercion($expr,bool_tree);
 					if (coercion) { //if coercion is invalid
 						return coercion;
 					}
@@ -986,7 +1064,7 @@ ctrl_flow:
 					iks_tree_t *bool_tree = iks_ast_new_node(IKS_AST_INDEFINIDO,NULL); //temporary tree so infer_type can infer between IKS_INT and expr
       		iks_ast_node_value_t *bool_treen = bool_tree->item;
       		bool_treen->iks_type = IKS_BOOL; //index of vector should be an integer
-					int coercion=verify_coercion($expr,bool_tree);
+					coercion=verify_coercion($expr,bool_tree);
 					if (coercion) { //if coercion is invalid
 						return coercion;
 					}
@@ -1006,7 +1084,7 @@ ctrl_flow:
 					iks_tree_t *bool_tree = iks_ast_new_node(IKS_AST_INDEFINIDO,NULL); //temporary tree so infer_type can infer between IKS_INT and expr
       		iks_ast_node_value_t *bool_treen = bool_tree->item;
       		bool_treen->iks_type = IKS_BOOL; //index of vector should be an integer
-					int coercion=verify_coercion($expr,bool_tree);
+					coercion=verify_coercion($expr,bool_tree);
 					if (coercion) { //if coercion is invalid
 						return coercion;
 					}
