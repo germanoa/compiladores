@@ -4,6 +4,8 @@
 # Ele recompila o projeto e executa a partir de um 
 # dado arquivo iloc em /input/etapa5/
 
+clear
+
 echo "####################################################"
 echo "#   ESTE SCRIPT IRA COMPILAR E EXECUTAR A ETAPA 5  #"
 echo "#    CODIGO ILOC A PARTIR DE UM PROGRAMA EM IKS    #"

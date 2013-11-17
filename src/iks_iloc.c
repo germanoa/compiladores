@@ -1345,7 +1345,7 @@ char *label_generator(){
 	char temp_label[LABEL_WIDTH];
 	char *prefix, *new_label;
   
-	prefix = malloc (sizeof (char) * LABEL_WIDTH);
+	prefix = malloc (sizeof (char));
 	new_label = malloc (sizeof (char) * LABEL_WIDTH);
 
 	strcpy (prefix, "l");
@@ -1383,7 +1383,7 @@ char *register_generator(){
 	char temp_register[REGISTER_WIDTH];
 	char *prefix, *new_register;
   
-	prefix = malloc (sizeof (char) * REGISTER_WIDTH);
+	prefix = malloc (sizeof (char));
 	new_register = malloc (sizeof (char) * REGISTER_WIDTH);
 
 	strcpy (prefix, "r");
