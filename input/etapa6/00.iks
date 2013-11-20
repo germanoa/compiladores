@@ -1,0 +1,21 @@
+int:funcao1()
+  int:a;
+  int:b;
+  {
+    b = 1;
+  }
+
+
+int:funcao2()
+  int:x;
+  int:y;
+  {
+    x = 2;
+    funcao1();
+  }
+
+
+
+int:main() {
+  funcao2();
+}

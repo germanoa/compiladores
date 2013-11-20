@@ -277,7 +277,7 @@ func:
       //iks_dict_delete(st);
 			//symbol_table_delete(scope->st->item);
 			//scope->st = iks_stack_pop(scope->st);
-			symbol_table_delete(scope->st);
+			//symbol_table_delete(scope->st);
 			scopes = iks_stack_pop(scopes);
 
 
