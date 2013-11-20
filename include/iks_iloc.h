@@ -106,7 +106,6 @@ struct iloc_oper_t {
 	iks_list_t *dst_operands;
 };
 
-
 /******************************************************************************
 * Objective: generate a new label from global label controller
 * Input: none

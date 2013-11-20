@@ -9,6 +9,31 @@
 
 
 /******************************************************************************
+* Objective: generate code for a function call
+* Input: pointer of pointer of iks_tree
+* Output:	none	
+******************************************************************************/
+void code_chamada_funcao(iks_tree_t **ast) {
+	iks_ast_node_value_t *F = (*ast)->item;
+	iks_tree_t *St = (*ast)->children->item;
+	
+	if (St) {
+		iks_ast_node_value_t *S = St->item;
+    //gera(goto funcao)
+    iloc_t *iloc;
+    iloc = new_iloc(NULL, new_iloc_oper(op_jumpI,
+	  																		NULL,
+	  																		NULL,
+	  																		NULL,
+	  																		S->symbol->value,
+	  																		NULL,
+	  																		NULL));
+    iks_list_append(F->code, (void*)iloc);
+	}
+}
+
+
+/******************************************************************************
 * Objective: generate code for general program
 * Input: pointer of pointer of iks_tree
 * Output:	none
@@ -20,7 +45,20 @@ void code_programa(iks_tree_t **ast) {
 	if(Ft) { //because program can be empty
 		iks_ast_node_value_t *F = Ft->item;
 		code_generator(&Ft);
-		P->code = F->code;
+
+    //gera(goto main)
+    iloc_t *iloc;
+    iloc = new_iloc(NULL, new_iloc_oper(op_jumpI,
+	  																		NULL,
+	  																		NULL,
+	  																		NULL,
+	  																		"main",
+	  																		NULL,
+	  																		NULL));
+    iks_list_append(P->code, (void*)iloc);
+
+		P->code = iks_list_concat(P->code,F->code);
+
 	}
 }
 
@@ -38,7 +76,16 @@ void code_funcao(iks_tree_t **ast) {
 		S->temp.next = label_generator();
 		code_generator(&St);
 		F->code = iks_list_concat(F->code, S->code);
+    label_insert(F->code,F->symbol->value);
 	}
+
+  //if there is next command
+  if(iks_list_size((*ast)->children)>1) {
+    iks_tree_t *Stnext = (*ast)->children->next->item;
+    code_generator(&Stnext);
+    iks_ast_node_value_t *Snext = Stnext->item;
+    F->code = iks_list_concat(F->code,Snext->code);
+  }
 }
 
 /******************************************************************************
@@ -1327,6 +1374,7 @@ void code_generator(iks_tree_t **ast) {
 			break;
 		case IKS_AST_CHAMADA_DE_FUNCAO:
 			//printf("\nIKS_AST_CHAMADA_DE_FUNCAO", n->type);	
+			code_chamada_funcao(ast);
 			break;
 		case IKS_AST_INDEFINIDO:
 			//printf("\nIKS_AST_INDEFINIDO", n->type);	
@@ -1521,8 +1569,11 @@ void iloc_oper_print(iks_list_t *opers) {
 		iloc_oper_t *oper = it->item;
 
 		if (!oper) break;
-		printf("\t");
-		//printf("\n%i\n", oper->opcode);
+
+    if(oper->opcode!=op_nop) {
+  		printf("\t");
+    }
+
 		switch(oper->opcode) {
 			case op_nop:
 				break;
@@ -1626,7 +1677,9 @@ void iloc_oper_print(iks_list_t *opers) {
 				fprintf(stderr,"error at iloc_oper_print: op code: %d\n",oper->opcode);
     }
     
-    printf("\n");
+    if(oper->opcode!=op_nop) {
+      printf("\n");
+    }
 
     it = it->next;    
   } while(it != opers);
@@ -1646,7 +1699,7 @@ void iloc_print(iks_list_t *code) {
 
 		if (!iloc) break;
 		if (iloc->label) {
-			printf ("%s: ",iloc->label);
+			printf ("%s:\n",iloc->label);
 		}
 
 		iloc_oper_print(iloc->opers);
