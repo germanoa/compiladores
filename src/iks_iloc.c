@@ -52,16 +52,39 @@ void code_chamada_funcao(iks_tree_t **ast) {
   /* RA fields (offsets)
     0: endereco de retorno da execucao. label eh um endereco?
     1: endereco onde deve ser escrito valor de retorno
-    2: VE
-    3: VD
-    4-x: parametros
-    x-y: variaveis locais
-    y-: estado da maquina
+    2-x: variaveis locais
+    x-y: parametros
+    y+1: VE
+    y+2: VD
+    y+3-z: estado da maquina
   */
 
     //sequencia de chamada
     //1. novo ra = fp <- fp + curr_ra_size
-    //4. cria e coloca label de retorno
+    iloc_t *iloc1;
+    iloc1 = new_iloc(NULL, new_iloc_oper(op_addI,
+	  																		"fp",
+	  																		"curr_ra_size",
+	  																		NULL,
+	  																		"fp",
+	  																		NULL,
+	  																		NULL));
+    iks_list_append(F->code, (void*)iloc1);
+    //4. label de retorno
+		F->temp.next = label_generator();
+		//fazer um TBL?
+    iloc_t *iloc2;
+    iloc2 = new_iloc(NULL, new_iloc_oper(op_store,
+	  																		F->temp.next,
+	  																		NULL,
+	  																		NULL,
+	  																		"fp",
+	  																		NULL,
+	  																		NULL));
+    iks_list_append(F->code, (void*)iloc2);
+		
+		
+
     //2. VE = NULL, pois escopo simples.
     //7. VD = antigo fp
     //3. Empilha parametros
@@ -78,6 +101,7 @@ void code_chamada_funcao(iks_tree_t **ast) {
     iks_list_append(F->code, (void*)iloc);
 
     //printa label de retorno.
+		label_append(F->code,F->temp.next);
 
 	}
 }
@@ -90,6 +114,10 @@ void code_chamada_funcao(iks_tree_t **ast) {
 void code_funcao(iks_tree_t **ast) {
 	iks_ast_node_value_t *F = (*ast)->item;
 	iks_tree_t *St = (*ast)->children->item;
+
+	//registrador onde deve ser escrito valor de retorno
+  curr_function = F;
+	F->temp.name = register_generator();
 	
 	if (St) {
 		iks_ast_node_value_t *S = St->item;
@@ -133,6 +161,52 @@ void code_funcao(iks_tree_t **ast) {
     F->code = iks_list_concat(F->code,Snext->code);
   }
 }
+
+/******************************************************************************
+* Objective: Generate code to return stmt
+* Input: pointer of pointer of iks_tree ast
+* Output:	none
+******************************************************************************/
+void code_return(iks_tree_t **ast) {
+	
+	iks_tree_t *E1t = (*ast)->children->item;
+	iks_ast_node_value_t *E1 = E1t->item;
+	code_generator(&E1t);
+
+	iks_ast_node_value_t *B = (*ast)->item;
+
+	B->code = E1->code;
+
+	iloc_t *iloc;
+
+	if (curr_function->iks_type==IKS_INT) {
+		iloc = new_iloc(NULL, new_iloc_oper(op_i2i,
+																				E1->temp.name,
+																				NULL,
+																				NULL,
+																				curr_function->temp.name,
+																				NULL,
+																				NULL));
+	}
+	else if (curr_function->iks_type==IKS_CHAR) {
+		iloc = new_iloc(NULL, new_iloc_oper(op_c2c,
+																				E1->temp.name,
+																				NULL,
+																				NULL,
+																				curr_function->temp.name,
+																				NULL,
+																				NULL));
+
+	}
+	else {
+		printf("return not supported. :p\n");
+	}
+
+	iks_list_append(B->code,iloc);
+
+}
+
+
 
 /******************************************************************************
 * Objective: code for bloco 
@@ -1345,6 +1419,7 @@ void code_generator(iks_tree_t **ast) {
 			code_attr(ast);
 			break;
 		case IKS_AST_RETURN:
+			code_return(ast);
 			//printf("\nIKS_AST_RETURN", n->type);
 			break;
 		case IKS_AST_BLOCO:
@@ -1622,6 +1697,11 @@ void iloc_oper_print(iks_list_t *opers) {
 																		(char*)oper->src_operands->next->item,
 																		(char*)oper->dst_operands->item);
 				break;
+			case op_addI:
+				printf("addI %s, %s => %s",	(char*)oper->src_operands->item,
+																		(char*)oper->src_operands->next->item,
+																		(char*)oper->dst_operands->item);
+				break;
 			case op_sub:
 				printf("sub %s, %s => %s",	(char*)oper->src_operands->item,
 																		(char*)oper->src_operands->next->item,
@@ -1711,6 +1791,10 @@ void iloc_oper_print(iks_list_t *opers) {
         printf("c2c %s => %s",(char*)oper->src_operands->item,
     													(char*)oper->dst_operands->item);
         break;
+      case op_store:
+      	printf("store %s => %s",(char*)oper->src_operands->item,
+																(char*)oper->dst_operands->item);
+				break;
       case op_storeAI:
       	printf("storeAI %s => %s, %s",(char*)oper->src_operands->item,
 																			(char*)oper->dst_operands->item,

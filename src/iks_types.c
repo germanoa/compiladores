@@ -9,7 +9,6 @@
 static inline void __scope_init(scope_t *scope) {
 	//scope->st = new_iks_stack();
 	scope->st = new_iks_dict();
-	scope->base_addr = 0;
 	scope->next_addr = 0;
 }
 

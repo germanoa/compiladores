@@ -28,6 +28,13 @@
 int reg_ctrl;
 int label_ctrl;
 
+/*
+*
+* Current function, used to set return value
+* and to get ra size.
+*
+*/
+iks_ast_node_value_t *curr_function;
 
 /*
 *
@@ -191,5 +198,14 @@ void iloc_print(iks_list_t *code);
 ******************************************************************************/
 iks_list_t *get_coercion_code(iks_ast_node_value_t *n);
 
+/*
+*
+* Different data types of return
+*
+*/
+union ret_value {
+	int i;
+	char c;
+};
 
 #endif /* __IKS_ILOC_H__ */

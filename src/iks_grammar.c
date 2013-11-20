@@ -225,7 +225,12 @@ int decl_symbol(iks_grammar_symbol_t *s,int iks_type, int decl_type, scope_t *sc
 	s->scope_type = scope->type;
 
 	if (s->decl_type==IKS_DECL_VAR) {
-		s->addr_offset = scope->next_addr;
+		if (scope->type==IKS_SCOPE_LOCAL) {
+			s->addr_offset = scope->next_addr + 16; //RA offset
+		}
+		else {
+			s->addr_offset = scope->next_addr;
+		}
 		scope->next_addr += s->iks_size;
 	}
   

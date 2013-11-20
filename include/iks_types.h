@@ -71,7 +71,6 @@ struct scope_t {
 	//iks_stack_t *st; //symbol tables 
 	iks_dict_t *st; //symbol tables 
 	int type;	
-	int base_addr;	
 	int next_addr;	
 };
 scope_t *scope;
