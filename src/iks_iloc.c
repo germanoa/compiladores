@@ -7,32 +7,6 @@
 #include "iks_tree.h"
 #include "parser.h"
 
-
-/******************************************************************************
-* Objective: generate code for a function call
-* Input: pointer of pointer of iks_tree
-* Output:	none	
-******************************************************************************/
-void code_chamada_funcao(iks_tree_t **ast) {
-	iks_ast_node_value_t *F = (*ast)->item;
-	iks_tree_t *St = (*ast)->children->item;
-	
-	if (St) {
-		iks_ast_node_value_t *S = St->item;
-    //gera(goto funcao)
-    iloc_t *iloc;
-    iloc = new_iloc(NULL, new_iloc_oper(op_jumpI,
-	  																		NULL,
-	  																		NULL,
-	  																		NULL,
-	  																		S->symbol->value,
-	  																		NULL,
-	  																		NULL));
-    iks_list_append(F->code, (void*)iloc);
-	}
-}
-
-
 /******************************************************************************
 * Objective: generate code for general program
 * Input: pointer of pointer of iks_tree
@@ -63,6 +37,52 @@ void code_programa(iks_tree_t **ast) {
 }
 
 /******************************************************************************
+* Objective: generate code for a function call
+* Input: pointer of pointer of iks_tree
+* Output:	none	
+******************************************************************************/
+void code_chamada_funcao(iks_tree_t **ast) {
+	iks_ast_node_value_t *F = (*ast)->item;
+	iks_tree_t *St = (*ast)->children->item;
+	
+	if (St) {
+		iks_ast_node_value_t *S = St->item;
+
+
+  /* RA fields (offsets)
+    0: endereco de retorno da execucao. label eh um endereco?
+    1: endereco onde deve ser escrito valor de retorno
+    2: VE
+    3: VD
+    4-x: parametros
+    x-y: variaveis locais
+    y-: estado da maquina
+  */
+
+    //sequencia de chamada
+    //1. novo ra = fp <- fp + curr_ra_size
+    //4. cria e coloca label de retorno
+    //2. VE = NULL, pois escopo simples.
+    //7. VD = antigo fp
+    //3. Empilha parametros
+
+    //5. transfere controle para chamado
+    iloc_t *iloc;
+    iloc = new_iloc(NULL, new_iloc_oper(op_jumpI,
+	  																		NULL,
+	  																		NULL,
+	  																		NULL,
+	  																		S->symbol->value,
+	  																		NULL,
+	  																		NULL));
+    iks_list_append(F->code, (void*)iloc);
+
+    //printa label de retorno.
+
+	}
+}
+
+/******************************************************************************
 * Objective: generate code for a function
 * Input: pointer of pointer of iks_tree
 * Output:	none	
@@ -75,8 +95,34 @@ void code_funcao(iks_tree_t **ast) {
 		iks_ast_node_value_t *S = St->item;
 		S->temp.next = label_generator();
 		code_generator(&St);
+
+    //sequencia de chamada
+    //8. aloca variaveis locais
+    //6. salva estado da maquina
+
+    // codigo proprio da funcao
 		F->code = iks_list_concat(F->code, S->code);
     label_insert(F->code,F->symbol->value);
+
+
+    //sequencia de retorno
+    //1,2. prepara  e disponibiliza parametros de retorno
+
+    //3. atualiza fp e sp
+
+    //4. restore do estado de maquina do chamador  
+
+    //5. transfere o controle.
+    //gera(goto return address, the first element of RA)
+    iloc_t *iloc;
+    iloc = new_iloc(NULL, new_iloc_oper(op_jump,
+	  																		NULL,
+	  																		NULL,
+	  																		NULL,
+	  																		"fp",
+	  																		NULL,
+	  																		NULL));
+    iks_list_append(F->code, (void*)iloc);
 	}
 
   //if there is next command
@@ -1394,15 +1440,12 @@ char *label_generator(){
 	char *prefix, *new_label;
   
 	prefix = malloc (sizeof (char));
-	new_label = malloc (sizeof (char) * LABEL_WIDTH);
-
 	strcpy (prefix, "l");
+
 	sprintf(temp_label, "%d", label_ctrl); 
 	label_ctrl++;
   
-	strcpy (new_label, temp_label);
-
-	new_label = strcat(prefix, new_label);
+	new_label = strcat(prefix, temp_label);
 
 	return new_label;
 }
@@ -1432,15 +1475,12 @@ char *register_generator(){
 	char *prefix, *new_register;
   
 	prefix = malloc (sizeof (char));
-	new_register = malloc (sizeof (char) * REGISTER_WIDTH);
-
 	strcpy (prefix, "r");
+
 	sprintf(temp_register, "%d", reg_ctrl); 
 	reg_ctrl++;
 
-	strcpy (new_register, temp_register);
-
-	new_register = strcat(prefix, new_register);
+	new_register = strcat(prefix, temp_register);
 
 	return new_register;
 }
@@ -1596,6 +1636,9 @@ void iloc_oper_print(iks_list_t *opers) {
 				printf("div %s, %s => %s",	(char*)oper->src_operands->item,
 																		(char*)oper->src_operands->next->item,
 																		(char*)oper->dst_operands->item);
+				break;
+			case op_jump:
+				printf("jump -> %s",(char*)oper->dst_operands->item);
 				break;
 			case op_jumpI:
 				printf("jumpI -> %s",(char*)oper->dst_operands->item);
