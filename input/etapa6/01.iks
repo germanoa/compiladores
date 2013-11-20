@@ -1,0 +1,15 @@
+int:a;
+
+
+int:funcao()
+  int:x;
+  {
+    x = 2;
+  }
+
+
+
+int:main() {
+	a = 1;
+  funcao();
+}
