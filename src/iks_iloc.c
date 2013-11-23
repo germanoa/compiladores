@@ -44,6 +44,8 @@ void code_programa(iks_tree_t **ast) {
 void code_chamada_funcao(iks_tree_t **ast) {
 	iks_ast_node_value_t *F = (*ast)->item;
 	iks_tree_t *St = (*ast)->children->item;
+
+	F->temp.name = F->symbol->ret_reg;
 	
 	if (St) {
 		iks_ast_node_value_t *S = St->item;
@@ -72,16 +74,27 @@ void code_chamada_funcao(iks_tree_t **ast) {
     iks_list_append(F->code, (void*)iloc1);
     //4. label de retorno
 		F->temp.next = label_generator();
-		//fazer um TBL?
+		char *ret_reg = register_generator();
+
     iloc_t *iloc2;
-    iloc2 = new_iloc(NULL, new_iloc_oper(op_store,
+    iloc2 = new_iloc(NULL, new_iloc_oper(op_tbl,
+																				ret_reg,
 	  																		F->temp.next,
+	  																		NULL,
+	  																		NULL,
+	  																		NULL,
+	  																		NULL));
+    iks_list_append(F->code, (void*)iloc2);
+
+    iloc_t *iloc3;
+    iloc3 = new_iloc(NULL, new_iloc_oper(op_store,
+	  																		ret_reg,
 	  																		NULL,
 	  																		NULL,
 	  																		"fp",
 	  																		NULL,
 	  																		NULL));
-    iks_list_append(F->code, (void*)iloc2);
+    iks_list_append(F->code, (void*)iloc3);
 		
 		
 
@@ -116,8 +129,11 @@ void code_funcao(iks_tree_t **ast) {
 	iks_tree_t *St = (*ast)->children->item;
 
 	//registrador onde deve ser escrito valor de retorno
-  curr_function = F;
 	F->temp.name = register_generator();
+  curr_function = F;
+
+	F->symbol->ret_reg = F->temp.name;
+
 	
 	if (St) {
 		iks_ast_node_value_t *S = St->item;
@@ -184,7 +200,8 @@ void code_return(iks_tree_t **ast) {
 																				E1->temp.name,
 																				NULL,
 																				NULL,
-																				curr_function->temp.name,
+																				//curr_function->temp.name,
+																				curr_function->symbol->ret_reg,
 																				NULL,
 																				NULL));
 	}
@@ -193,7 +210,8 @@ void code_return(iks_tree_t **ast) {
 																				E1->temp.name,
 																				NULL,
 																				NULL,
-																				curr_function->temp.name,
+																				//curr_function->temp.name,
+																				curr_function->symbol->ret_reg,
 																				NULL,
 																				NULL));
 
@@ -1691,6 +1709,10 @@ void iloc_oper_print(iks_list_t *opers) {
 
 		switch(oper->opcode) {
 			case op_nop:
+				break;
+			case op_tbl:
+				printf("tbl %s, %s",	(char*)oper->src_operands->item,
+																		(char*)oper->src_operands->next->item);
 				break;
 			case op_add:
 				printf("add %s, %s => %s",	(char*)oper->src_operands->item,

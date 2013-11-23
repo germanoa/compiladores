@@ -80,7 +80,8 @@ typedef enum {
 	op_i2i, op_c2c, op_c2i, op_i2c,
 	op_cmp_LT, op_cmp_LE, op_cmp_EQ, op_cmp_GE, op_cmp_GT, op_cmp_NE, op_cbr,
 	op_jump, op_jumpI,
- 	op_nop
+ 	op_nop,
+	op_tbl
  } opcode_t;
 
 

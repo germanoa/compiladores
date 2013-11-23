@@ -892,7 +892,7 @@ func_call:
 			s = n->symbol;
 			/* 3.A.17 */
 			if(symbol_is_decl_type(s,IKS_DECL_FUNCTION)) {
-				iks_tree_t *x = iks_ast_new_node(IKS_AST_CHAMADA_DE_FUNCAO,NULL);
+				iks_tree_t *x = iks_ast_new_node(IKS_AST_CHAMADA_DE_FUNCAO,s);
 				iks_ast_node_value_t *xn = x->item;
 				xn->iks_type = n->iks_type;
 				iks_ast_connect_nodes(x,$id);

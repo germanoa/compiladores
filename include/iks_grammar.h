@@ -36,6 +36,7 @@ struct iks_grammar_symbol_t {
 		int addr_offset; //offset of base addr from scope
 		unsigned int num_dimen; //number of dimensions the vector has
 		iks_list_t *dimens; //list of dimension sizes
+		char *ret_reg; // to store register with return value from function
 };
 
 /**
