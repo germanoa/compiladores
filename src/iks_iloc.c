@@ -73,7 +73,7 @@ void code_chamada_funcao(iks_tree_t **ast) {
 	  																		"fp",
 	  																		"12",
 	  																		NULL));
-    iks_list_append(F->code, (void*)iloc1);
+    iks_list_append(F->code, (void*)iloc0);
 
 
     //1. novo ra = fp <- fp + curr_ra_size
