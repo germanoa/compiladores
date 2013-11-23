@@ -50,18 +50,32 @@ void code_chamada_funcao(iks_tree_t **ast) {
 	if (St) {
 		iks_ast_node_value_t *S = St->item;
 
-
   /* RA fields (offsets)
     0: endereco de retorno da execucao. label eh um endereco?
-    1: endereco onde deve ser escrito valor de retorno
-    2-x: variaveis locais
+    4: endereco onde deve ser escrito valor de retorno
+    8: VE
+    12: VD
+    16-x: variaveis locais
     x-y: parametros
-    y+1: VE
-    y+2: VD
     y+3-z: estado da maquina
   */
 
-    //sequencia de chamada
+    //SEQUENCIA DE CHAMADA
+
+    //2. VE = NULL, pois escopo simples.
+
+    //7. VD = antigo fp
+    iloc_t *iloc0;
+    iloc0 = new_iloc(NULL, new_iloc_oper(op_storeAI,
+	  																		"fp",
+	  																		"NULL",
+	  																		NULL,
+	  																		"fp",
+	  																		"12",
+	  																		NULL));
+    iks_list_append(F->code, (void*)iloc1);
+
+
     //1. novo ra = fp <- fp + curr_ra_size
     iloc_t *iloc1;
     iloc1 = new_iloc(NULL, new_iloc_oper(op_addI,
@@ -95,12 +109,9 @@ void code_chamada_funcao(iks_tree_t **ast) {
 	  																		NULL,
 	  																		NULL));
     iks_list_append(F->code, (void*)iloc3);
-		
-		
 
-    //2. VE = NULL, pois escopo simples.
-    //7. VD = antigo fp
     //3. Empilha parametros
+		//TODO
 
     //5. transfere controle para chamado
     iloc_t *iloc;
@@ -140,21 +151,30 @@ void code_funcao(iks_tree_t **ast) {
 		S->temp.next = label_generator();
 		code_generator(&St);
 
-    //sequencia de chamada
+    //SEQUENCIA DE CHAMADA
     //8. aloca variaveis locais
+		//TODO
+
     //6. salva estado da maquina
+		// professor informou que basta reservar area
+		// ou seja, reservar na definicao do RA size
 
     // codigo proprio da funcao
 		F->code = iks_list_concat(F->code, S->code);
     label_insert(F->code,F->symbol->value);
 
 
-    //sequencia de retorno
+    //SEQUENCIA DE RETORNO
+
     //1,2. prepara  e disponibiliza parametros de retorno
+		//implementado em code_return + registrador para Funcao->temp.name		
 
     //3. atualiza fp e sp
+		//TODO
 
-    //4. restore do estado de maquina do chamador  
+    //4. restore do estado de maquina do chamador
+		// professor informou que basta reservar area
+		// ou seja, reservar na definicao do RA size
 
     //5. transfere o controle.
     //gera(goto return address, the first element of RA)
