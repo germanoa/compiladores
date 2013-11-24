@@ -16,11 +16,11 @@ void code_program(iks_tree_t **ast) {
 	iks_ast_node_value_t *P = (*ast)->item;
 	iks_tree_t *Ft = (*ast)->children->item;
 
-	if(Ft) { //because program can be empty
+	if(Ft) { // because program can be empty
 		iks_ast_node_value_t *F = Ft->item;
 		code_generator(&Ft);
 
-    //gera(goto main)
+    // gera(goto main)
     iloc_t *iloc;
     iloc = new_iloc(NULL, new_iloc_oper(op_jumpI,
 	  																		NULL,
@@ -50,21 +50,21 @@ void code_function_call(iks_tree_t **ast) {
 	if (St) {
 		iks_ast_node_value_t *S = St->item;
 
-  /* RA fields (offsets)
-    0: endereco de retorno da execucao. label eh um endereco?
-    4: endereco onde deve ser escrito valor de retorno
-    8: VE
-    12: VD
-    16-x: variaveis locais
-    x-y: parametros
-    y+3-z: estado da maquina
-  */
+		/* RA fields (offsets)
+		 * 0: return address of execution. is label an address?
+		 * 4: address where must be write the return value
+		 * 8: VE
+ 		 * 12: VD
+  	 * 16-x: local variables
+	   * x-y: parameters
+		 * y+3-z: machine state
+ 		*/ 
 
-    //SEQUENCIA DE CHAMADA
+    // CALL SEQUENCE 
 
-    //2. VE = NULL, pois escopo simples.
+    // 2. VE = NULL, because simple escope
 
-    //7. VD = antigo fp
+    // 7. VD = old fp
     iloc_t *iloc0;
     iloc0 = new_iloc(NULL, new_iloc_oper(op_storeAI,
 	  																		"fp",
@@ -76,7 +76,7 @@ void code_function_call(iks_tree_t **ast) {
     iks_list_append(F->code, (void*)iloc0);
 
 
-    //1. novo ra = fp <- fp + curr_ra_size
+    // 1. new ra = fp <- fp + curr_ra_size
     iloc_t *iloc1;
     iloc1 = new_iloc(NULL, new_iloc_oper(op_addI,
 	  																		"fp",
@@ -86,7 +86,8 @@ void code_function_call(iks_tree_t **ast) {
 	  																		NULL,
 	  																		NULL));
     iks_list_append(F->code, (void*)iloc1);
-    //4. label de retorno
+
+    // 4. return label
 		F->temp.next = label_generator();
 		char *ret_reg = register_generator();
 
@@ -110,10 +111,10 @@ void code_function_call(iks_tree_t **ast) {
 	  																		NULL));
     iks_list_append(F->code, (void*)iloc3);
 
-    //3. Empilha parametros
-		//TODO
+    // 3. stack parameters
+		// TO DO
 
-    //5. transfere controle para chamado
+    // 5. tranfer the control to call
     iloc_t *iloc;
     iloc = new_iloc(NULL, new_iloc_oper(op_jumpI,
 	  																		NULL,
@@ -124,7 +125,7 @@ void code_function_call(iks_tree_t **ast) {
 	  																		NULL));
     iks_list_append(F->code, (void*)iloc);
 
-    //printa label de retorno.
+    // print return label
 		label_append(F->code,F->temp.next);
 
 	}
@@ -139,7 +140,7 @@ void code_function(iks_tree_t **ast) {
 	iks_ast_node_value_t *F = (*ast)->item;
 	iks_tree_t *St = (*ast)->children->item;
 
-	//registrador onde deve ser escrito valor de retorno
+	// register where must to be write the return value
 	F->temp.name = register_generator();
   curr_function = F;
 
@@ -151,33 +152,33 @@ void code_function(iks_tree_t **ast) {
 		S->temp.next = label_generator();
 		code_generator(&St);
 
-    //SEQUENCIA DE CHAMADA
-    //8. aloca variaveis locais
-		//TODO
+    // CALL SEQUENCE
+    // 8. memory alloc for local variables
+		// TO DO
 
-    //6. salva estado da maquina
-		// professor informou que basta reservar area
-		// ou seja, reservar na definicao do RA size
+    // 6. save the machine state
+		// Scnhorr told that the area reservation is enough,
+		// in other words, to reserve in RA size definition
 
-    // codigo proprio da funcao
+    // own function code
 		F->code = iks_list_concat(F->code, S->code);
     label_insert(F->code,F->symbol->value);
 
 
-    //SEQUENCIA DE RETORNO
+    // CALL SEQUENCE
 
-    //1,2. prepara  e disponibiliza parametros de retorno
-		//implementado em code_return + registrador para Funcao->temp.name		
+    // 1,2. prepare and make available return values
+		// implementing in code_return + registter to Function->temp.name		
 
-    //3. atualiza fp e sp
-		//TODO
+    // 3. refresh fp and sp
+		// TODO
 
-    //4. restore do estado de maquina do chamador
-		// professor informou que basta reservar area
-		// ou seja, reservar na definicao do RA size
+    // 4. restore of machine state of caller
+		// Scnhorr told that the area reservation is enough,
+		// in other words, to reserve in RA size definition
 
-    //5. transfere o controle.
-    //gera(goto return address, the first element of RA)
+    // 5. transfer the controll.
+    // gera(goto return address, the first element of RA)
     iloc_t *iloc;
     iloc = new_iloc(NULL, new_iloc_oper(op_jump,
 	  																		NULL,
@@ -189,7 +190,7 @@ void code_function(iks_tree_t **ast) {
     iks_list_append(F->code, (void*)iloc);
 	}
 
-  //if there is next command
+  // if there is next command
   if(iks_list_size((*ast)->children)>1) {
     iks_tree_t *Stnext = (*ast)->children->next->item;
     code_generator(&Stnext);
@@ -220,7 +221,7 @@ void code_return(iks_tree_t **ast) {
 																				E1->temp.name,
 																				NULL,
 																				NULL,
-																				//curr_function->temp.name,
+																				// curr_function->temp.name,
 																				curr_function->symbol->ret_reg,
 																				NULL,
 																				NULL));
@@ -230,7 +231,7 @@ void code_return(iks_tree_t **ast) {
 																				E1->temp.name,
 																				NULL,
 																				NULL,
-																				//curr_function->temp.name,
+																				// curr_function->temp.name,
 																				curr_function->symbol->ret_reg,
 																				NULL,
 																				NULL));
@@ -255,7 +256,7 @@ void code_bloco(iks_tree_t **ast) {
 	iks_ast_node_value_t *P = (*ast)->item;
 	iks_tree_t *Ft = (*ast)->children->item;
 
-	if(Ft) { //because program can be empty
+	if(Ft) { // because program can be empty
 		iks_ast_node_value_t *F = Ft->item;
 		code_generator(&Ft);
 		P->code = F->code;
@@ -271,10 +272,10 @@ void code_bloco(iks_tree_t **ast) {
 void code_id_lits(iks_tree_t **ast) {
 	iks_ast_node_value_t *E = (*ast)->item;
 
-	//registrador que receberah conteudo de id na memoria
+	// register that will receive memory content of id
 	E->temp.name = register_generator();
 
-	//registrador que receberah endereco na memoria deste id
+	// register that will receive the address of this id
 	char *reg_temp = register_generator();
 
 	char *addr = int_to_char(E->symbol->addr_offset);
@@ -297,7 +298,7 @@ void code_id_lits(iks_tree_t **ast) {
 																				NULL,
 																				NULL));
 
-	// carregando conteudo da memoria para registrador E->temp.name
+	// loading memory content to register E->temp.name
 	switch(E->iks_type) {
 		case IKS_INT:
 			load = new_iloc(NULL, new_iloc_oper(op_load,
@@ -323,7 +324,7 @@ void code_id_lits(iks_tree_t **ast) {
 	iks_list_append(E->code, loadAI);
 	iks_list_append(E->code, load);
 
-	//iloc_print(E->code);
+	// iloc_print(E->code);
 }
 
 /******************************************************************************
@@ -338,7 +339,7 @@ void code_literal(iks_tree_t **ast) {
   
   switch(S->symbol->token_type) {
     case TK_LIT_TRUE:
-      //gera(goto B.t)
+      // gera(goto B.t)
       iloc = new_iloc(NULL, new_iloc_oper(op_jumpI,
 																					NULL,
 																					NULL,
@@ -349,7 +350,7 @@ void code_literal(iks_tree_t **ast) {
       iks_list_append(S->code, (void*)iloc);
       break;
     case TK_LIT_FALSE:
-      //gera(goto B.f)
+      // gera(goto B.f)
       iloc = new_iloc(NULL, new_iloc_oper(op_jumpI,
 																					NULL,
 																					NULL,
@@ -391,7 +392,7 @@ void code_literal(iks_tree_t **ast) {
       fprintf(stderr,"error at code_literal: token type: %d\n",S->symbol->token_type);
   }
 
-	//iloc_print(S->code);
+	// iloc_print(S->code);
 }
 
 /******************************************************************************
@@ -427,7 +428,7 @@ void code_arit_sum(iks_tree_t **ast) {
  
 	B->code = iks_list_concat(B->code,arit_sum);	
 
-	//iloc_print(B->code);
+	// iloc_print(B->code);
 }
 
 
@@ -464,7 +465,7 @@ void code_arit_sub(iks_tree_t **ast) {
  
 	B->code = iks_list_concat(B->code,arit_sub);
 
-	//iloc_print(B->code);
+	// iloc_print(B->code);
 }
 
 
@@ -501,7 +502,7 @@ void code_arit_mul(iks_tree_t **ast) {
 
 	B->code = iks_list_concat(B->code,arit_mul);
 
-	//iloc_print(B->code);	
+	// iloc_print(B->code);	
 }
 
 
@@ -538,7 +539,7 @@ void code_arit_div(iks_tree_t **ast) {
  
 	B->code = iks_list_concat(B->code,arit_div);	
 
-	//iloc_print(B->code);
+	// iloc_print(B->code);
 }
 
 
@@ -570,7 +571,7 @@ void code_arim_inv(iks_tree_t **ast) {
  
 	B->code = iks_list_concat(B->code,arit_inv);	
 
-	//iloc_print(B->code);
+	// iloc_print(B->code);
 }
 
 
@@ -595,7 +596,7 @@ void code_log_neg(iks_tree_t **ast) {
 
 	B->code = E1->code;	
 
-	//iloc_print(B->code);
+	// iloc_print(B->code);
 }
 
 
@@ -714,7 +715,7 @@ void code_comp_eq(iks_tree_t **ast) {
 
 	B->code = iks_list_concat(B->code,comp_eq);
 
-	//iloc_print(B->code);
+	// iloc_print(B->code);
 
 }
 
@@ -768,7 +769,7 @@ void code_comp_ne(iks_tree_t **ast) {
 
 	B->code = iks_list_concat(B->code,comp_ne);
 
-	//iloc_print(B->code);
+	// iloc_print(B->code);
 }
 
 
@@ -821,7 +822,7 @@ void code_comp_le(iks_tree_t **ast) {
 
 	B->code = iks_list_concat(B->code,comp_le);
 
-	//iloc_print(B->code);
+	// iloc_print(B->code);
 }		
 
 
@@ -874,7 +875,7 @@ void code_comp_ge(iks_tree_t **ast) {
 
 	B->code = iks_list_concat(B->code,comp_ge);
 
-	//iloc_print(B->code);
+	// iloc_print(B->code);
 }	
 
 
@@ -927,7 +928,7 @@ void code_comp_lt(iks_tree_t **ast) {
 
 	B->code = iks_list_concat(B->code,comp_lt);
 
-	//iloc_print(B->code);
+	// iloc_print(B->code);
 }
 
 
@@ -980,7 +981,7 @@ void code_comp_gt(iks_tree_t **ast) {
 
 	B->code = iks_list_concat(B->code,comp_gt);
 
-	//iloc_print(B->code);
+	// iloc_print(B->code);
 }
 
 /******************************************************************************
@@ -1015,7 +1016,7 @@ void code_if(iks_tree_t **ast){
 
 	label_append(S->code,S->temp.next);
 
-	//if there is next command
+	// if there is next command
 	if(iks_list_size((*ast)->children)>2) {
 		iks_tree_t *Stnext = (*ast)->children->next->next->item;
 		code_generator(&Stnext);
@@ -1077,7 +1078,7 @@ void code_if_else(iks_tree_t **ast) {
 
 	label_append(S->code,S->temp.next);
 
-	//if there is next command
+	// if there is next command
 	if(iks_list_size((*ast)->children)>3) {
 		iks_tree_t *Stnext = (*ast)->children->next->next->item;
 		code_generator(&Stnext);
@@ -1132,7 +1133,7 @@ void code_while_do(iks_tree_t **ast) {
 
 	label_append(S->code,S->temp.next);
 
-	//if there is next command
+	// if there is next command
 	if(iks_list_size((*ast)->children)>2) {
 		iks_tree_t *Stnext = (*ast)->children->next->next->item;
 		code_generator(&Stnext);
@@ -1176,7 +1177,7 @@ void code_do_while(iks_tree_t **ast) {
 
 	label_append(S->code,S->temp.next);
 
-	//if there is next command
+	// if there is next command
 	if(iks_list_size((*ast)->children)>2) {
 		iks_tree_t *Stnext = (*ast)->children->next->next->item;
 		code_generator(&Stnext);
@@ -1187,8 +1188,8 @@ void code_do_while(iks_tree_t **ast) {
 
 /******************************************************************************
 * Objective: recursively calculate dk (used in e = base + dk*w)
-* Input: pointer to pointer to tree containing the vector node
-				 current dimension
+* Input: pointer to pointer to tree containing the vector node,
+				 current dimension,
 				 list of iloc codes
 * Output:	string containing register containing dk
 ******************************************************************************/
@@ -1209,15 +1210,15 @@ char *get_dk_reg(iks_tree_t *ast, unsigned int current_dimen, iks_list_t **code)
 		iks_grammar_symbol_t *IDs = IDn->symbol;
 		
 		iks_list_t *n_dimen = IDs->dimens;
-		iks_list_t *i_dimen = ast->children->next; //starts on next since first child is ID
+		iks_list_t *i_dimen = ast->children->next; // starts on next since first child is ID
 		
 		int i = 1;
 		for(i = 1; i < current_dimen; i++) {
-			n_dimen = n_dimen->next; //runs through symbol's dimensions to get nk
-			i_dimen = i_dimen->next; //runs through node's dimensions to get ik
+			n_dimen = n_dimen->next; // runs through symbol's dimensions to get nk
+			i_dimen = i_dimen->next; // runs through node's dimensions to get ik
 		}
 		
-		//getting nk
+		// getting nk
 		char *nk = int_to_char(*(int *)n_dimen->item);
 		
 		char *nk_reg = register_generator();
@@ -1228,10 +1229,10 @@ char *get_dk_reg(iks_tree_t *ast, unsigned int current_dimen, iks_list_t **code)
 																										nk_reg,
 																										NULL,
 																										NULL));
-		//free(nk); //can I free this right now or is it used inside iloc_t?
+		// free(nk); // can I free this right now or is it used inside iloc_t?
 		iks_list_append(*code,nk_load);
 		
-		//dk-1*nk
+		// dk-1*nk
 		iloc_t *multiply = new_iloc(NULL, new_iloc_oper(op_mult,
 																										prev_dk_reg,
 																										nk_reg,
@@ -1247,7 +1248,7 @@ char *get_dk_reg(iks_tree_t *ast, unsigned int current_dimen, iks_list_t **code)
 		iks_ast_node_value_t *ik_node = ik_tree->item;
 		*code = iks_list_concat(*code,ik_node->code);
 		
-		//(dk-1*nk) + ik
+		// (dk-1*nk) + ik
 		iloc_t *add = new_iloc(NULL, new_iloc_oper(	op_add,
 																								prev_dk_reg,
 																								ik_node->temp.name,
@@ -1285,7 +1286,7 @@ void code_vector(iks_tree_t **ast) {
 																								NULL));
 	iks_list_append(vector_code,w_load);
 	
-	//dk*w
+	// dk*w
 	iloc_t *multiply = new_iloc(NULL, new_iloc_oper(op_mult,
 																									dk_reg,
 																									w_reg,
@@ -1306,7 +1307,7 @@ void code_vector(iks_tree_t **ast) {
 																										NULL));
 	iks_list_append(vector_code,base_load);
 	
-	//base + (dk*w)
+	// base + (dk*w)
 	iloc_t *add = new_iloc(NULL, new_iloc_oper(	op_add,
 																							base_reg,
 																							dk_reg,
@@ -1334,7 +1335,7 @@ void code_attr(iks_tree_t **ast) {
 	iks_list_t *second_child_in_list = first_child_in_list->next;
 	iks_list_t *third_child_in_list = second_child_in_list->next;
 	
-	iks_tree_t *IDorIDV_tree = first_child_in_list->item; //IDorIDV: this could be a vector attribution
+	iks_tree_t *IDorIDV_tree = first_child_in_list->item; // IDorIDV: this could be a vector attribution
 	iks_ast_node_value_t *IDorIDV = IDorIDV_tree->item;
 
 	iks_tree_t *Et = (*ast)->children->next->item;
@@ -1343,7 +1344,7 @@ void code_attr(iks_tree_t **ast) {
 	
 	S->code = iks_list_concat(S->code,E->code);
 
-	//S->temp.name = register_generator();
+	// S->temp.name = register_generator();
 
 	iloc_t *attr = NULL;
 	opcode_t op = op_storeAI;
@@ -1368,7 +1369,7 @@ void code_attr(iks_tree_t **ast) {
 																				IDorIDV->temp.name,
 																				NULL));
 	}
-	else { //this is not a vector attribution
+	else { // this is not a vector attribution
 		iks_ast_node_value_t *ID = IDorIDV;
 		char *addr = int_to_char(ID->symbol->addr_offset);
 		
@@ -1396,7 +1397,7 @@ void code_attr(iks_tree_t **ast) {
 	label_append(S->code,S->temp.next);
 
 	
-	if(third_child_in_list != first_child_in_list) { //there's a command after this attribution
+	if(third_child_in_list != first_child_in_list) { // there's a command after this attribution
 		code_generator((iks_tree_t**)&third_child_in_list->item);
 		
 		iks_ast_node_value_t *next_command_tree = ((iks_tree_t *)third_child_in_list->item)->item;
@@ -1404,7 +1405,7 @@ void code_attr(iks_tree_t **ast) {
 		S->code = iks_list_concat(S->code,next_command_tree->code);
 	}
 	
-	//iloc_print(S->code);
+	// iloc_print(S->code);
 
 }
 
@@ -1423,120 +1424,120 @@ void code_generator(iks_tree_t **ast) {
 	
 	switch(n->type) {
 		case IKS_AST_PROGRAMA:
-			//printf("\nIKS_AST_PROGRAMA", n->type);
+			// printf("\nIKS_AST_PROGRAMA", n->type);
 			code_program(ast);
 			break;
 		case IKS_AST_FUNCAO:
-			//printf("\nIKS_AST_FUNCAO", n->type);
+			// printf("\nIKS_AST_FUNCAO", n->type);
 			code_function(ast);
 			break;
 		case IKS_AST_IF:
-			//printf("\nIKS_AST_IF", n->type);
+			// printf("\nIKS_AST_IF", n->type);
 			code_if(ast);
 			break;
 		case IKS_AST_IF_ELSE:
-			//printf("\nIKS_AST_IF_ELSE", n->type);
+			// printf("\nIKS_AST_IF_ELSE", n->type);
 			code_if_else(ast);
 			break;
 		case IKS_AST_DO_WHILE:
-			//printf("\nIKS_AST_DO_WHILE", n->type);
+			// printf("\nIKS_AST_DO_WHILE", n->type);
 			code_do_while(ast);
 			break;
 		case IKS_AST_WHILE_DO:
-			//printf("\nIKS_AST_WHILE_DO", n->type);
+			// printf("\nIKS_AST_WHILE_DO", n->type);
 			code_while_do(ast);
 			break;
 		case IKS_AST_INPUT:
-			//printf("\nIKS_AST_INPUT", n->type);
+			// printf("\nIKS_AST_INPUT", n->type);
 			break;
 		case IKS_AST_OUTPUT:
-			//printf("\nIKS_AST_OUTPUT", n->type);
+			// printf("\nIKS_AST_OUTPUT", n->type);
 			break;
 		case IKS_AST_ATRIBUICAO:
-			//printf("\nIKS_AST_ATRIBUICAO", n->type);
+			// printf("\nIKS_AST_ATRIBUICAO", n->type);
 			code_attr(ast);
 			break;
 		case IKS_AST_RETURN:
 			code_return(ast);
-			//printf("\nIKS_AST_RETURN", n->type);
+			// printf("\nIKS_AST_RETURN", n->type);
 			break;
 		case IKS_AST_BLOCO:
-			//printf("\nIKS_AST_BLOCO", n->type);
+			// printf("\nIKS_AST_BLOCO", n->type);
 			code_bloco(ast);
 			break;
 		case IKS_AST_IDENTIFICADOR:
-			//printf("\nIKS_AST_IDENTIFICADOR", n->type);
+			// printf("\nIKS_AST_IDENTIFICADOR", n->type);
 			code_id_lits(ast);
 			break;
 		case IKS_AST_LITERAL:
-			//printf("\nIKS_AST_LITERAL", n->type);
+			// printf("\nIKS_AST_LITERAL", n->type);
 			code_literal(ast);
 			break;
 		case IKS_AST_ARIM_SOMA:
-			//printf("\nIKS_AST_ARIM_SOMA", n->type);
+			// printf("\nIKS_AST_ARIM_SOMA", n->type);
 			code_arit_sum(ast);
 			break;
 		case IKS_AST_ARIM_SUBTRACAO:
-			//printf("\nIKS_AST_ARIM_SUBTRACAO", n->type);
+			// printf("\nIKS_AST_ARIM_SUBTRACAO", n->type);
 			code_arit_sub(ast);
 			break;
 		case IKS_AST_ARIM_MULTIPLICACAO:
-			//printf("\nIKS_AST_ARIM_MULTIPLICACAO", n->type);
+			// printf("\nIKS_AST_ARIM_MULTIPLICACAO", n->type);
 			code_arit_mul(ast);
 			break;
 		case IKS_AST_ARIM_DIVISAO:
-			//printf("\nIKS_AST_ARIM_DIVISAO", n->type);
+			// printf("\nIKS_AST_ARIM_DIVISAO", n->type);
 			code_arit_div(ast);
 			break;
 		case IKS_AST_ARIM_INVERSAO:
-			//printf("\nIKS_AST_ARIM_INVERSAO", n->type);
+			// printf("\nIKS_AST_ARIM_INVERSAO", n->type);
 			code_arim_inv(ast);
 			break;
 		case IKS_AST_LOGICO_E:
-			//printf("\nIKS_AST_LOGICO_E", n->type);
+			// printf("\nIKS_AST_LOGICO_E", n->type);
 			code_log_and(ast);
 			break;
 		case IKS_AST_LOGICO_OU:
-			//printf("\nIKS_AST_LOGICO_OU", n->type);
+			// printf("\nIKS_AST_LOGICO_OU", n->type);
 			code_log_or(ast);
 			break;
 		case IKS_AST_LOGICO_COMP_IGUAL:
-			//printf("\nIKS_AST_LOGICO_COMP_IGUAL", n->type);
+			// printf("\nIKS_AST_LOGICO_COMP_IGUAL", n->type);
 			code_comp_eq(ast);
 			break;
 		case IKS_AST_LOGICO_COMP_DIF:
-			//printf("\nIKS_AST_LOGICO_COMP_DIF", n->type);
+			// printf("\nIKS_AST_LOGICO_COMP_DIF", n->type);
 			code_comp_ne(ast);
 			break;
 		case IKS_AST_LOGICO_COMP_LE:
-			//printf("\nIKS_AST_LOGICO_COMP_LE", n->type);
+			// printf("\nIKS_AST_LOGICO_COMP_LE", n->type);
 			code_comp_le(ast);		
 			break;
 		case IKS_AST_LOGICO_COMP_GE:
-			//printf("\nIKS_AST_LOGICO_COMP_GE", n->type);
+			// printf("\nIKS_AST_LOGICO_COMP_GE", n->type);
 			code_comp_ge(ast);	
 			break;	
 		case IKS_AST_LOGICO_COMP_L:
-			//printf("\nIKS_AST_LOGICO_COMP_L", n->type);
+			// printf("\nIKS_AST_LOGICO_COMP_L", n->type);
 			code_comp_lt(ast);		
 			break;
 		case IKS_AST_LOGICO_COMP_G:
-			//printf("\nIKS_AST_LOGICO_COMP_G", n->type);
+			// printf("\nIKS_AST_LOGICO_COMP_G", n->type);
 			code_comp_gt(ast);
 			break;
 		case IKS_AST_LOGICO_COMP_NEGACAO:
 			code_log_neg(ast);
 			break;
 		case IKS_AST_VETOR_INDEXADO:
-			//printf("\nIKS_AST_VETOR_INDEXADO", n->type);
+			// printf("\nIKS_AST_VETOR_INDEXADO", n->type);
 			code_vector(ast);
 			break;
 		case IKS_AST_CHAMADA_DE_FUNCAO:
-			//printf("\nIKS_AST_CHAMADA_DE_FUNCAO", n->type);	
+			// printf("\nIKS_AST_CHAMADA_DE_FUNCAO", n->type);	
 			code_function_call(ast);
 			break;
 		case IKS_AST_INDEFINIDO:
-			//printf("\nIKS_AST_INDEFINIDO", n->type);	
+			// printf("\nIKS_AST_INDEFINIDO", n->type);	
 		default:
 			fprintf(stderr,"error at code_generator\n");
 			break;
@@ -1572,7 +1573,7 @@ char *int_to_char(int i) {
 	char temp[MAXMEM];
 	char *t;
 
-	//horrivel, pensar como melhorar isso
+	// horrivel, pensar como melhorar isso
 	t = malloc (sizeof(char) * MAXMEM);
 	sprintf(t, "%d", i);
 	return t;
@@ -1910,7 +1911,7 @@ iks_list_t *get_coercion_code(iks_ast_node_value_t *S) {
 		case IKS_COERCION_FLOAT_TO_INT:
 		case IKS_COERCION_FLOAT_TO_BOOL:
 		case IKS_COERCION_BOOL_TO_FLOAT:
-			//does not supported at iloc
+			// does not supported at iloc
 			break;
 		default:
       fprintf(stderr,"ops at get_coercion_code\n");
