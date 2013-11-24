@@ -12,7 +12,7 @@
 * Input: pointer of pointer of iks_tree
 * Output:	none
 ******************************************************************************/
-void code_programa(iks_tree_t **ast) {
+void code_program(iks_tree_t **ast) {
 	iks_ast_node_value_t *P = (*ast)->item;
 	iks_tree_t *Ft = (*ast)->children->item;
 
@@ -41,7 +41,7 @@ void code_programa(iks_tree_t **ast) {
 * Input: pointer of pointer of iks_tree
 * Output:	none	
 ******************************************************************************/
-void code_chamada_funcao(iks_tree_t **ast) {
+void code_function_call(iks_tree_t **ast) {
 	iks_ast_node_value_t *F = (*ast)->item;
 	iks_tree_t *St = (*ast)->children->item;
 
@@ -135,7 +135,7 @@ void code_chamada_funcao(iks_tree_t **ast) {
 * Input: pointer of pointer of iks_tree
 * Output:	none	
 ******************************************************************************/
-void code_funcao(iks_tree_t **ast) {
+void code_function(iks_tree_t **ast) {
 	iks_ast_node_value_t *F = (*ast)->item;
 	iks_tree_t *St = (*ast)->children->item;
 
@@ -1424,11 +1424,11 @@ void code_generator(iks_tree_t **ast) {
 	switch(n->type) {
 		case IKS_AST_PROGRAMA:
 			//printf("\nIKS_AST_PROGRAMA", n->type);
-			code_programa(ast);
+			code_program(ast);
 			break;
 		case IKS_AST_FUNCAO:
 			//printf("\nIKS_AST_FUNCAO", n->type);
-			code_funcao(ast);
+			code_function(ast);
 			break;
 		case IKS_AST_IF:
 			//printf("\nIKS_AST_IF", n->type);
@@ -1533,7 +1533,7 @@ void code_generator(iks_tree_t **ast) {
 			break;
 		case IKS_AST_CHAMADA_DE_FUNCAO:
 			//printf("\nIKS_AST_CHAMADA_DE_FUNCAO", n->type);	
-			code_chamada_funcao(ast);
+			code_function_call(ast);
 			break;
 		case IKS_AST_INDEFINIDO:
 			//printf("\nIKS_AST_INDEFINIDO", n->type);	
