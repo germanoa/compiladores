@@ -1,0 +1,1 @@
+/usr/bin/gcc  -g   CMakeFiles/iloc_parser.dir/lexer.c.o CMakeFiles/iloc_parser.dir/parser.c.o CMakeFiles/iloc_parser.dir/src/iloc_parser.c.o CMakeFiles/iloc_parser.dir/home/gandersson/code/compiladores/src/iks_list.c.o  -o iloc_parser -rdynamic -lfl 

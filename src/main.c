@@ -13,6 +13,7 @@
 #include "iks_ast.h"
 #include "iks_types.h"
 #include "iks_gv.h"
+#include "iks_iloc.h"
 #include "main.h"
 
 void yyerror(char* str)
@@ -31,21 +32,26 @@ void iks_init() {
 
 int main (int argc, char **argv)
 {
-  iks_init();  
-	//printf("\n%d", argc);  
-	//printf("\n\n\n%s\n\n\n\n", argv[0]);
-  //printf("\n\n\n%s\n\n\n\n", argv[1]);
-  //printf("\n\n\n%s\n\n\n\n", argv[2]);
-  gv_init("ast_graph.dot");
-	
-  int result = yyparse();
-  gv_close();
-  
-	code_generator(&ast);
-	iks_ast_node_value_t *program = ast->item;
-	iloc_print(program->code);  
+  int result;
 
-  //symbol_table_print((iks_dict_t*)iks_stack_top(scope));
+  if (argc==2) {
+    printf("aqui\n");
+    result = iloc_parser(argc,argv);
+  }
+  else {
+    iks_init();  
+
+    gv_init("ast_graph.dot");	
+    result = yyparse();
+    gv_close();
+    
+    code_generator(&ast);
+    iks_ast_node_value_t *program = ast->item;
+    program_iloc = program->code;
+  }
+
+  iloc_print(program_iloc);  
+
 
   return result;
 }

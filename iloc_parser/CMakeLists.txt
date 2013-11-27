@@ -6,22 +6,11 @@ FLEX_TARGET(scanner scanner.l ${CMAKE_CURRENT_BINARY_DIR}/lexer.c)
 BISON_TARGET(parser parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.c VERBOSE parser.output)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 INCLUDE_DIRECTORIES(${compilador_SOURCE_DIR}/include/)
-INCLUDE_DIRECTORIES(${compilador_SOURCE_DIR}/src/)
-INCLUDE_DIRECTORIES(${compilador_SOURCE_DIR}/iloc_parser/include/)
-ADD_EXECUTABLE(main
+INCLUDE_DIRECTORIES(${compilador_SOURCE_DIR}/../include/)
+ADD_EXECUTABLE(iloc_parser
   ${FLEX_scanner_OUTPUTS}
   ${BISON_parser_OUTPUTS}
-  src/main.c
-  src/iks_gv.c
-  src/iks_dict.c
-  src/iks_list.c
-  src/iks_tree.c
-  src/iks_graph.c
-  src/iks_stack.c
-  src/iks_grammar.c
-  src/iks_ast.c
-  src/iks_types.c
-  src/iks_iloc.c
-  iloc_parser/src/iloc_parser.c
+  src/iloc_parser.c
+  ../src/iks_list.c
 )
-TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})
+TARGET_LINK_LIBRARIES(iloc_parser ${FLEX_LIBRARIES})

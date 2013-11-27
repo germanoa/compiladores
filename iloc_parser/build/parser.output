@@ -1,0 +1,249 @@
+Terminals unused in grammar
+
+   sub
+   mult
+   _div
+   inv
+   addI
+   subI
+   multI
+   divI
+   rdivI
+   and
+   andI
+   or
+   orI
+   xor
+   xorI
+   lshift
+   rshift
+   lshiftI
+   rshifI
+   load
+   loadAI
+   loadA0
+   loadI
+   cload
+   cloadAI
+   cloadA0
+   store
+   storeAI
+   storeA0
+   cstore
+   cstoreAI
+   cstoreA0
+   i2i
+   c2c
+   c2i
+   i2c
+   cmp_LT
+   cmp_LE
+   cmp_EQ
+   cmp_GE
+   cmp_GT
+   cmp_NE
+   cbr
+   jump
+   jumpI
+   nop
+   tbl
+   l
+
+
+Rules useless in parser due to conflicts
+
+    2 p0: $@1 p
+
+
+State 4 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: p0 add
+
+    1 $@1: /* empty */
+
+    2 p0: $@1 p
+
+    3 p: p i
+    4  | /* empty */
+
+    5 i: i_2_1
+
+    6 i_2_1: add r comma r to r
+
+
+Terminals, with rules where they appear
+
+add (0) 0 6
+sub (1)
+mult (2)
+_div (3)
+inv (4)
+addI (5)
+subI (6)
+multI (7)
+divI (8)
+rdivI (9)
+and (10)
+andI (11)
+or (12)
+orI (13)
+xor (14)
+xorI (15)
+lshift (16)
+rshift (17)
+lshiftI (18)
+rshifI (19)
+load (20)
+loadAI (21)
+loadA0 (22)
+loadI (23)
+cload (24)
+cloadAI (25)
+cloadA0 (26)
+store (27)
+storeAI (28)
+storeA0 (29)
+cstore (30)
+cstoreAI (31)
+cstoreA0 (32)
+i2i (33)
+c2c (34)
+c2i (35)
+i2c (36)
+cmp_LT (37)
+cmp_LE (38)
+cmp_EQ (39)
+cmp_GE (40)
+cmp_GT (41)
+cmp_NE (42)
+cbr (43)
+jump (44)
+jumpI (45)
+nop (46)
+tbl (47)
+r (48) 6
+l (49)
+comma (50) 6
+to (51) 6
+error (256)
+
+
+Nonterminals, with rules where they appear
+
+$accept (54)
+    on left: 0
+p0 (55)
+    on left: 2, on right: 0
+$@1 (56)
+    on left: 1, on right: 2
+p (57)
+    on left: 3 4, on right: 2 3
+i (58)
+    on left: 5, on right: 3
+i_2_1 (59)
+    on left: 6, on right: 5
+
+
+state 0
+
+    0 $accept: . p0 add
+
+    $default  reduce using rule 1 ($@1)
+
+    p0   go to state 1
+    $@1  go to state 2
+
+
+state 1
+
+    0 $accept: p0 . add
+
+    add  shift, and go to state 3
+
+
+state 2
+
+    2 p0: $@1 . p
+
+    $default  reduce using rule 4 (p)
+
+    p  go to state 4
+
+
+state 3
+
+    0 $accept: p0 add .
+
+    $default  accept
+
+
+state 4
+
+    2 p0: $@1 p .
+    3 p: p . i
+
+    add  shift, and go to state 5
+
+    add  [reduce using rule 2 (p0)]
+
+    i      go to state 6
+    i_2_1  go to state 7
+
+
+state 5
+
+    6 i_2_1: add . r comma r to r
+
+    r  shift, and go to state 8
+
+
+state 6
+
+    3 p: p i .
+
+    $default  reduce using rule 3 (p)
+
+
+state 7
+
+    5 i: i_2_1 .
+
+    $default  reduce using rule 5 (i)
+
+
+state 8
+
+    6 i_2_1: add r . comma r to r
+
+    comma  shift, and go to state 9
+
+
+state 9
+
+    6 i_2_1: add r comma . r to r
+
+    r  shift, and go to state 10
+
+
+state 10
+
+    6 i_2_1: add r comma r . to r
+
+    to  shift, and go to state 11
+
+
+state 11
+
+    6 i_2_1: add r comma r to . r
+
+    r  shift, and go to state 12
+
+
+state 12
+
+    6 i_2_1: add r comma r to r .
+
+    $default  reduce using rule 6 (i_2_1)
