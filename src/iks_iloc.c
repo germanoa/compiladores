@@ -1760,6 +1760,16 @@ void iloc_oper_print(iks_list_t *opers) {
 																		(char*)oper->src_operands->next->item,
 																		(char*)oper->dst_operands->item);
 				break;
+			case op_inv:
+				printf("inv %s, %s => %s",	(char*)oper->src_operands->item,
+																		(char*)oper->src_operands->next->item,
+																		(char*)oper->dst_operands->item);
+				break;
+			case op_divI:
+				printf("divI %s, %s => %s",	(char*)oper->src_operands->item,
+																		(char*)oper->src_operands->next->item,
+																		(char*)oper->dst_operands->item);
+				break;
 			case op_jump:
 				printf("jump -> %s",(char*)oper->dst_operands->item);
 				break;

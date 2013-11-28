@@ -35,7 +35,6 @@ int main (int argc, char **argv)
   int result;
 
   if (argc==2) {
-    printf("aqui\n");
     result = iloc_parser(argc,argv);
   }
   else {

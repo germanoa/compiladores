@@ -1,5 +1,8 @@
 %{
-  #include "parser.h"
+#include "parser.h"
+
+extern YYSTYPE ilocparserlval;
+
 %}
 
 %option noyywrap
@@ -56,21 +59,29 @@ jumpI { return jumpI; }
 nop { return nop; }
 tbl { return tbl; }
 
-r[0-9]+ { return r; }
-l[0-9]+ { return l; }
+r[0-9]+ { 
+  char *c = malloc(yyleng+1);
+  c = strncpy(c,yytext,yyleng);
+
+  ilocparserlval.c = c;
+  return r;
+}
+
+l[0-9]+ { 
+  char *c = malloc(yyleng+1);
+  c = strncpy(c,yytext,yyleng);
+
+  ilocparserlval.c = c;
+  return l;
+}
 
 , { return comma; }
 => { return to; }
 
 %%
 
-//int ilocparserwrap() {
-//  return 0;
-//}
-
-
 //void yyerror(char *str) {
 void ilocparsererror(char *str) {
-  fflush(stderr);
-  fprintf(stderr,"error\n");
+//  fflush(stderr);
+//  fprintf(stderr,"error\n");
 }

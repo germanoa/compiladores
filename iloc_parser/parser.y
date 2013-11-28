@@ -17,6 +17,11 @@ PROLOGUE
 DECLARATIONS
 */
 
+%union {
+  char *c;
+  int op;
+}
+
 %token add 0
 %token sub 1
 %token mult 2
@@ -66,13 +71,18 @@ DECLARATIONS
 %token nop 46
 %token tbl 47
 
-%token r 48
-%token l 49
+%token<c> r 48
+%token<c> l 49
 
 %token comma 50
 %token to 51
 
+%type<op> op
+
+
 %start p0
+
+
 
 %%
 
@@ -82,9 +92,8 @@ GRAMMAR RULES
 
 p0:
   {
-    iloc_program = new_iks_list();
-  }
-  p
+    program_iloc = new_iks_list();
+  } p
 ;
 
 p:
@@ -94,30 +103,99 @@ p:
 
 i:
   i_2_1
-//  | i_1_1
-//  | i_1_2
-//  | i_0_1
-//  | i_2_0
+  | i_1_1
+  | i_1_2
+  | i_0_1
+  | i_2_0
 ;
 
 i_2_1:
-  add r comma r to r
+  op r comma r to r
     {
       iloc_t *iloc;
-      printf("achei add!\n");
+      iloc = new_iloc(NULL, new_iloc_oper($1,
+                                          $2,
+                                          $4,
+                                          NULL,
+                                          $6,
+                                          NULL,
+                                          NULL));
+      iks_list_append(program_iloc, (void*)iloc);
     }
 ;
 
-//i_1_1:
-//;
-//
-//i_1_2:
-//;
-//
-//i_0_1:
-//;
-//
-//i_2_0:
-//;
+i_1_1:
+  op r to r
+    {
+      iloc_t *iloc;
+      iloc = new_iloc(NULL, new_iloc_oper($1,
+                                          $2,
+                                          NULL,
+                                          NULL,
+                                          $4,
+                                          NULL,
+                                          NULL));
+      iks_list_append(program_iloc, (void*)iloc);
+    }
+;
+
+i_1_2:
+  op r to r comma r
+    {
+      iloc_t *iloc;
+      iloc = new_iloc(NULL, new_iloc_oper($1,
+                                          $2,
+                                          NULL,
+                                          NULL,
+                                          $4,
+                                          $6,
+                                          NULL));
+      iks_list_append(program_iloc, (void*)iloc);
+    }
+;
+
+i_0_1:
+  op r
+    {
+      iloc_t *iloc;
+      iloc = new_iloc(NULL, new_iloc_oper($1,
+                                          NULL,
+                                          NULL,
+                                          NULL,
+                                          $2,
+                                          NULL,
+                                          NULL));
+      iks_list_append(program_iloc, (void*)iloc);
+    }
+;
+
+i_2_0:
+  op r comma r
+    {
+      iloc_t *iloc;
+      iloc = new_iloc(NULL, new_iloc_oper($1,
+                                          $2,
+                                          $4,
+                                          NULL,
+                                          NULL,
+                                          NULL,
+                                          NULL));
+      iks_list_append(program_iloc, (void*)iloc);
+    }
+;
+
+op:
+  add { $$=op_add; }
+  | sub { $$=op_sub; }
+  | mult { $$=op_mult; }
+  | _div { $$=op_div; }
+  | inv { $$=op_inv; }
+  | addI { $$=op_addI; }
+  | subI { $$=op_subI; }
+  | multI { $$=op_multI; }
+  | divI { $$=op_divI; }
+  | rdivI{ $$=op_rdivI; }
+  | and { $$=op_and; }
+;
 
 %%

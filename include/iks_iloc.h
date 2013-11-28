@@ -67,23 +67,23 @@ struct iloc_t {
 * that represent valid operations
 *
 */
-typedef enum { 
-	op_add, op_sub, op_mult, op_div, op_inv,
-	op_addI, op_subI, op_multI, op_divI, op_rdivI,
-	op_and, op_andI, op_or, op_orI, op_xor, op_xorI, 
-	op_lshift, op_rshift,
-	op_lshiftI, op_rshifI,
-	op_load, op_loadAI, op_loadA0, op_loadI,
-	op_cload, op_cloadAI, op_cloadA0,
-	op_store, op_storeAI, op_storeA0,
-	op_cstore, op_cstoreAI, op_cstoreA0,
-	op_i2i, op_c2c, op_c2i, op_i2c,
-	op_cmp_LT, op_cmp_LE, op_cmp_EQ, op_cmp_GE, op_cmp_GT, op_cmp_NE, op_cbr,
-	op_jump, op_jumpI,
- 	op_nop,
-	op_tbl
- } opcode_t;
-
+enum opcode { 
+	op_add=0, op_sub=1, op_mult=2, op_div=3, op_inv=4,
+	op_addI=5, op_subI=6, op_multI=7, op_divI=8, op_rdivI=9,
+	op_and=10, op_andI=11, op_or=12, op_orI=13, op_xor=14, op_xorI=15, 
+	op_lshift=16, op_rshift=17,
+	op_lshiftI=18, op_rshifI=19,
+	op_load=20, op_loadAI=21, op_loadA0=22, op_loadI=23,
+	op_cload=24, op_cloadAI=25, op_cloadA0=26,
+	op_store=27, op_storeAI=28, op_storeA0=29,
+	op_cstore=30, op_cstoreAI=31, op_cstoreA0=32,
+	op_i2i=33, op_c2c=34, op_c2i=35, op_i2c=36,
+	op_cmp_LT=37, op_cmp_LE=38, op_cmp_EQ=39, op_cmp_GE=40, op_cmp_GT=41, op_cmp_NE=42, op_cbr=43,
+	op_jump=44, op_jumpI=45,
+ 	op_nop=46,
+	op_tbl=47
+ };
+typedef enum opcode opcode_t;
 
 /*
 *
