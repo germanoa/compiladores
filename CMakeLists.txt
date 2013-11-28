@@ -23,6 +23,7 @@ ADD_EXECUTABLE(main
   src/iks_ast.c
   src/iks_types.c
   src/iks_iloc.c
+  src/iks_optim.c
 )
 TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})
 TARGET_LINK_LIBRARIES(main ${compilador_SOURCE_DIR}/iloc_parser/build/parser.o)
