@@ -61,14 +61,6 @@
 /* Using locations.  */
 #define YYLSP_NEEDED 0
 
-/* Substitute the variable and function names.  */
-#define yyparse         ilocparserparse
-#define yylex           ilocparserlex
-#define yyerror         ilocparsererror
-#define yylval          ilocparserlval
-#define yychar          ilocparserchar
-#define yydebug         ilocparserdebug
-#define yynerrs         ilocparsernerrs
 
 
 /* Copy the first part of user declarations.  */
@@ -86,7 +78,7 @@
 
 
 /* Line 268 of yacc.c  */
-#line 90 "parser.c"
+#line 82 "parser.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -182,7 +174,7 @@ typedef int YYSTYPE;
 
 
 /* Line 343 of yacc.c  */
-#line 186 "parser.c"
+#line 178 "parser.tab.c"
 
 #ifdef short
 # undef short
@@ -1432,7 +1424,7 @@ yyreduce:
 
 
 /* Line 1806 of yacc.c  */
-#line 1436 "parser.c"
+#line 1428 "parser.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

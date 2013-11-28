@@ -2,7 +2,10 @@
   #include "parser.h"
 %}
 
+%option noyywrap
+
 %%
+
 
 add { return add; }
 sub { return sub; }
@@ -61,7 +64,13 @@ l[0-9]+ { return l; }
 
 %%
 
-void yyerror(char *str) {
+//int ilocparserwrap() {
+//  return 0;
+//}
+
+
+//void yyerror(char *str) {
+void ilocparsererror(char *str) {
   fflush(stderr);
   fprintf(stderr,"error\n");
 }

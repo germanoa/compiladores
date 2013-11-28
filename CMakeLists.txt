@@ -11,6 +11,7 @@ INCLUDE_DIRECTORIES(${compilador_SOURCE_DIR}/iloc_parser/include/)
 ADD_EXECUTABLE(main
   ${FLEX_scanner_OUTPUTS}
   ${BISON_parser_OUTPUTS}
+  ${BISONILOC_parser_OUTPUTS}
   src/main.c
   src/iks_gv.c
   src/iks_dict.c
@@ -22,6 +23,8 @@ ADD_EXECUTABLE(main
   src/iks_ast.c
   src/iks_types.c
   src/iks_iloc.c
-  iloc_parser/src/iloc_parser.c
 )
 TARGET_LINK_LIBRARIES(main ${FLEX_LIBRARIES})
+TARGET_LINK_LIBRARIES(main ${compilador_SOURCE_DIR}/iloc_parser/build/parser.o)
+TARGET_LINK_LIBRARIES(main ${compilador_SOURCE_DIR}/iloc_parser/build/lex.ilocparser.o)
+TARGET_LINK_LIBRARIES(main ${compilador_SOURCE_DIR}/iloc_parser/build/iloc_parser.o)
