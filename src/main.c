@@ -14,6 +14,7 @@
 #include "iks_types.h"
 #include "iks_gv.h"
 #include "iks_iloc.h"
+#include "iks_optim.h"
 #include "main.h"
 
 void yyerror(char* str)
@@ -34,8 +35,16 @@ int main (int argc, char **argv)
 {
   int result;
 
-  if (argc==2) {
-    result = iloc_parser(argc,argv);
+  long window=1;
+  long count=1;
+
+  if (argc>1) {
+    const char *filename = argv[1];
+    if (argc==4) {
+      window = strtol(argv[2],NULL,10);
+      count = strtol(argv[3],NULL,10);
+    }
+    result = iloc_parser(filename);
   }
   else {
     iks_init();  
@@ -48,6 +57,8 @@ int main (int argc, char **argv)
     iks_ast_node_value_t *program = ast->item;
     program_iloc = program->code;
   }
+  
+  optim_main(program_iloc,window,count);
 
   iloc_print(program_iloc);  
 
