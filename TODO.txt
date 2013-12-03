@@ -1,44 +1,8 @@
 TASK LIST - STEP 5
-Last Update: oct-25-2013 
+Last Update: nov-30-2013 
 
 ---------------------------------------------------------------------
-1. documentar no modo doxygen
-	 verificar porque doxygen nao estah gerando doc para as funcoes
+1. Step6 fix and Step7
 	assigned to: Pedro
 	current status: in Process
----------------------------------------------------------------------
-
-2. alterar padrão de nomes de arquivos e funções
-	assigned to: Pedro
-	current status: done
----------------------------------------------------------------------
-
-3. etapa 5.1.1 - suporte para arranjos multidimensionais em IKS
-	assigned to: Artur
-	current status: in progress
----------------------------------------------------------------------
-
-4. etapa 5.1.2 - implementação de um estrutura de dados para ILOC
-	assigned to: Germano
-	current status: done
----------------------------------------------------------------------
-
-5. etapa 5.1.3 e 5.1.4 - Gerenciamentp de Rótulos e Registradores
-	assigned to: Pedro
-	curent status: in progress
----------------------------------------------------------------------
-
-6. code generator - Expressões aritméticas, lógicas e unárias
-	assigned to: Pedro
-	current status: 
---------------------------------------------------------------------
-
-7. code generator - condicionais
-	assigned to: Germano
-	current status:
---------------------------------------------------------------------
-
-8. code generator -
-	assigned to: Artur
-	current status:
 --------------------------------------------------------------------
