@@ -59,19 +59,27 @@ jumpI { return jumpI; }
 nop { return nop; }
 tbl { return tbl; }
 
-r[0-9]+ { 
-  char *c = malloc(yyleng+1);
-  c = strncpy(c,yytext,yyleng);
+[0-9]+ { 
+  char *c1 = malloc(yyleng+1);
+  c1 = strncpy(c1,yytext,yyleng);
 
-  ilocparserlval.c = c;
+  ilocparserlval.c = c1;
+  return constant;
+}
+
+r[0-9]+ { 
+  char *c1 = malloc(yyleng+1);
+  c1 = strncpy(c1,yytext,yyleng);
+
+  ilocparserlval.c = c1;
   return r;
 }
 
 l[0-9]+ { 
-  char *c = malloc(yyleng+1);
-  c = strncpy(c,yytext,yyleng);
+  char *c1 = malloc(yyleng+1);
+  c1 = strncpy(c1,yytext,yyleng);
 
-  ilocparserlval.c = c;
+  ilocparserlval.c = c1;
   return l;
 }
 

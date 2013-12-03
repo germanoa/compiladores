@@ -57,7 +57,7 @@ int main (int argc, char **argv)
     iks_ast_node_value_t *program = ast->item;
     program_iloc = program->code;
   }
-  
+ 
   optim_main(program_iloc,window,count);
 
   iloc_print(program_iloc);  

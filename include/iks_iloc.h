@@ -81,7 +81,8 @@ enum opcode {
 	op_cmp_LT=37, op_cmp_LE=38, op_cmp_EQ=39, op_cmp_GE=40, op_cmp_GT=41, op_cmp_NE=42, op_cbr=43,
 	op_jump=44, op_jumpI=45,
  	op_nop=46,
-	op_tbl=47
+	op_tbl=47,
+  op_inc=48, op_dec=49
  };
 typedef enum opcode opcode_t;
 

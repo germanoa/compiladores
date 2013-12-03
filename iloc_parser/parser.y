@@ -70,15 +70,17 @@ DECLARATIONS
 %token jumpI 45
 %token nop 46
 %token tbl 47
+%token inc 48
+%token dec 49
 
-%token<c> r 48
-%token<c> l 49
+%token<c> r 100
+%token<c> l 101
+%token<c> constant 102
 
-%token comma 50
-%token to 51
+%token comma 103
+%token to 104
 
 %type<op> op
-
 
 %start p0
 
@@ -122,10 +124,34 @@ i_2_1:
                                           NULL));
       iks_list_append(program_iloc, (void*)iloc);
     }
+  | op r comma constant to r
+    {
+      iloc_t *iloc;
+      iloc = new_iloc(NULL, new_iloc_oper($1,
+                                          $2,
+                                          $4,
+                                          NULL,
+                                          $6,
+                                          NULL,
+                                          NULL));
+      iks_list_append(program_iloc, (void*)iloc);
+    }
 ;
 
 i_1_1:
   op r to r
+    {
+      iloc_t *iloc;
+      iloc = new_iloc(NULL, new_iloc_oper($1,
+                                          $2,
+                                          NULL,
+                                          NULL,
+                                          $4,
+                                          NULL,
+                                          NULL));
+      iks_list_append(program_iloc, (void*)iloc);
+    }
+  | op constant to r
     {
       iloc_t *iloc;
       iloc = new_iloc(NULL, new_iloc_oper($1,
@@ -196,6 +222,44 @@ op:
   | divI { $$=op_divI; }
   | rdivI{ $$=op_rdivI; }
   | and { $$=op_and; }
+  | andI { $$=op_andI; }
+  | or { $$=op_or; }
+  | orI { $$=op_orI; }
+  | xor { $$=op_xor; }
+  | xorI { $$=op_xorI; }
+  | lshift { $$=op_lshift; }
+  | lshiftI { $$=op_lshiftI; }
+  | rshift { $$=op_rshift; }
+  | load { $$=op_load; }
+  | loadAI { $$=op_loadAI; }
+  | loadA0 { $$=op_loadA0; }
+  | cload { $$=op_cload; }
+  | cloadAI { $$=op_cloadAI; }
+  | cloadA0 { $$=op_cloadA0; }
+  | store { $$=op_store; }
+  | storeAI { $$=op_storeAI; }
+  | storeA0 { $$=op_storeA0; }
+  | cstore { $$=op_cstore; }
+  | cstoreAI { $$=op_cstoreAI; }
+  | cstoreA0 { $$=op_cstoreA0; }
+  | i2i { $$=op_i2i; }
+  | c2c { $$=op_c2c; }
+  | c2i { $$=op_c2i; }
+  | i2c { $$=op_i2c; }
+  | cmp_LT { $$=op_cmp_LT; }
+  | cmp_LE { $$=op_cmp_LE; }
+  | cmp_EQ { $$=op_cmp_EQ; }
+  | cmp_GE { $$=op_cmp_GE; }
+  | cmp_GT { $$=op_cmp_GT; }
+  | cmp_NE { $$=op_cmp_NE; }
+  | jump { $$=op_jump; }
+  | jumpI { $$=op_jumpI; }
+  | nop { $$=op_nop; }
+  | tbl { $$=op_tbl; }
+  | loadI { $$=op_loadI; }
+  | inc { $$=op_inc; }
+  | dec { $$=op_dec; }
 ;
+
 
 %%

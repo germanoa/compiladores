@@ -85,10 +85,13 @@
      jumpI = 45,
      nop = 46,
      tbl = 47,
-     r = 48,
-     l = 49,
-     comma = 50,
-     to = 51
+     inc = 48,
+     dec = 49,
+     r = 100,
+     l = 101,
+     constant = 102,
+     comma = 103,
+     to = 104
    };
 #endif
 
@@ -107,7 +110,7 @@ typedef union YYSTYPE
 
 
 /* Line 2068 of yacc.c  */
-#line 111 "parser.h"
+#line 114 "parser.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
