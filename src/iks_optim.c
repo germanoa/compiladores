@@ -45,8 +45,8 @@ void alg_optim(iks_list_t *c, int w) {
                             o->dst_operands->item,
                             NULL,
                             NULL);
-        break;
         }
+        break;
       // addI r0, 0 => r1
       case op_addI:
         t1 = o->src_operands->next->item;
@@ -58,8 +58,8 @@ void alg_optim(iks_list_t *c, int w) {
                             o->dst_operands->item,
                             NULL,
                             NULL);
-        break;
         }
+        break;
       // multI r0, 1 => r1
       case op_multI:
         t1 = o->src_operands->next->item;
@@ -72,8 +72,8 @@ void alg_optim(iks_list_t *c, int w) {
                             o->dst_operands->item,
                             NULL,
                             NULL);
-        break;
         }
+        break;
     }
 
     c = c->next;
@@ -122,52 +122,61 @@ void const_precalc(iks_list_t *c, int w) {
   while(w--) {
     iloc_t *i = c->item;
     iloc_oper_t *o = i->opers->item;
-    if(found_const) {
-      int where=0;
-      if(!strncmp(t2,o->src_operands->item,2)) {
-        t3=o->src_operands->next->item;
+    if(o->dst_operands->item) {
+      if(!strncmp(t2,o->dst_operands->item)) {
+        found_const=0;
       }
-      else if(!strncmp(t2,o->src_operands->next->item,2))  {
-        t3=o->src_operands->item;
-}
-        switch (o->opcode) {
-          case op_add:
-              i->opers->item = new_iloc_oper(op_addI,
-                                t3,
-                                t1,
-                                NULL,
-                                o->dst_operands->item,
-                                NULL,
-                                NULL);
-              break;
-          case op_sub:
-              i->opers->item = new_iloc_oper(op_subI,
-                                t3,
-                                t1,
-                                NULL,
-                                o->dst_operands->item,
-                                NULL,
-                                NULL);
-              break;
-          case op_mult:
-              i->opers->item = new_iloc_oper(op_multI,
-                                t3,
-                                t1,
-                                NULL,
-                                o->dst_operands->item,
-                                NULL,
-                                NULL);
-              break;
-          case op_div:
-              i->opers->item = new_iloc_oper(op_divI,
-                                t3,
-                                t1,
-                                NULL,
-                                o->dst_operands->item,
-                                NULL,
-                                NULL);
-              break;
+      if(found_const) {
+        int vai=0;
+        if(!strncmp(t2,o->src_operands->item,2)) {
+          t3=o->src_operands->next->item;
+          vai=1;
         }
+        else if(!strncmp(t2,o->src_operands->next->item,2))  {
+          t3=o->src_operands->item;
+          vai=1;
+}
+          if(vai) {
+            switch (o->opcode) {
+              case op_add:
+                  i->opers->item = new_iloc_oper(op_addI,
+                                    t3,
+                                    t1,
+                                    NULL,
+                                    o->dst_operands->item,
+                                    NULL,
+                                    NULL);
+                  break;
+              case op_sub:
+                  i->opers->item = new_iloc_oper(op_subI,
+                                    t3,
+                                    t1,
+                                    NULL,
+                                    o->dst_operands->item,
+                                    NULL,
+                                    NULL);
+                  break;
+              case op_mult:
+                  i->opers->item = new_iloc_oper(op_multI,
+                                    t3,
+                                    t1,
+                                    NULL,
+                                    o->dst_operands->item,
+                                    NULL,
+                                    NULL);
+                  break;
+              case op_div:
+                  i->opers->item = new_iloc_oper(op_divI,
+                                    t3,
+                                    t1,
+                                    NULL,
+                                    o->dst_operands->item,
+                                    NULL,
+                                    NULL);
+                  break;
+            }
+          }
+      }
     }
     // loadI 2 => r2
     // op r2,r3 => r4 ---> opI 2,r3 => r4
